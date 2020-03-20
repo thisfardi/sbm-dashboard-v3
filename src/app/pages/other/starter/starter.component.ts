@@ -1,9 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 
 @Component({
-  selector: 'app-starter',
-  templateUrl: './starter.component.html',
-  styleUrls: ['./starter.component.scss']
+    selector: 'app-starter',
+    templateUrl: './starter.component.html',
+    styleUrls: ['./starter.component.scss']
 })
 
 /**
@@ -11,12 +11,12 @@ import { Component, OnInit } from '@angular/core';
  */
 export class StarterComponent implements OnInit {
 
-   // bread crumb items
-   breadCrumbItems: Array<{}>;
+    // bread crumb items
+    breadCrumbItems: Array<{}>;
 
-   constructor() { }
+    constructor() { }
 
-   ngOnInit() {
-     this.breadCrumbItems = [{ label: 'SBM Dashboard v3.0', path: '/' }, { label: 'Pages', path: '/' }, { label: 'Starter', active: true }];
-   }
+    ngOnInit() {
+        this.breadCrumbItems = [{ label: 'SBM Dashboard v3.0', path: '/' }, { label: 'Pages', path: '/' }, { label: 'Starter', active: true }];
+    }
 }
