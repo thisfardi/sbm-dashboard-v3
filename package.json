@@ -8,8 +8,6 @@
     "test": "ng test",
     "lint": "ng lint",
     "e2e": "ng e2e",
-    "build:stats": "ng build --aot --prod --stats-json",
-    "analyze": "webpack-bundle-analyzer dist/sbm-dashboard-v3/stats-es2015.json",
     "postinstall": "ng build --aot --prod"
   },
   "private": true,
@@ -38,6 +36,7 @@
     "angularx-flatpickr": "^6.1.1",
     "apexcharts": "~3.17.0",
     "bootstrap": "^4.3.1",
+    "express": "^4.17.1",
     "feather-icons": "^4.24.1",
     "flatpickr": "^4.6.2",
     "metismenujs": "^1.1.0",
@@ -48,6 +47,7 @@
     "ngx-drag-drop": "^2.0.0",
     "ngx-dropzone-wrapper": "^8.0.0",
     "ngx-mask": "^8.0.6",
+    "path": "^0.12.7",
     "rxjs": "^6.5.3",
     "smooth-scrollbar": "^8.3.1",
     "tslib": "^1.10.0",
@@ -74,5 +74,9 @@
     "tslint": "^5.15.0",
     "typescript": "~3.5.3",
     "webpack-bundle-analyzer": "^3.6.0"
+  },
+  "engines": {
+    "node": "~10.16.3",
+    "npm": "~6.9.0"
   }
 }
