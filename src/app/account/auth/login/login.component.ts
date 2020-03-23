@@ -27,7 +27,7 @@ export class LoginComponent implements OnInit, AfterViewInit {
         let name = '';
         let password = '';
         let remember_credentials = JSON.parse(this.cookieService.getCookie('rememberCredentials'));
-        
+
         if(remember_credentials){
             name = remember_credentials.name;
             password = remember_credentials.password;
@@ -78,6 +78,9 @@ export class LoginComponent implements OnInit, AfterViewInit {
                             this.cookieService.deleteCookie('rememberCredentials');
                         }
                         this.success_msg = data['msg'];
+                        if(this.f.username.value == 'admin'){
+                            this.returnUrl = '/admin/users';
+                        }
                         this.router.navigate([this.returnUrl]);
                     }else if(data['status'] == 'failed'){
                         this.error = data['msg'];

@@ -2,7 +2,7 @@ import { Component, OnInit, Output, EventEmitter } from '@angular/core';
 import { Router } from '@angular/router';
 
 import { AuthenticationService } from '../../../core/services/auth.service';
-
+import { CookieService } from '../../../core/services/cookie.service';
 import { Notification } from './topbar.model';
 
 import { notificationItems } from './data';
@@ -25,19 +25,24 @@ export class TopbarComponent implements OnInit {
     flag?: string,
     name: string
   };
-
+  name: string;
+  email: string;
   openMobileMenu: boolean;
 
   @Output() settingsButtonClicked = new EventEmitter();
   @Output() mobileMenuButtonClicked = new EventEmitter();
 
-  constructor(private router: Router, private authService: AuthenticationService) {}
+  constructor(private router: Router, private authService: AuthenticationService, private cookieService: CookieService) {}
 
-  ngOnInit() {
-    // get the notifications
-    this._fetchNotifications();
-    this.openMobileMenu = false;
-  }
+    ngOnInit() {
+        let user_info = JSON.parse(this.cookieService.getCookie('currentUser'));
+
+        this.name = user_info.name;
+        this.email = user_info.email;
+        // get the notifications
+        this._fetchNotifications();
+        this.openMobileMenu = false;
+    }
 
   /**
    * Change the language

@@ -23,19 +23,11 @@ export class ApiService {
                 //login successful if the status is success
                 if (res['status'] == 'success') {
                     // store res details and jwt in cookie
-                    this.cookieService.setCookie('currentUser', JSON.stringify(res), 1);
+                    this.cookieService.setCookie('currentUser', JSON.stringify(res['res']), 1);
                 }
 
                 return res;
             }));
-    }
-
-
-    unauthorised() {
-        return throwError({ status: 401, error: { message: 'Unauthorised' } });
-    }
-    error(message) {
-        return throwError({ status: 400, error: { message } });
     }
     /**
      * Performs the register

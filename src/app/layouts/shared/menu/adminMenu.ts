@@ -1,70 +1,33 @@
 import { MenuItem } from './menu.model';
 
-export const MENU: MenuItem[] = [
+export const ADMINMENU: MenuItem[] = [
+    {
+        label: 'ADMIN',
+        isTitle: true
+    },
+    {
+        label: 'Users',
+        icon: 'user',
+        link: '/admin/users',
+    },
+    {
+        label: 'Add a new user',
+        icon: 'user-plus',
+        link: '/admin/adduser',
+    },
     {
         label: 'OVERVIEW',
         isTitle: true
     },
     {
-        label: 'Dashboard',
-        icon: 'bar-chart-2',
-        link: '/',
-    },
-    {
         label: 'Shops',
         icon: 'home',
-        subItems: [
-            {
-                label: 'Meetfresh Temple',
-                link: '/shop/meetfresh-temple',
-            },
-            {
-                label: 'Meetfresh Cupertino',
-                link: '/shop/meetfresh-cupertino'
-            },
-            {
-                label: 'Meetfresh Temple',
-                link: '/shop/meetfresh-temple'
-            },
-        ]
+        link: '/admin/shops'
     },
     {
         label: 'Operators',
         icon: 'users',
-        link: '/operator',
-    },
-    {
-        label: 'DETAILS',
-        isTitle: true
-    },
-    {
-        label: 'Transactions',
-        icon: 'trending-up',
-        link: '/detail/transaction',
-    },
-    {
-        label: 'Payments',
-        icon: 'briefcase',
-        link: '/detail/payment',
-    },
-    {
-        label: 'Articles',
-        icon: 'gift',
-        link: '/detail/article',
-    },
-    {
-        label: 'COMPARISON',
-        isTitle: true
-    },
-    {
-        label: 'Shop compare',
-        icon: 'award',
-        link: '/compare/shops',
-    },
-    {
-        label: 'Period compare',
-        icon: 'calendar',
-        link: '/compare/period',
+        link: '/admin/operators',
     },
 
 // Reserve for dev
