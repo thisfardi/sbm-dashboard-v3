@@ -23,7 +23,7 @@ export class LoginComponent implements OnInit, AfterViewInit {
 
     ngOnInit() {
         this.loginForm = this.formBuilder.group({
-            email: ['', [Validators.required, Validators.email]],
+            username: ['', [Validators.required]],
             password: ['', Validators.required],
         });
 
@@ -53,7 +53,7 @@ export class LoginComponent implements OnInit, AfterViewInit {
             return;
         }
         this.loading = true;
-        this.authenticationService.login(this.f.email.value, this.f.password.value)
+        this.authenticationService.login(this.f.username.value, this.f.password.value)
             .pipe(first())
             .subscribe(
                 data => {
@@ -61,7 +61,7 @@ export class LoginComponent implements OnInit, AfterViewInit {
                     this.loading = false;
                 },
                 error => {
-                    this.error = error;
+                    this.error = error.msg;
                     this.loading = false;
                 }
             );

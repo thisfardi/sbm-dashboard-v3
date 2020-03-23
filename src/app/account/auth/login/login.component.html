@@ -14,21 +14,21 @@
                                     </a>
                                 </div>
                                 <h6 class="h5 mb-0 mt-4">Welcome back!</h6>
-                                <p class="text-muted mt-1 mb-4">Enter your email address and password to access admin panel.</p>
+                                <p class="text-muted mt-1 mb-4">Enter your username and password to access admin panel.</p>
                                 <form class="authentication-form" name="loginForm" [formGroup]="loginForm" (ngSubmit)="onSubmit()" novalidate>
                                     <ngb-alert type="danger" *ngIf="error" [dismissible]="false">{{ error }}</ngb-alert>
                                     <div class="form-group">
-                                        <label class="form-control-label">Email Address</label>
+                                        <label class="form-control-label">Username</label>
                                         <div class="input-group input-group-merge">
                                             <div class="input-group-prepend">
                                                 <span class="input-group-text">
-                                                    <i class="icon-dual" data-feather="mail" appFeatherIcon></i>
+                                                    <i class="icon-dual" data-feather="user" appFeatherIcon></i>
                                                 </span>
                                             </div>
-                                            <input type="email" class="form-control" formControlName="email" id="email" placeholder="dashboard@sbmtec.com" [ngClass]="{ 'is-invalid': submitted && f.email.errors }" required />
-                                            <div *ngIf="submitted && f.email.errors" class="invalid-feedback">
-                                                <div *ngIf="f.email.errors.required">Email is required</div>
-                                                <div *ngIf="f.email.errors.email">Email must be a valid email address</div>
+                                            <input type="text" class="form-control" formControlName="username" id="username" placeholder="Enter your name" [ngClass]="{ 'is-invalid': submitted && f.username.errors }" required />
+                                            <div *ngIf="submitted && f.username.errors" class="invalid-feedback">
+                                                <div *ngIf="f.username.errors.required">User name is required</div>
+                                                <!-- <div *ngIf="f.email.errors.email">Email must be a valid email address</div> -->
                                             </div>
                                         </div>
                                     </div>
@@ -57,12 +57,12 @@
                                         <button class="btn btn-primary btn-block" type="submit"> Log In </button>
                                     </div>
                                 </form>
-                                <div class="py-3 text-center"><span class="font-size-16 font-weight-bold">Or</span></div>
-                                <div class="row">
+                                <!-- <div class="py-3 text-center"><span class="font-size-16 font-weight-bold">Or</span></div> -->
+                                <!-- <div class="row">
                                     <div class="col-12">
                                         <p class="pb-0"><strong>Username: </strong> dashboard@sbmtec.com, <strong>Password: </strong>test</p>
                                     </div>
-                                </div>
+                                </div> -->
                             </div>
                             <div class="col-lg-6 d-none d-md-inline-block">
                                 <div class="auth-page-sidebar">

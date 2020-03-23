@@ -4,13 +4,15 @@ import { BehaviorSubject, Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 
 import { CookieService } from '../services/cookie.service';
+import { ApiService } from '../services/api.service';
+import { ParseService } from '../services/parse.service';
 import { User } from '../models/auth.models';
 
 @Injectable({ providedIn: 'root' })
 export class AuthenticationService {
     user: User;
 
-    constructor(private http: HttpClient, private cookieService: CookieService) {
+    constructor(private http: HttpClient, private cookieService: CookieService, private apiService: ApiService, private parseService: ParseService) {
     }
 
     /**
@@ -24,21 +26,15 @@ export class AuthenticationService {
     }
 
     /**
-     * Performs the auth
-     * @param email email of user
+     * Performs the login
+     * @param username username of user
      * @param password password of user
      */
-    login(email: string, password: string) {
-        return this.http.post<any>(`/api/login`, { email, password })
-            .pipe(map(user => {
-                // login successful if there's a jwt token in the response
-                if (user && user.token) {
-                    this.user = user;
-                    // store user details and jwt in cookie
-                    this.cookieService.setCookie('currentUser', JSON.stringify(user), 1);
-                }
-                return user;
-            }));
+    login(username: string, password: string) {
+        return this.apiService.login(this.parseService.encode({
+            name: username,
+            password: password
+        }));
     }
 
     /**
@@ -50,4 +46,3 @@ export class AuthenticationService {
         this.user = null;
     }
 }
-
