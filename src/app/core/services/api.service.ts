@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { BehaviorSubject, Observable } from 'rxjs';
+import { BehaviorSubject, Observable, throwError } from 'rxjs';
 import { map } from 'rxjs/operators';
 
 import { CookieService } from '../services/cookie.service';
@@ -21,14 +21,22 @@ export class ApiService {
         return this.http.post(`${api_url}/auth/login`, data)
             .pipe(map(res => {
                 //login successful if the status is success
-                if (res && res['status'] == 'success') {
+                if (res['status'] == 'success') {
                     // store res details and jwt in cookie
                     this.cookieService.setCookie('currentUser', JSON.stringify(res), 1);
                 }
+
                 return res;
             }));
     }
 
+
+    unauthorised() {
+        return throwError({ status: 401, error: { message: 'Unauthorised' } });
+    }
+    error(message) {
+        return throwError({ status: 400, error: { message } });
+    }
     /**
      * Performs the register
      * @param username username of user
