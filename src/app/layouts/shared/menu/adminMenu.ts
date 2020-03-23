@@ -13,7 +13,7 @@ export const ADMINMENU: MenuItem[] = [
     {
         label: 'Add a new user',
         icon: 'user-plus',
-        link: '/admin/adduser',
+        link: '/admin/add-user',
     },
     {
         label: 'OVERVIEW',
