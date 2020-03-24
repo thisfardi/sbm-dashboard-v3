@@ -5,7 +5,7 @@ import { UIModule } from '../../shared/ui/ui.module';
 
 import { AdminRoutingModule } from './admin-routing.module';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { NgbTabsetModule, NgbTooltipModule, NgbProgressbarModule } from '@ng-bootstrap/ng-bootstrap';
+import { NgbTabsetModule, NgbTooltipModule, NgbProgressbarModule, NgbAlertModule } from '@ng-bootstrap/ng-bootstrap';
 import { NgSelectModule } from '@ng-select/ng-select';
 
 import { UsersComponent } from './users/users.component';
@@ -22,7 +22,8 @@ import { EditUserComponent } from './edit-user/edit-user.component';
         UIModule,
         NgSelectModule,
         FormsModule,
-        ReactiveFormsModule
+        ReactiveFormsModule,
+        NgbAlertModule
     ],
     // tslint:disable-next-line: max-line-length
     declarations: [UsersComponent, AddUserComponent, EditUserComponent]

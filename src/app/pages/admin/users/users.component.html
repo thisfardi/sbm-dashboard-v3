@@ -29,7 +29,7 @@
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        <tr *ngFor="let user of users; index as idx" (click)="select_shop(user)">
+                                        <tr *ngFor="let user of users; index as idx" (click)="select_user(user)">
                                             <td>{{ idx + 1 }}</td>
                                             <td>{{ user.name }}</td>
                                             <td>{{ user.email }}</td>
@@ -56,37 +56,48 @@
                             <div class="form-group row mb-3">
                                 <label for="inputEmail3" class="col-3 col-form-label">User name</label>
                                 <div class="col-9">
-                                    <input type="email" class="form-control" placeholder="User name">
+                                    <input type="email" class="form-control" placeholder="User name" [(ngModel)]='_name' [ngModelOptions]="{standalone: true}">
                                 </div>
                             </div>
                             <div class="form-group row mb-3">
                                 <label for="inputEmail3" class="col-3 col-form-label">Email</label>
                                 <div class="col-9">
-                                    <input type="email" class="form-control" placeholder="Email">
+                                    <input type="email" class="form-control" placeholder="Email" [(ngModel)]='_email' [ngModelOptions]="{standalone: true}">
                                 </div>
                             </div>
                             <div class="form-group row mb-3">
                                 <label for="inputPassword3" class="col-3 col-form-label">Password</label>
                                 <div class="col-9">
-                                    <input type="password" class="form-control" placeholder="Password">
+                                    <input type="password" class="form-control" placeholder="Password" [(ngModel)]='_password' [ngModelOptions]="{standalone: true}">
                                 </div>
                             </div>
                             <div class="form-group row mb-3">
                                 <label for="inputPassword5" class="col-3 col-form-label">Re Password</label>
                                 <div class="col-9">
-                                    <input type="password" class="form-control" placeholder="Retype Password">
+                                    <input type="password" class="form-control" placeholder="Retype Password" [(ngModel)]='_repassword' [ngModelOptions]="{standalone: true}">
                                 </div>
                             </div>
                             <div class="form-group row mb-3">
                                 <label for="default" class="col-3 col-form-label">Database</label>
                                 <div class="col-9">
-                                    <ng-select [items]="database"></ng-select>
+                                    <app-miniloader [display]='db_loading'></app-miniloader>
+                                    <div *ngIf='!db_loading'>
+                                        <ng-select [items]="database" (change)='select_database()' [(ngModel)]='selected_database' [ngModelOptions]="{standalone: true}"></ng-select>
+                                    </div>
                                 </div>
                             </div>
                             <div class="form-group row mb-3">
                                 <label for="default" class="col-3 col-form-label">Shops</label>
                                 <div class="col-9">
-                                    <ng-select [items]="shops" [multiple]="true"></ng-select>
+                                    <app-miniloader [display]='shop_loading'></app-miniloader>
+                                    <div *ngIf='!shop_loading'>
+                                        <ngb-alert *ngIf='invalid_database' type="danger" [dismissible]="false">
+                                            This database does not include shops. Please select different database.
+                                        </ngb-alert>
+                                        <div *ngIf='!invalid_database'>
+                                            <ng-select [items]="shops" [multiple]="true" [(ngModel)]='selected_shops' [ngModelOptions]="{standalone: true}"></ng-select>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                             <div class="form-group mb-0 justify-content-end row">
@@ -94,41 +105,72 @@
                                     <button class="btn btn-primary btn-sm mr-1" (click)="add_user($event)">Add this user</button>
                                 </div>
                             </div>
+                            <div class="form-group mb-0 justify-content-end row mt-2">
+                                <div class="col-9">
+                                    <ngb-alert *ngIf='validation_error' type="danger" [dismissible]="false">
+                                        {{ validation_error_msg }}
+                                    </ngb-alert>
+                                </div>
+                            </div>
                         </form>
                     </div>
+                    <!-- User modification -->
                     <div *ngIf='currentUser'>
                         <h4 class="header-title mt-0 mb-3"><i class="uil-user-square mr-3 icon-dual-success"></i>Modify this user</h4>
                         <form class="form-horizontal">
                             <div class="form-group row mb-3">
                                 <label for="inputEmail3" class="col-3 col-form-label">User name</label>
                                 <div class="col-9">
-                                    <input type="text" class="form-control" placeholder="Email" [(ngModel)]='currentUser.name' [ngModelOptions]="{standalone: true}">
+                                    <input type="text" class="form-control" placeholder="User name" [(ngModel)]='_name' [ngModelOptions]="{standalone: true}">
                                 </div>
                             </div>
                             <div class="form-group row mb-3">
                                 <label for="inputEmail3" class="col-3 col-form-label">Email</label>
                                 <div class="col-9">
-                                    <input type="email" class="form-control" placeholder="Email" [(ngModel)]='currentUser.email' [ngModelOptions]="{standalone: true}">
+                                    <input type="email" class="form-control" readonly placeholder="Email" [(ngModel)]='_email' [ngModelOptions]="{standalone: true}">
                                 </div>
                             </div>
                             <div class="form-group row mb-3">
                                 <label for="default" class="col-3 col-form-label">Database</label>
                                 <div class="col-9">
-                                    <ng-select [items]="database"></ng-select>
+                                    <app-miniloader [display]='db_loading'></app-miniloader>
+                                    <div *ngIf='!db_loading'>
+                                        <input type="text" class="form-control" readonly value="{{ selected_database }}">
+                                    </div>
                                 </div>
                             </div>
                             <div class="form-group row mb-3">
                                 <label for="default" class="col-3 col-form-label">Shops</label>
                                 <div class="col-9">
-                                    <ng-select [items]="shops" [multiple]="true"></ng-select>
+                                    <app-miniloader [display]='shop_loading'></app-miniloader>
+                                    <div *ngIf='!shop_loading'>
+                                        <ngb-alert *ngIf='invalid_database' type="danger" [dismissible]="false">
+                                            This database does not include shops. Please select different database.
+                                        </ngb-alert>
+                                        <div *ngIf='!invalid_database'>
+                                            <ng-select [items]="shops" [multiple]="true" [(ngModel)]='selected_shops' [ngModelOptions]="{standalone: true}"></ng-select>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                             <div class="form-group mb-0 justify-content-end row">
                                 <div class="col-9">
                                     <button class="btn btn-success btn-sm mr-1 mb-1" (click)='update_user($event)'>Update</button>
-                                    <button class="btn btn-warning btn-sm mr-1 mb-1" (click)='discard($event)'>Discard</button>
                                     <button class="btn btn-danger btn-sm mr-1 mb-1" (click)='remove_user($event)'>Remove this user</button>
                                     <button class="btn btn-primary btn-sm mr-1 mb-1" (click)="remove_current_user($event)">Add a new user</button>
+                                </div>
+                            </div>
+                            <div class="form-group mb-0 justify-content-end row mt-2">
+                                <div class="col-9">
+                                    <ngb-alert type="success" [dismissible]="false">
+                                        User updated successfully.
+                                    </ngb-alert>
+                                    <ngb-alert type="warning" [dismissible]="false">
+                                        User removed successfully.
+                                    </ngb-alert>
+                                    <ngb-alert *ngIf='validation_error' type="danger" [dismissible]="false">
+                                        {{ validation_error_msg }}
+                                    </ngb-alert>
                                 </div>
                             </div>
                         </form>

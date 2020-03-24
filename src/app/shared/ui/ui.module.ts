@@ -25,6 +25,6 @@ import { MiniloaderComponent } from './miniloader/miniloader.component';
     NgbTooltipModule,
     NgbDropdownModule
   ],
-  exports: [SlimscrollDirective, FeatherIconDirective, PreloaderComponent, PagetitleComponent]
+  exports: [SlimscrollDirective, FeatherIconDirective, PreloaderComponent, PagetitleComponent, MiniloaderComponent]
 })
 export class UIModule { }

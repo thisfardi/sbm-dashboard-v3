@@ -12,7 +12,6 @@ const api_url = 'http://198.11.172.117/sbm-dashboard';
 })
 export class ApiService {
     constructor( private http: HttpClient, private cookieService: CookieService ) { }
-
     login(data) {
         return this.http.post(`${api_url}/auth/login`, data)
             .pipe(map(res => {
@@ -28,7 +27,24 @@ export class ApiService {
     users() {
         return this.http.post(`${api_url}/auth/users`, {})
             .pipe(map(res => {
-                // Check exists
+                return res;
+            }))
+    }
+    database() {
+        return this.http.post(`${api_url}/auth/db`, {})
+            .pipe(map(res => {
+                return res;
+            }))
+    }
+    shops(data) {
+        return this.http.post(`${api_url}/auth/shop`, data)
+            .pipe(map(res => {
+                return res;
+            }))
+    }
+    update_user(data){
+        return this.http.post(`${api_url}/auth/update`, data)
+            .pipe(map(res => {
                 return res;
             }))
     }
