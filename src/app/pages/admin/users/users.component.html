@@ -107,6 +107,9 @@
                             </div>
                             <div class="form-group mb-0 justify-content-end row mt-2">
                                 <div class="col-9">
+                                    <ngb-alert *ngIf='user_add_succeed' type="success" [dismissible]="false">
+                                        User added successfully.
+                                    </ngb-alert>
                                     <ngb-alert *ngIf='validation_error' type="danger" [dismissible]="false">
                                         {{ validation_error_msg }}
                                     </ngb-alert>
@@ -156,16 +159,16 @@
                             <div class="form-group mb-0 justify-content-end row">
                                 <div class="col-9">
                                     <button class="btn btn-success btn-sm mr-1 mb-1" (click)='update_user($event)'>Update</button>
-                                    <button class="btn btn-danger btn-sm mr-1 mb-1" (click)='remove_user($event)'>Remove this user</button>
+                                    <button class="btn btn-danger btn-sm mr-1 mb-1" (click)='remove_confirm(confirmRemoveModal)'>Remove this user</button>
                                     <button class="btn btn-primary btn-sm mr-1 mb-1" (click)="remove_current_user($event)">Add a new user</button>
                                 </div>
                             </div>
                             <div class="form-group mb-0 justify-content-end row mt-2">
                                 <div class="col-9">
-                                    <ngb-alert type="success" [dismissible]="false">
+                                    <ngb-alert *ngIf='user_update_succeed' type="success" [dismissible]="false">
                                         User updated successfully.
                                     </ngb-alert>
-                                    <ngb-alert type="warning" [dismissible]="false">
+                                    <ngb-alert *ngIf='user_delete_succeed' type="warning" [dismissible]="false">
                                         User removed successfully.
                                     </ngb-alert>
                                     <ngb-alert *ngIf='validation_error' type="danger" [dismissible]="false">
@@ -180,3 +183,20 @@
         </div>
     </div>
 </div>
+
+<!-- Remove user confirm Modal -->
+<ng-template #confirmRemoveModal let-modal>
+    <div class="modal-header">
+        <h5 class="modal-title">Remove {{ _name }}</h5>
+        <button type="button" class="close" (click)="modal.dismiss('Cross click')" aria-hidden="true">×</button>
+    </div>
+    <div class="modal-body text-center">
+        <i class="uil-file-times text-warning display-3"></i>
+        <h4 class="text-danger mt-4">Are you going to remove this user?</h4>
+        <p class="w-75 mx-auto text-muted">All report data saved in database will be removed too.</p>
+        <div class="mt-4">
+            <a href="javascript: void(0);" class="btn btn-outline-danger btn-rounded width-md mr-2" (click)="remove_user()"><i class="uil uil-user-times mr-1"></i> Confirm</a>
+            <a href="javascript: void(0);" class="btn btn-outline-primary btn-rounded width-md" (click)="modal.dismiss('Cross click')"><i class="uil uil-arrow-left mr-1"></i> Back</a>
+        </div>
+    </div>
+</ng-template>

@@ -48,6 +48,18 @@ export class ApiService {
                 return res;
             }))
     }
+    add_user(data){
+        return this.http.post(`${api_url}/auth/register`, data)
+            .pipe(map(res => {
+                return res;
+            }))
+    }
+    remove_user(data){
+        return this.http.post(`${api_url}/auth/delete`, data)
+            .pipe(map(res => {
+                return res;
+            }))
+    }
     /**
      * Performs the register
      * @param username username of user

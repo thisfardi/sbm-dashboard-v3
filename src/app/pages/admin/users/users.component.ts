@@ -1,6 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { first } from 'rxjs/operators';
 
+import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+
 import { ApiService } from '../../../core/services/api.service';
 import { ParseService } from '../../../core/services/parse.service';
 @Component({
@@ -10,7 +12,7 @@ import { ParseService } from '../../../core/services/parse.service';
 })
 export class UsersComponent implements OnInit {
 
-    constructor(private apiService: ApiService, private parseService: ParseService) { }
+    constructor(private apiService: ApiService, private parseService: ParseService, private modalService: NgbModal) { }
 
     users: Object;
     currentUser: Object;
@@ -28,7 +30,7 @@ export class UsersComponent implements OnInit {
 
     server_user_fetching_error = false;
     selected_database: string;
-    selected_shops: Object;
+    selected_shops: [];
 
     database: Object;
     shops: Object;
@@ -42,11 +44,28 @@ export class UsersComponent implements OnInit {
     // Validation error
     validation_error = false;
     validation_error_msg = '';
+
+    // succeed
+    user_update_succeed = false;
+    user_add_succeed = false;
+    user_delete_succeed = false;
+
+    modalRef: any;
     ngOnInit() {
 
         this.loading = true;
         this.server_user_fetching_error = false;
         this._fetchUserList();
+    }
+
+    reset_values() {
+        // Reset values
+        this._name = '';
+        this._email = '';
+        this._password = '';
+        this._repassword = '';
+        this.selected_database = '';
+        this.selected_shops = [];
     }
 
     // Api call
@@ -64,6 +83,12 @@ export class UsersComponent implements OnInit {
                     if(!this.users){
                         this.noUsers = true;
                     }
+
+                    // Reset messages
+                    this.user_update_succeed = false;
+                    this.user_add_succeed = false;
+                    this.user_delete_succeed = false;
+
                 },
                 error => {
                     this.server_user_fetching_error = true;
@@ -117,6 +142,7 @@ export class UsersComponent implements OnInit {
                 data => {
                     if(data['status'] == 'success'){
                         this._fetchUserList();
+                        this.user_update_succeed = true;
                     }
                 },
                 error => {
@@ -124,8 +150,46 @@ export class UsersComponent implements OnInit {
                 }
             )
     }
+    _addUser(name, email, password, database, shops){
+        this.apiService.add_user(this.parseService.encode({
+            name: name,
+            email: email,
+            password: password,
+            database: database,
+            shop: JSON.stringify(shops)
+        }))
+            .pipe(first())
+            .subscribe(
+                data => {
+                    if(data['status'] == 'success'){
+                        this._fetchUserList();
+                        this.user_add_succeed = true;
 
-
+                        this.reset_values();
+                    }
+                },
+                error => {
+                    console.log(error)
+                }
+            )
+    }
+    _remove_user(id){
+        this.apiService.remove_user(this.parseService.encode({
+            id: id
+        }))
+            .pipe(first())
+            .subscribe(
+                data => {
+                    this._fetchUserList();
+                    this.user_delete_succeed = true;
+                    this.currentUser = null;
+                    this.reset_values();
+                },
+                error => {
+                    console.log(error)
+                }
+            )
+    }
     // Selects user from user list table
     select_user(item){
         this.currentUser = item;
@@ -162,23 +226,60 @@ export class UsersComponent implements OnInit {
     // Add a new user
     add_user(e){
         e.preventDefault();
+        this.validation_error = false;
+        if(this._name && this._email && this._password && (this._password == this._repassword) && this.selected_database && (this.selected_shops['length'] != 0)){
+
+            this._addUser(this._name, this._email, this._password, this.selected_database, this.selected_shops);
+
+        }else{
+
+            this.validation_error = true;
+            this.validation_error_msg = 'Validation error.';
+
+            if(!this._name || !this._email){
+                this.validation_error_msg += ' You should input your name and email.';
+            }
+            else if((this._password != this._repassword) || !this._password){
+                this.validation_error_msg += ' Password mismatching.';
+            }
+            else if(!this.selected_database){
+                this.validation_error_msg += ' You should select database.';
+            }
+            else{
+                this.validation_error_msg += ' You should select at least one shop.';
+            }
+        }
     }
     // Remove user | opens a confirmation modal
-    remove_user(e){
-        e.preventDefault();
+    remove_confirm(confirmRemoveModal: any){
+        this.modalRef = this.modalService.open(confirmRemoveModal, { centered: true });
+    }
+    remove_user(){
+        this.modalRef.close();
+        this._remove_user(this.currentUser['id']);
     }
     // Update user
     update_user(e){
         e.preventDefault();
-        if(this._name && (this.selected_shops.length != 0)){
+        this.validation_error = false;
+        if(this._name && (this.selected_shops['length'] != 0)){
+
             this._updateUser(this.currentUser['id'], this._name, this.selected_shops);
+
         }else{
+
             this.validation_error = true;
-            this.validation_error_msg = 'Validation error. Please fill out all fields.';
+            this.validation_error_msg = 'Validation error.';
+
+            if(!this._name){
+                this.validation_error_msg += ' You should input your name.';
+            }
+            else if(this.selected_shops['length'] == 0){
+                this.validation_error_msg += ' You should select at least one shop.';
+            }
+            else{
+                // Do nothing.
+            }
         }
-    }
-    // Discard changes
-    discard(e){
-        e.preventDefault();
     }
 }
