@@ -26,7 +26,7 @@
                                                     <i class="icon-dual" data-feather="user" appFeatherIcon></i>
                                                 </span>
                                             </div>
-                                            <input type="text" class="form-control" formControlName="username" id="username" placeholder="Enter your name" [ngClass]="{ 'is-invalid': submitted && f.username.errors }" required />
+                                            <input type="text" class="form-control" formControlName="username" id="username" placeholder="Enter your name" [ngClass]="{ 'is-invalid': submitted && f.username.errors }" required tabindex='1'/>
                                             <div *ngIf="submitted && f.username.errors" class="invalid-feedback">
                                                 <div *ngIf="f.username.errors.required">User name is required</div>
                                                 <!-- <div *ngIf="f.email.errors.email">Email must be a valid email address</div> -->
@@ -42,7 +42,7 @@
                                                     <i data-feather="lock" class="icon-dual" appFeatherIcon></i>
                                                 </span>
                                             </div>
-                                            <input type="password" class="form-control" formControlName="password" [ngClass]="{ 'is-invalid': submitted && f.password.errors }" id="password" placeholder="Enter your password" required />
+                                            <input type="password" class="form-control" formControlName="password" [ngClass]="{ 'is-invalid': submitted && f.password.errors }" id="password" placeholder="Enter your password" required tabindex='2'/>
                                             <div *ngIf="submitted && f.password.errors" class="invalid-feedback">
                                                 <div *ngIf="f.password.errors.required">Password is required</div>
                                             </div>
@@ -55,7 +55,7 @@
                                         </div>
                                     </div>
                                     <div class="form-group mb-0 text-center">
-                                        <button class="btn btn-primary btn-block" type="submit"> Log In </button>
+                                        <button class="btn btn-primary btn-block" type="submit" tabindex='3'> Log In </button>
                                     </div>
                                 </form>
                                 <!-- <div class="py-3 text-center"><span class="font-size-16 font-weight-bold">Or</span></div> -->
