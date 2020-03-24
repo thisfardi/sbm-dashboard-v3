@@ -1,1 +1,140 @@
-<p>users works!</p>
+
+<div class="container-fluid">
+    <app-ui-preloader [display]="loading"></app-ui-preloader>
+    <app-page-title title="User management"></app-page-title>
+    <div class="row">
+        <div class="col-md-8">
+            <div class="card">
+                <div class="card-body">
+                    <div *ngIf='server_user_fetching_error'>
+                        <h4 class="header-title mt-0 mb-1">The server is not responding at the moment. Please try again later.</h4>
+                    </div>
+                    <div *ngIf='!server_user_fetching_error'>
+                        <div *ngIf='noUsers'>
+                            <h4 class="header-title mt-0 mb-1">There are no users in the database. Please add a new user.</h4>
+                        </div>
+                        <div *ngIf='!noUsers'>
+                            <h4 class="header-title mt-0 mb-3">List of users</h4>
+                            <div class="table-responsive">
+                                <table class="table table-hover mb-0">
+                                    <thead>
+                                        <tr>
+                                            <th>#</th>
+                                            <th>Name</th>
+                                            <th>Email</th>
+                                            <th>Database</th>
+                                            <th>Shops</th>
+                                            <th>Member since</th>
+                                            <th>Last login</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr *ngFor="let user of users; index as idx" (click)="select_shop(user)">
+                                            <td>{{ idx + 1 }}</td>
+                                            <td>{{ user.name }}</td>
+                                            <td>{{ user.email }}</td>
+                                            <td>{{ user.database }}</td>
+                                            <td>{{ get_shop_length(user.shop_name) }} shops</td>
+                                            <td>{{ user.member_since }}</td>
+                                            <td>{{ user.last_login }}</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- User edit section -->
+        <div class="col-md-4">
+            <div class="card">
+                <div class="card-body">
+                    <div *ngIf='!currentUser'>
+                        <h4 class="header-title mt-0 mb-3"><i class="uil-user-plus mr-3 icon-dual-primary"></i>Add a new user</h4>
+                        <form class="form-horizontal">
+                            <div class="form-group row mb-3">
+                                <label for="inputEmail3" class="col-3 col-form-label">User name</label>
+                                <div class="col-9">
+                                    <input type="email" class="form-control" placeholder="User name">
+                                </div>
+                            </div>
+                            <div class="form-group row mb-3">
+                                <label for="inputEmail3" class="col-3 col-form-label">Email</label>
+                                <div class="col-9">
+                                    <input type="email" class="form-control" placeholder="Email">
+                                </div>
+                            </div>
+                            <div class="form-group row mb-3">
+                                <label for="inputPassword3" class="col-3 col-form-label">Password</label>
+                                <div class="col-9">
+                                    <input type="password" class="form-control" placeholder="Password">
+                                </div>
+                            </div>
+                            <div class="form-group row mb-3">
+                                <label for="inputPassword5" class="col-3 col-form-label">Re Password</label>
+                                <div class="col-9">
+                                    <input type="password" class="form-control" placeholder="Retype Password">
+                                </div>
+                            </div>
+                            <div class="form-group row mb-3">
+                                <label for="default" class="col-3 col-form-label">Database</label>
+                                <div class="col-9">
+                                    <ng-select [items]="database"></ng-select>
+                                </div>
+                            </div>
+                            <div class="form-group row mb-3">
+                                <label for="default" class="col-3 col-form-label">Shops</label>
+                                <div class="col-9">
+                                    <ng-select [items]="shops" [multiple]="true"></ng-select>
+                                </div>
+                            </div>
+                            <div class="form-group mb-0 justify-content-end row">
+                                <div class="col-9">
+                                    <button class="btn btn-primary btn-sm mr-1" (click)="add_user($event)">Add this user</button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                    <div *ngIf='currentUser'>
+                        <h4 class="header-title mt-0 mb-3"><i class="uil-user-square mr-3 icon-dual-success"></i>Modify this user</h4>
+                        <form class="form-horizontal">
+                            <div class="form-group row mb-3">
+                                <label for="inputEmail3" class="col-3 col-form-label">User name</label>
+                                <div class="col-9">
+                                    <input type="text" class="form-control" placeholder="Email" [(ngModel)]='currentUser.name' [ngModelOptions]="{standalone: true}">
+                                </div>
+                            </div>
+                            <div class="form-group row mb-3">
+                                <label for="inputEmail3" class="col-3 col-form-label">Email</label>
+                                <div class="col-9">
+                                    <input type="email" class="form-control" placeholder="Email" [(ngModel)]='currentUser.email' [ngModelOptions]="{standalone: true}">
+                                </div>
+                            </div>
+                            <div class="form-group row mb-3">
+                                <label for="default" class="col-3 col-form-label">Database</label>
+                                <div class="col-9">
+                                    <ng-select [items]="database"></ng-select>
+                                </div>
+                            </div>
+                            <div class="form-group row mb-3">
+                                <label for="default" class="col-3 col-form-label">Shops</label>
+                                <div class="col-9">
+                                    <ng-select [items]="shops" [multiple]="true"></ng-select>
+                                </div>
+                            </div>
+                            <div class="form-group mb-0 justify-content-end row">
+                                <div class="col-9">
+                                    <button class="btn btn-success btn-sm mr-1 mb-1" (click)='update_user($event)'>Update</button>
+                                    <button class="btn btn-warning btn-sm mr-1 mb-1" (click)='discard($event)'>Discard</button>
+                                    <button class="btn btn-danger btn-sm mr-1 mb-1" (click)='remove_user($event)'>Remove this user</button>
+                                    <button class="btn btn-primary btn-sm mr-1 mb-1" (click)="remove_current_user($event)">Add a new user</button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

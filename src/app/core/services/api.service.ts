@@ -13,10 +13,6 @@ const api_url = 'http://198.11.172.117/sbm-dashboard';
 export class ApiService {
     constructor( private http: HttpClient, private cookieService: CookieService ) { }
 
-    /**
-     * Performs the login
-     * @param data formdata of user authentication
-     */
     login(data) {
         return this.http.post(`${api_url}/auth/login`, data)
             .pipe(map(res => {
@@ -28,6 +24,13 @@ export class ApiService {
 
                 return res;
             }));
+    }
+    users() {
+        return this.http.post(`${api_url}/auth/users`, {})
+            .pipe(map(res => {
+                // Check exists
+                return res;
+            }))
     }
     /**
      * Performs the register

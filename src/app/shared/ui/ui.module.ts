@@ -11,9 +11,10 @@ import { SlimscrollDirective } from './slimscroll.directive';
 import { PreloaderComponent } from './preloader/preloader.component';
 import { PagetitleComponent } from './pagetitle/pagetitle.component';
 import { FeatherIconDirective } from './feather-icon.directive';
+import { MiniloaderComponent } from './miniloader/miniloader.component';
 
 @NgModule({
-  declarations: [SlimscrollDirective, PreloaderComponent, PagetitleComponent, FeatherIconDirective],
+  declarations: [SlimscrollDirective, PreloaderComponent, PagetitleComponent, FeatherIconDirective, MiniloaderComponent],
   imports: [
     CommonModule,
     FormsModule,

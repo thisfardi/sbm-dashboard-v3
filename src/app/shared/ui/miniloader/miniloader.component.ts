@@ -1,11 +1,11 @@
 import { Component, OnInit, Input } from '@angular/core';
 
 @Component({
-    selector: 'app-ui-preloader',
-    templateUrl: './preloader.component.html',
-    styleUrls: ['./preloader.component.scss']
+    selector: 'app-miniloader',
+    templateUrl: './miniloader.component.html',
+    styleUrls: ['./miniloader.component.scss']
 })
-export class PreloaderComponent implements OnInit {
+export class MiniloaderComponent implements OnInit {
 
     @Input() display = false;
     constructor() { }
@@ -26,5 +26,4 @@ export class PreloaderComponent implements OnInit {
     hide() {
         this.display = false;
     }
-
 }
