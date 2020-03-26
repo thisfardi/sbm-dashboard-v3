@@ -216,13 +216,15 @@ export class UsersComponent implements OnInit {
         return JSON.parse(data).length;
     }
 
-    // Remove current user variable so that admin can add a new user
+    // Remove current user variable so that admin can add a new user | triggered when 'Add new user' button clicked
     remove_current_user(e){
         e.preventDefault();
         this.currentUser = null;
         this.selected_database = '';
         this.selected_shops = [];
+        this.reset_values();
     }
+
     // Add a new user
     add_user(e){
         e.preventDefault();
