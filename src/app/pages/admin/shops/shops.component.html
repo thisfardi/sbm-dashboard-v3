@@ -1,0 +1,118 @@
+<div class="container-fluid">
+    <app-ui-preloader [display]="loading"></app-ui-preloader>
+    <app-page-title title="Database, shops and operators"></app-page-title>
+    <div class="row">
+        <div class="col-md-4">
+            <div class="card">
+                <div class="card-body">
+                    <div *ngIf='server_fetching_error'>
+                        <h4 class="header-title mt-0 mb-1">The server is not responding at the moment.
+                            <i class="uil-refresh ml-3 icon-dual-info" placement="bottom" ngbTooltip="Click here to refresh" (click)="ngOnInit()"></i>
+                        </h4>
+                    </div>
+                    <div *ngIf='!server_fetching_error'>
+                        <h4 class="header-title mt-0 mb-3">List of database</h4>
+                        <app-miniloader [display]='db_loading'></app-miniloader>
+                        <div *ngIf='!db_loading'>
+                            <div class="table-responsive slimscroll" appSlimScroll>
+                                <table class="table table-hover mb-0">
+                                    <thead>
+                                        <tr>
+                                            <th width='20%'>#</th>
+                                            <th width='80%'>Name</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr *ngFor="let item of database; index as idx" (click)="select_database(item)">
+                                            <td>{{ idx + 1 }}</td>
+                                            <td>{{ item }}</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card">
+                <div class="card-body">
+                    <app-miniloader [display]='shop_loading'></app-miniloader>
+                    <div *ngIf='!shop_loading'>
+                        <div *ngIf='!shops'>
+                            <h4 class="header-title mt-0 mb-1">Please select database to see shops.</h4>
+                        </div>
+                        <div *ngIf='shops'>
+                            <div *ngIf='invalid_database'>
+                                <h4 class="header-title mt-0 mb-1">There are no shops in <span class="text-danger">{{ selected_database }}</span> database. Please select different database.</h4>
+                            </div>
+                            <div *ngIf='!invalid_database'>
+                                <h4 class="header-title mt-0 mb-3">The list of shops in <span class="text-primary">{{ selected_database }}</span> database.</h4>
+                                <div class="table-responsive slimscroll" appSlimScroll>
+                                    <table class="table table-hover mb-0">
+                                        <thead>
+                                            <tr>
+                                                <th width='20%'>#</th>
+                                                <th width='80%'>Name</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr *ngFor="let item of shops; index as idx" (click)='select_shop(item)'>
+                                                <td>{{ idx + 1 }}</td>
+                                                <td>{{ item }}</td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card">
+                <div class="card-body">
+                    <app-miniloader [display]='operator_loading'></app-miniloader>
+                    <div *ngIf="!operator_loading">
+                        <div *ngIf='!shops'>
+                            <h4 class="header-title mt-0 mb-1">Please select database to see operators.</h4>
+                        </div>
+                        <div *ngIf='shops'>
+                            <div *ngIf='invalid_database'>
+                                <h4 class="header-title mt-0 mb-1">There are no operators in <span class="text-danger">{{ selected_database }}</span> database. Please select different database.</h4>
+                            </div>
+                            <div *ngIf='!invalid_database'>
+                                <div *ngIf='!selected_shop'>
+                                    <h4 class="header-title mt-0 mb-3">The list of all operators in <span class="text-primary">{{ selected_database }}</span> database.</h4>
+                                </div>
+                                <div *ngIf='selected_shop'>
+                                    <h4 class="header-title mt-0 mb-3">The list of operators in <span class="text-primary">{{ selected_shop }}</span> shop.</h4>
+                                </div>
+                                <div class="table-responsive slimscroll" appSlimScroll>
+                                    <table class="table table-hover mb-0">
+                                        <thead>
+                                            <tr>
+                                                <th width='20%'>#</th>
+                                                <th width='30%'>Code</th>
+                                                <th width='50%'>Name</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr *ngFor="let item of operators; index as idx">
+                                                <td>{{ idx + 1 }}</td>
+                                                <td>{{ item.code }}</td>
+                                                <td>{{ item.description }}</td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

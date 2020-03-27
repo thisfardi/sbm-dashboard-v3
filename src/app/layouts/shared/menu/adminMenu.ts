@@ -11,18 +11,9 @@ export const ADMINMENU: MenuItem[] = [
         link: '/admin/users',
     },
     {
-        label: 'OVERVIEW',
-        isTitle: true
-    },
-    {
         label: 'Shops',
         icon: 'home',
         link: '/admin/shops'
-    },
-    {
-        label: 'Operators',
-        icon: 'users',
-        link: '/admin/operators',
     },
 
 // Reserve for dev

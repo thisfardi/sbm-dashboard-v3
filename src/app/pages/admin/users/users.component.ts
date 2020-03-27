@@ -5,6 +5,9 @@ import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 
 import { ApiService } from '../../../core/services/api.service';
 import { ParseService } from '../../../core/services/parse.service';
+
+import { AdminService } from '../admin.service';
+
 @Component({
     selector: 'app-users',
     templateUrl: './users.component.html',
@@ -12,7 +15,7 @@ import { ParseService } from '../../../core/services/parse.service';
 })
 export class UsersComponent implements OnInit {
 
-    constructor(private apiService: ApiService, private parseService: ParseService, private modalService: NgbModal) { }
+    constructor(private apiService: ApiService, private parseService: ParseService, private modalService: NgbModal, private adminService: AdminService) { }
 
     users: Object;
     currentUser: Object;
@@ -52,10 +55,13 @@ export class UsersComponent implements OnInit {
 
     modalRef: any;
     ngOnInit() {
-
-        this.loading = true;
-        this.server_user_fetching_error = false;
-        this._fetchUserList();
+        if(!this.adminService.users){
+            this.loading = true;
+            this.server_user_fetching_error = false;
+            this._fetchUserList();
+        }else{
+            this.users = this.adminService.users;
+        }
     }
 
     reset_values() {
@@ -79,7 +85,9 @@ export class UsersComponent implements OnInit {
                     this.db_loading = true;
                     this._fetchDatabase();
 
+                    this.adminService.users = [...data['data']];
                     this.users = [...data['data']];
+
                     if(!this.users){
                         this.noUsers = true;
                     }
@@ -88,7 +96,6 @@ export class UsersComponent implements OnInit {
                     this.user_update_succeed = false;
                     this.user_add_succeed = false;
                     this.user_delete_succeed = false;
-
                 },
                 error => {
                     this.server_user_fetching_error = true;
@@ -190,6 +197,8 @@ export class UsersComponent implements OnInit {
                 }
             )
     }
+
+    
     // Selects user from user list table
     select_user(item){
         this.currentUser = item;

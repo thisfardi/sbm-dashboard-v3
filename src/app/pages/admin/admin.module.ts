@@ -9,8 +9,7 @@ import { NgbTabsetModule, NgbTooltipModule, NgbProgressbarModule, NgbAlertModule
 import { NgSelectModule } from '@ng-select/ng-select';
 
 import { UsersComponent } from './users/users.component';
-import { AddUserComponent } from './add-user/add-user.component';
-import { EditUserComponent } from './edit-user/edit-user.component';
+import { ShopsComponent } from './shops/shops.component';
 
 @NgModule({
     imports: [
@@ -26,7 +25,7 @@ import { EditUserComponent } from './edit-user/edit-user.component';
         NgbAlertModule
     ],
     // tslint:disable-next-line: max-line-length
-    declarations: [UsersComponent, AddUserComponent, EditUserComponent]
+    declarations: [UsersComponent, ShopsComponent]
 })
 
 export class AdminModule { }

@@ -7,7 +7,9 @@
             <div class="card">
                 <div class="card-body">
                     <div *ngIf='server_user_fetching_error'>
-                        <h4 class="header-title mt-0 mb-1">The server is not responding at the moment. Please try again later.</h4>
+                        <h4 class="header-title mt-0 mb-1">The server is not responding at the moment.
+                            <i class="uil-refresh ml-3 icon-dual-info" placement="bottom" ngbTooltip="Click here to refresh" (click)="ngOnInit()"></i>
+                        </h4>
                     </div>
                     <div *ngIf='!server_user_fetching_error'>
                         <div *ngIf='noUsers'>
@@ -15,7 +17,7 @@
                         </div>
                         <div *ngIf='!noUsers'>
                             <h4 class="header-title mt-0 mb-3">List of users</h4>
-                            <div class="table-responsive">
+                            <div class="table-responsive slimscroll" appSlimScroll>
                                 <table class="table table-hover mb-0">
                                     <thead>
                                         <tr>

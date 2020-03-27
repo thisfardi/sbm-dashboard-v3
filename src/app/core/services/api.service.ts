@@ -60,6 +60,18 @@ export class ApiService {
                 return res;
             }))
     }
+    all_operators(data){
+        return this.http.post(`${api_url}/home/all_operators`, data)
+            .pipe(map(res => {
+                return res;
+            }))
+    }
+    operators(data){
+        return this.http.post(`${api_url}/home/operators`, data)
+            .pipe(map(res => {
+                return res;
+            }))
+    }
     /**
      * Performs the register
      * @param username username of user
