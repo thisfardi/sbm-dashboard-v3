@@ -91,7 +91,7 @@ export class LoginComponent implements OnInit, AfterViewInit {
                     this.loading = false;
                 },
                 error => {
-                    this.error = error.msg;
+                    this.error = 'Server error. Please try again later.';
                     this.loading = false;
                 }
             );
