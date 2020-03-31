@@ -12,6 +12,8 @@ const api_url = 'http://198.11.172.117/sbm-dashboard';
 })
 export class ApiService {
     constructor( private http: HttpClient, private cookieService: CookieService ) { }
+
+    // Admin APIs
     login(data) {
         return this.http.post(`${api_url}/auth/login`, data)
             .pipe(map(res => {
@@ -72,11 +74,12 @@ export class ApiService {
                 return res;
             }))
     }
-    /**
-     * Performs the register
-     * @param username username of user
-     * @param email email of user
-     * @param password password of user
-     * @param confirm_password
-     */
+
+    // User APIs
+    sum_data(data){
+        return this.http.post(`${api_url}/home/sum_data`, data)
+            .pipe(map(res => {
+                return res;
+            }))
+    }
 }

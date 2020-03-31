@@ -2,17 +2,17 @@
     <div class="card-body p-0">
         <div class="media p-3">
             <div class="media-body">
-                <span class="text-muted text-uppercase font-size-12 font-weight-bold">{{ mainTitle }}</span>
-                <h2 class="mb-0">{{ value }}</h2>
+                <span class="main-title text-muted text-uppercase font-size-12 font-weight-bold">{{ mainTitle }}</span>
+                <h2 class="value mb-0">{{ value }}</h2>
             </div>
             <div class="align-self-center">
                 <apx-chart #chart class="apex-chart-widget" [series]="series" [chart]="chartData" [colors]="colors"
                     [tooltip]="tooltip" [stroke]="stroke" [fill]="fill" [markers]="markers">
                 </apx-chart>
-                <span class="text-success font-weight-bold font-size-13"
-                    [ngClass]="{ 'text-danger': subValue === '5.05%' }"><i class='uil'
-                        [ngClass]="{ 'uil uil-arrow-down': subValue === '5.05%' , 'uil uil-arrow-up': subValue !== '5.05%'}"></i>
-                    {{ subValue }}</span>
+                <span class="text-success font-weight-bold font-size-13" [ngClass]="{ 'text-danger': increased != true, 'text-primary': increased == true }">
+                    <i class='uil' [ngClass]="{ 'uil-arrow-down': increased != true , 'uil-arrow-up': increased == true}"></i>
+                    {{ subValue }}
+                </span>
             </div>
         </div>
     </div>

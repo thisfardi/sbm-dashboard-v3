@@ -2,36 +2,9 @@ import { MenuItem } from './menu.model';
 
 export const MENU: MenuItem[] = [
     {
-        label: 'OVERVIEW',
-        isTitle: true
-    },
-    {
-        label: 'Dashboard',
+        label: 'Overview',
         icon: 'bar-chart-2',
         link: '/',
-    },
-    {
-        label: 'Shops',
-        icon: 'home',
-        subItems: [
-            {
-                label: 'Meetfresh Temple',
-                link: '/shop/meetfresh-temple',
-            },
-            {
-                label: 'Meetfresh Cupertino',
-                link: '/shop/meetfresh-cupertino'
-            },
-            {
-                label: 'Meetfresh Temple',
-                link: '/shop/meetfresh-temple'
-            },
-        ]
-    },
-    {
-        label: 'Operators',
-        icon: 'users',
-        link: '/operator',
     },
     {
         label: 'DETAILS',

@@ -1,53 +1,85 @@
+<app-ui-preloader [display]="sum_loading"></app-ui-preloader>
 <div class="container-fluid">
+    <!-- Controls  -->
     <div class="row page-title align-items-center">
-        <div class="col-sm-4 col-xl-6">
-            <h4 class="mb-1 mt-0">Overview</h4>
-        </div>
-        <div class="col-sm-8 col-xl-6">
-            <form class="form-inline float-sm-right mt-3 mt-sm-0">
-                <div class="form-group mb-sm-0 mr-2">
-                    <input type="text" class="form-control" id="dashdaterange" style="min-width: 208px;" placeholder="2018-10-03 to 2018-10-10" mwlFlatpickr [convertModelValue]="true" mode="range" />
+        <div class="col-sm-8 col-xl-8">
+            <form class="form-inline float-sm-left mt-3 mt-sm-0 d-flex justify-content-between filter-form">
+                <div class="form-group mr-2 mb-2">
+                    <ng-select [items]="user_shops" [(ngModel)]='current_shop' [ngModelOptions]="{standalone: true}"></ng-select>
                 </div>
-                <div class="btn-group" ngbDropdown>
-                    <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown" ngbDropdownToggle>
-                        <i class='uil uil-file-alt mr-1'></i>Download
-                        <i class="icon"><span>
-                <i data-feather="chevron-down"></i>
-                        </span>
-                        </i>
+                <div class="form-group mr-2 mb-2">
+                    <input type="text" class="form-control" id="dashdaterange" style="min-width: 208px;" placeholder="2018-10-03 to 2018-10-10" mwlFlatpickr [convertModelValue]="true" mode="range" [(ngModel)]="dash_date_range" [ngModelOptions]="{standalone: true}"/>
+                </div>
+                <div class="btn-group mb-2" ngbDropdown>
+                    <button type="button" class="btn btn-primary" (click)="apply_filter()">
+                        <i class='uil uil-check mr-1'></i>Apply
                     </button>
-                    <div class="dropdown-menu dropdown-menu-right" ngbDropdownMenu>
-                        <a href="javascript: void(0);" class="dropdown-item notify-item">
-                            <i data-feather="mail" class="icon-dual icon-xs mr-2"></i>
-                            <span> Email</span>
-                        </a>
-                        <a href="javascript: void(0);" class="dropdown-item notify-item">
-                            <i data-feather="printer" class="icon-dual icon-xs mr-2"></i>
-                            <span> Print</span>
-                        </a>
-                        <div class="dropdown-divider"></div>
-                        <a href="javascript: void(0);" class="dropdown-item notify-item">
-                            <i data-feather="file" class="icon-dual icon-xs mr-2"></i>
-                            <span> Re-Generate</span>
-                        </a>
-                    </div>
                 </div>
             </form>
         </div>
+        <div class="col-sm-4 col-xl-4">
+        </div>
     </div>
     <!-- Widget  -->
-    <div class="row">
-        <div class="col-md-6 col-xl-3">
-            <app-statchart mainTitle="today revenue" value=2100 subValue="10.21%" chartColors="#5369f8"></app-statchart>
+    <div *ngIf="!sum_loading" class="row">
+        <div *ngIf='db_error' class="col-md-12">
+            <ngb-alert type="danger" [dismissible]="false">
+                Database connection error. Please try again later.
+            </ngb-alert>
         </div>
-        <div class="col-md-6 col-xl-3">
-            <app-statchart mainTitle="product sold" value=1065 subValue='5.05%' chartColors="#f77e53"></app-statchart>
+        <div class="col-lg-4 col-xl-2">
+            <app-statchart mainTitle="netsale"
+                serie_values='{{ sum_data.netsale }}'
+                value='{{ sum_data.netsale[9] }}'
+                subValue="{{get_percent(sum_data.netsale[9], sum_data.netsale[8])}}%"
+                chartColors="{{get_hex_color(sum_data.netsale[9], sum_data.netsale[8])}}"
+                class="cursor-pointer">
+            </app-statchart>
         </div>
-        <div class="col-md-6 col-xl-3">
-            <app-statchart mainTitle="New customers" value=11 subValue="25.16%" chartColors="#43d39e"></app-statchart>
+        <div class="col-lg-4 col-xl-2">
+            <app-statchart mainTitle="transactions"
+                serie_values='{{ sum_data.transaction }}'
+                value='{{ sum_data.transaction[9] }}'
+                subValue='{{get_percent(sum_data.transaction[9], sum_data.transaction[8])}}%'
+                chartColors="{{get_hex_color(sum_data.transaction[9], sum_data.transaction[8])}}"
+                class="cursor-pointer">
+            </app-statchart>
         </div>
-        <div class="col-md-6 col-xl-3">
-            <app-statchart mainTitle="new visitors" value=750 subValue="5.05%" chartColors="#ffbe0b"></app-statchart>
+        <div class="col-lg-4 col-xl-2">
+            <app-statchart mainTitle="discount"
+                serie_values='{{ sum_data.discount }}'
+                value='{{ sum_data.discount[9] }}'
+                subValue="{{get_percent(sum_data.discount[9], sum_data.discount[8])}}%"
+                chartColors="{{get_hex_color(sum_data.discount[9], sum_data.discount[8])}}"
+                class="cursor-pointer">
+            </app-statchart>
+        </div>
+        <div class="col-lg-4 col-xl-2">
+            <app-statchart mainTitle="promotion"
+                serie_values='{{ sum_data.promotion }}'
+                value='{{ sum_data.promotion[9] }}'
+                subValue="{{get_percent(sum_data.promotion[9], sum_data.promotion[8])}}%"
+                chartColors="{{get_hex_color(sum_data.promotion[9], sum_data.promotion[8])}}"
+                class="cursor-pointer">
+            </app-statchart>
+        </div>
+        <div class="col-lg-4 col-xl-2">
+            <app-statchart mainTitle="tip"
+                serie_values='{{ sum_data.tip }}'
+                value='{{ sum_data.tip[9] }}'
+                subValue="{{get_percent(sum_data.tip[9], sum_data.tip[8])}}%"
+                chartColors="{{get_hex_color(sum_data.tip[9], sum_data.tip[8])}}"
+                class="cursor-pointer">
+            </app-statchart>
+        </div>
+        <div class="col-lg-4 col-xl-2">
+            <app-statchart mainTitle="tax"
+                serie_values='{{ sum_data.tax }}'
+                value='{{ sum_data.tax[9] }}'
+                subValue="{{get_percent(sum_data.tax[9], sum_data.tax[8])}}%"
+                chartColors="{{get_hex_color(sum_data.tax[9], sum_data.tax[8])}}"
+                class="cursor-pointer">
+            </app-statchart>
         </div>
     </div>
     <!-- end widget -->
@@ -162,78 +194,6 @@
                 <!-- end card-body -->
             </div>
             <!-- end card -->
-        </div>
-    </div>
-    <div class="row">
-        <div class="col-xl-4">
-            <div class="card">
-                <div class="card-body pt-2 pb-2">
-                    <h5 class="mb-4 header-title">Top Performers</h5>
-                    <app-members image="assets/images/users/avatar-7.jpg" text="Senior Sales Guy" name="laguna">
-                    </app-members>
-                    <app-members image="assets/images/users/avatar-9.jpg" text="Social Media Campaign" name="Greeva Y">
-                    </app-members>
-                    <app-members image="assets/images/users/avatar-4.jpg" text="Inventory Manager" name="Nik G">
-                    </app-members>
-                    <app-members image="assets/images/users/avatar-1.jpg" text="Sales Persons" name="Hardik G">
-                    </app-members>
-                    <app-members image="assets/images/users/avatar-5.jpg" text="Sales Persons" name="Stive K">
-                    </app-members>
-                </div>
-            </div>
-        </div>
-
-        <div class="col-xl-4">
-            <div class="card">
-                <div class="card-body pt-2 pb-3">
-                    <a routerLink="/task-list" class="btn btn-primary btn-sm mt-2 float-right">
-            View All
-          </a>
-                    <h5 class="mb-4 header-title">Tasks</h5>
-
-                    <div class="slimscroll" style="max-height: 390px;" appSlimScroll>
-                        <app-task title="Draft the new contract document for sales team" text="Due on 24 Aug, 2019" id=1>
-                        </app-task>
-                        <app-task title="iOS App home page" text="Due on 23 Aug, 2019" id=2>
-                        </app-task>
-                        <app-task title="Write a release note for SBM Dashboard v3.0" text="Due on 22 Aug, 2019" id=3>
-                        </app-task>
-                        <app-task title="Invite Greeva to a project SBM Dashboard v3.0 admin" text="Due on 21 Aug, 2019" id=4>
-                        </app-task>
-                        <app-task title="Enable analytics tracking for main website" text="Due on 20 Aug, 2019" id=5>
-                        </app-task>
-                        <app-task title="Invite user to a project" text="Due on 28 Aug, 2019" id=6>
-                        </app-task>
-                        <app-task title="Write a release note" text="Due on 14 Aug, 2019" id=7>
-                        </app-task>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <div class="col-xl-4">
-            <div class="card">
-                <div class="card-body pt-2">
-                    <div class="dropdown mt-2 float-right" ngbDropdown>
-                        <a href="javascript: void(0);" class="dropdown-toggle arrow-none text-muted" ngbDropdownToggle>
-                            <i class="uil uil-ellipsis-v"></i>
-                        </a>
-                        <div class="dropdown-menu dropdown-menu-right" ngbDropdownMenu>
-                            <!-- item-->
-                            <a href="javascript:void(0);" class="dropdown-item"><i class="uil uil-refresh mr-2"></i>Refresh</a>
-                            <!-- item-->
-                            <a href="javascript:void(0);" class="dropdown-item"><i class="uil uil-user-plus mr-2"></i>Add Member</a>
-                            <div class="dropdown-divider"></div>
-                            <!-- item-->
-                            <a href="javascript:void(0);" class="dropdown-item text-danger"><i class="uil uil-exit mr-2"></i>Exit</a>
-                        </div>
-                    </div>
-                    <h5 class="mb-4 header-title">Recent Conversation</h5>
-                    <div class="chat-conversation">
-                        <app-chat maxHeight="328"></app-chat>
-                    </div>
-                </div>
-            </div>
         </div>
     </div>
 </div>
