@@ -12,6 +12,7 @@ export class StatchartComponent implements OnInit {
     @Input() subValue: string;
     @Input() chartColors: string;
     @Input() serie_values: any;
+    @Input() date_values: any;
 
     @ViewChild('chart', { static: true }) chartRef: any;
 
@@ -23,10 +24,12 @@ export class StatchartComponent implements OnInit {
     tooltip: {};
     stroke: {};
     increased: boolean;
+    date: any;
 
     constructor() { }
 
     ngOnInit() {
+        this.date = [...this.date_values.split(',')];
         this.chartData = {
             type: 'area',
             height: 45,
@@ -41,7 +44,12 @@ export class StatchartComponent implements OnInit {
         };
         this.colors = [this.chartColors];
         this.series = [{
-            data: [...this.serie_values.split(',').map(item => parseFloat(item))]
+            data: [...this.serie_values.split(',').map((item, idx) => {
+                return {
+                    x: this.date[idx],
+                    y: parseFloat(item)
+                }
+            })]
         }];
         if(this.series[0].data[8] <= this.series[0].data[9]){
             this.increased = true;
@@ -58,7 +66,12 @@ export class StatchartComponent implements OnInit {
                 enabled: false
             },
             x: {
-                show: false
+                show: true,
+                title: {
+                    formatter: (date) => {
+                        return '';
+                    }
+                }
             },
             y: {
                 title: {

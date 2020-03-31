@@ -231,9 +231,9 @@ export class DashboardComponent implements OnInit {
             if(st > 255) st = 255;
             st = parseInt(st.toString());
             if(st < 0) {
-                return `rgb(${ 0 - st }, ${ 255 + st }, 0)`;
+                return `rgb(${ 0 - st }, 0, ${ 255 + st })`;
             }else{
-                return `rgb(0, ${ 255 - st }, ${ st })`;
+                return `rgb(0, ${ st }, ${ 255 - st })`;
             }
         }
         //return '#000000';
