@@ -272,6 +272,8 @@ export class DashboardComponent implements OnInit {
         this.db_error = false;
         this.payment_loading = true;
         this.today_items = [];
+        this.salesDonutChart.series = [];
+        this.salesDonutChart.labels = [];
         this.apiService.payment_data(this.parseService.encode({
             from: this.dash_date,
             to: this.dash_date,
