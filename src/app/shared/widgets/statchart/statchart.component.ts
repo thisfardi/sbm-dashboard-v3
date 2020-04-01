@@ -51,7 +51,7 @@ export class StatchartComponent implements OnInit {
                 }
             })]
         }];
-        if(this.series[0].data[8] <= this.series[0].data[9]){
+        if(this.series[0].data[8].y <= this.series[0].data[9].y){
             this.increased = true;
         }else{
             this.increased = false;

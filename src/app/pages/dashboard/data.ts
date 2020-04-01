@@ -32,8 +32,8 @@ const revenueAreaChart: ChartType = {
         width: 4
     },
     series: [{
-        name: 'Revenue',
-        data: [10, 20, 5, 15, 10, 20, 15, 25, 20, 30, 25, 40, 30, 50, 35]
+        name: 'Netsale',
+        data: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
     }],
     dataLabels: {
         enabled: false
@@ -58,7 +58,7 @@ const revenueAreaChart: ChartType = {
     yaxis: {
         labels: {
             formatter(val) {
-                return val + 'k';
+                return '$' + val;
             }
         }
     },
@@ -99,14 +99,11 @@ const targetsBarChart: ChartType = {
         colors: ['transparent']
     },
     series: [{
-        name: 'Net Profit',
-        data: [35, 44, 55, 57, 56, 61]
-    }, {
-        name: 'Revenue',
-        data: [52, 76, 85, 101, 98, 87]
+        name: 'Transactions',
+        data: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
     }],
     xaxis: {
-        categories: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'],
+        categories: ['00:00', '01:00', '02:00', '03:00', '04:00', '05:00', '06:00', '07:00', '08:00', '09:00', '10:00', '11:00', '12:00', '13:00', '14:00', '15:00', '16:00', '17:00', '18:00', '19:00', '20:00', '21:00', '22:00', '23:00'],
         axisBorder: {
             show: false
         },
@@ -124,7 +121,7 @@ const targetsBarChart: ChartType = {
     tooltip: {
         y: {
             formatter: (val: any) => {
-                return '$ ' + val + ' thousands';
+                return val;
             }
         }
     },
@@ -144,7 +141,7 @@ const salesDonutChart: ChartType = {
         height: 298,
         type: 'donut',
     },
-    colors: ['#5369f8', '#43d39e', '#f77e53', '#ffbe0b'],
+    colors: ['#5369f8', '#43d39e', '#f77e53', '#ffbe0b', '#5369f8', '#43d39e', '#f77e53', '#ffbe0b', '#5369f8', '#43d39e', '#f77e53', '#ffbe0b'],
     legend: {
         show: true,
         position: 'right',
@@ -154,8 +151,8 @@ const salesDonutChart: ChartType = {
             vertical: 3
         }
     },
-    series: [44, 55, 41, 17],
-    labels: ['Clothes 44k', 'Smartphons 55k', 'Electronics 41k', 'Other 17k'],
+    series: [],
+    labels: [],
     responsive: [{
         breakpoint: 480,
         options: {
@@ -167,7 +164,7 @@ const salesDonutChart: ChartType = {
     tooltip: {
         y: {
             formatter: (value) => {
-                return value + 'k';
+                return '$' + value;
             }
         },
     }
