@@ -33,7 +33,7 @@ export class StatchartComponent implements OnInit {
         this.chartData = {
             type: 'area',
             height: 45,
-            width: 90,
+            width: 180,
             sparkline: {
                 enabled: true
             },

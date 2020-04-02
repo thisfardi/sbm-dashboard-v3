@@ -58,16 +58,12 @@ export class DashboardComponent implements OnInit {
         // Set the default shop as the first shop of the shop list
         this.current_shop = this.user_shops[0];
         this.refresh_values();
-        /**
-        * Fetches the data
-        */
+
         this._fetchData();
         this._fetchSumData();
     }
 
-    /**
-    * fetches the dashboard value via API
-    */
+
     private _fetchData() {
         this.revenueAreaChart = revenueAreaChart;
         this.targetsBarChart = targetsBarChart;
@@ -165,8 +161,6 @@ export class DashboardComponent implements OnInit {
                                 this.sum_data['tax'][this._10_days.indexOf(item.d)] = parseFloat(item.tax ? item.tax : 0);
                             }
                         }
-
-                        this._fetchSaleData();
                         this._fetchPaymentData();
                     }else{
                         this.db_error = true;
@@ -256,6 +250,7 @@ export class DashboardComponent implements OnInit {
                         }
                         this.revenueAreaChart.xaxis.categories = [...x_axis];
                         this.revenueAreaChart.series[0].data = [...y_axis];
+
                     }else{
                         this.db_error = true;
                     }
@@ -287,20 +282,21 @@ export class DashboardComponent implements OnInit {
                     this.payment_loading = false;
                     if(data['status'] == 'success'){
                         let payment_data = data['data'];
-
+                        //Hourly sale
                         for(let item of payment_data.hourly_sale){
                             this.targetsBarChart.series[0].data[parseInt(item.h)] = parseInt(item.transaction_count);
                         }
+                        // Payment detail
                         for(let item of payment_data.payment_detail){
                             this.salesDonutChart.series.push(parseFloat(item.amount));
                             this.salesDonutChart.labels.push(item.payment_description);
                         }
-
+                        // Today items
                         this.today_items = [...payment_data.today_items];
                     }else{
                         this.db_error = true;
                     }
-
+                    this._fetchSaleData();
                 },
                 error => {
                     this.db_error = true;
@@ -363,20 +359,19 @@ export class DashboardComponent implements OnInit {
             }
         }else{
             let st = (c - p) / Math.abs(p) * 255;
-            if(st < -255) st = -255;
-            if(st > 255) st = 255;
+            if (st < -255) { st = -255; }
+            if (st > 255) { st = 255; }
             st = parseInt(st.toString());
-            if(st < 0) {
+            if (st < 0) {
                 return `rgb(${ 0 - st }, 0, ${ 255 + st })`;
-            }else{
+            } else {
                 return `rgb(0, ${ st }, ${ 255 - st })`;
             }
         }
-        //return '#000000';
     }
     // Saledata functions
     change_division(division: any){
         this.sale_division = division;
-        this._fetchSaleData()
+        this._fetchSaleData();
     }
 }

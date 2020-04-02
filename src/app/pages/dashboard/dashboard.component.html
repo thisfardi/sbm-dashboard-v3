@@ -27,17 +27,17 @@
                 Database connection error. Please try again later.
             </ngb-alert>
         </div>
-        <div class="col-lg-4 col-xl-2">
+        <div class="col-lg-6 col-xl-4">
             <app-statchart mainTitle="netsale"
                 serie_values='{{ sum_data.netsale }}'
-                value='{{ sum_data.netsale[9] }}'
+                value='{{ sum_data.netsale[9] | currency }}'
                 subValue="{{get_percent(sum_data.netsale[9], sum_data.netsale[8])}}%"
                 chartColors="{{get_hex_color(sum_data.netsale[9], sum_data.netsale[8])}}"
                 date_values="{{_10_days}}"
                 class="cursor-pointer">
             </app-statchart>
         </div>
-        <div class="col-lg-4 col-xl-2">
+        <div class="col-lg-6 col-xl-4">
             <app-statchart mainTitle="transactions"
                 serie_values='{{ sum_data.transaction }}'
                 value='{{ sum_data.transaction[9] }}'
@@ -47,40 +47,40 @@
                 class="cursor-pointer">
             </app-statchart>
         </div>
-        <div class="col-lg-4 col-xl-2">
+        <div class="col-lg-6 col-xl-4">
             <app-statchart mainTitle="discount"
                 serie_values='{{ sum_data.discount }}'
-                value='{{ sum_data.discount[9] }}'
+                value='{{ sum_data.discount[9] | currency }}'
                 subValue="{{get_percent(sum_data.discount[9], sum_data.discount[8])}}%"
                 chartColors="{{get_hex_color(sum_data.discount[9], sum_data.discount[8])}}"
                 date_values="{{_10_days}}"
                 class="cursor-pointer">
             </app-statchart>
         </div>
-        <div class="col-lg-4 col-xl-2">
+        <div class="col-lg-6 col-xl-4">
             <app-statchart mainTitle="promotion"
                 serie_values='{{ sum_data.promotion }}'
-                value='{{ sum_data.promotion[9] }}'
+                value='{{ sum_data.promotion[9] | currency }}'
                 subValue="{{get_percent(sum_data.promotion[9], sum_data.promotion[8])}}%"
                 chartColors="{{get_hex_color(sum_data.promotion[9], sum_data.promotion[8])}}"
                 date_values="{{_10_days}}"
                 class="cursor-pointer">
             </app-statchart>
         </div>
-        <div class="col-lg-4 col-xl-2">
+        <div class="col-lg-6 col-xl-4">
             <app-statchart mainTitle="tip"
                 serie_values='{{ sum_data.tip }}'
-                value='{{ sum_data.tip[9] }}'
+                value='{{ sum_data.tip[9] | currency }}'
                 subValue="{{get_percent(sum_data.tip[9], sum_data.tip[8])}}%"
                 chartColors="{{get_hex_color(sum_data.tip[9], sum_data.tip[8])}}"
                 date_values="{{_10_days}}"
                 class="cursor-pointer">
             </app-statchart>
         </div>
-        <div class="col-lg-4 col-xl-2">
+        <div class="col-lg-6 col-xl-4">
             <app-statchart mainTitle="tax"
                 serie_values='{{ sum_data.tax }}'
-                value='{{ sum_data.tax[9] }}'
+                value='{{ sum_data.tax[9] | currency }}'
                 subValue="{{get_percent(sum_data.tax[9], sum_data.tax[8])}}%"
                 chartColors="{{get_hex_color(sum_data.tax[9], sum_data.tax[8])}}"
                 date_values="{{_10_days}}"
@@ -95,11 +95,11 @@
                 <div class="card-body p-0">
                     <h5 class="card-title header-title border-bottom p-3 mb-0">Overview</h5>
                     <!-- Overview data -->
-                    <app-overview value='${{sum_data.grossale[9]}}' icon='shopping-bag' title="Gross sale" classNames="px-3 py-4">
+                    <app-overview value='{{sum_data.grossale[9] | currency}}' icon='shopping-bag' title="Gross sale" classNames="px-3 py-4">
                     </app-overview>
                     <app-overview value='{{sum_data.article_count[9]}}' icon='shopping-cart' title="Total items sold" classNames="px-3 py-4">
                     </app-overview>
-                    <app-overview value='${{ sum_data.average_bill[9] }}' icon='user' title="Average bill per user" classNames="px-3 py-4"></app-overview>
+                    <app-overview value='{{ sum_data.average_bill[9] | currency }}' icon='user' title="Average bill per user" classNames="px-3 py-4"></app-overview>
                 </div>
             </div>
         </div>
@@ -108,16 +108,16 @@
                 <div class="card-body pb-0">
                     <ul class="nav card-nav float-right">
                         <li class="nav-item">
-                            <a class="nav-link" [ngClass]="{ 'text-danger': sale_division === 7, 'text-muted': sale_division !==7 }" href="javascript: void(0);" (click)="change_division(7)">This Week</a>
+                            <a class="nav-link" [ngClass]="{ 'text-danger': sale_division === 7, 'text-muted': sale_division !==7 }" href="javascript: void(0);" (click)="change_division(7)">Week</a>
                         </li>
                         <li class="nav-item">
                             <a class="nav-link" [ngClass]="{ 'text-danger': sale_division === 15, 'text-muted': sale_division !==15 }" href="javascript: void(0);" (click)="change_division(15)">15 days</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" [ngClass]="{ 'text-danger': sale_division === 30, 'text-muted': sale_division !==30 }" href="javascript: void(0);" (click)="change_division(30)">This Month</a>
+                            <a class="nav-link" [ngClass]="{ 'text-danger': sale_division === 30, 'text-muted': sale_division !==30 }" href="javascript: void(0);" (click)="change_division(30)">Month</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" [ngClass]="{ 'text-danger': sale_division === 365, 'text-muted': sale_division !==365 }" href="javascript: void(0);" (click)="change_division(365)">This Year</a>
+                            <a class="nav-link" [ngClass]="{ 'text-danger': sale_division === 365, 'text-muted': sale_division !==365 }" href="javascript: void(0);" (click)="change_division(365)">Year</a>
                         </li>
                     </ul>
                     <h5 class="card-title header-title mb-0">Netsale details</h5>
@@ -192,7 +192,7 @@
                                     <tr *ngFor="let item of today_items; index as idx">
                                         <td>{{ idx + 1 }}</td>
                                         <td>{{ item.article_name }}</td>
-                                        <td>${{ item.price }}</td>
+                                        <td>{{ item.price | currency }}</td>
                                         <td>{{ item.qty }}</td>
                                     </tr>
                                 </tbody>

@@ -119,6 +119,7 @@ const targetsBarChart: ChartType = {
         borderColor: '#f3f4f7'
     },
     tooltip: {
+        theme: 'dark',
         y: {
             formatter: (val: any) => {
                 return val;
@@ -141,7 +142,7 @@ const salesDonutChart: ChartType = {
         height: 298,
         type: 'donut',
     },
-    colors: ['#5369f8', '#43d39e', '#f77e53', '#ffbe0b', '#5369f8', '#43d39e', '#f77e53', '#ffbe0b', '#5369f8', '#43d39e', '#f77e53', '#ffbe0b'],
+    colors: ['#5369f8', '#43d39e', '#f77e53', '#ffbe0b', '#91FDFF', '#FFB0AF', '#31393C', '#D591F2', '#0A6D72', '#E0D0EA', '#6F5A96', '#40160F'],
     legend: {
         show: true,
         position: 'right',
