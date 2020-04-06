@@ -11,19 +11,24 @@ export const MENU: MenuItem[] = [
         isTitle: true
     },
     {
+        label: 'Sales',
+        icon: 'activity',
+        link: '/details/sale',
+    },
+    {
         label: 'Transactions',
         icon: 'trending-up',
-        link: '/detail/transaction',
+        link: '/details/transaction',
     },
     {
         label: 'Payments',
         icon: 'briefcase',
-        link: '/detail/payment',
+        link: '/details/payment',
     },
     {
         label: 'Articles',
         icon: 'gift',
-        link: '/detail/article',
+        link: '/details/article',
     },
     {
         label: 'COMPARISON',

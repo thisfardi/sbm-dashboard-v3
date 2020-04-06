@@ -20,7 +20,7 @@ const revenueAreaChart: ChartType = {
         height: 282,
         type: 'area',
         toolbar: {
-            show: false
+            show: true
         },
     },
     tooltip: {

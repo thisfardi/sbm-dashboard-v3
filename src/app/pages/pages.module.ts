@@ -14,8 +14,11 @@ import { WidgetModule } from '../shared/widgets/widget.module';
 import { UiModule } from './ui/ui.module';
 import { AppsModule } from './apps/apps.module';
 import { OtherModule } from './other/other.module';
+import { DetailsModule } from './details/details.module';
+
 import { NgSelectModule } from '@ng-select/ng-select';
 import { NgbAlertModule } from '@ng-bootstrap/ng-bootstrap';
+
 
 @NgModule({
   declarations: [DashboardComponent],
@@ -31,6 +34,7 @@ import { NgbAlertModule } from '@ng-bootstrap/ng-bootstrap';
     UiModule,
     AppsModule,
     OtherModule,
+    DetailsModule,
     NgSelectModule,
     NgbAlertModule
   ]

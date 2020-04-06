@@ -25,7 +25,7 @@ export class DashboardComponent implements OnInit {
     sale_division = 7 // Weekly. 15, 30, 365
 
     _15_days    = [];
-    weekdays    = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
+    weekdays    = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
     weeks       = ['First week', 'Second week', 'Third week', 'Forth week', 'Fifth week'];
     months      = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
 

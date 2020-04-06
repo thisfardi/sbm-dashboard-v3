@@ -10,6 +10,7 @@ const routes: Routes = [
     { path: 'apps', loadChildren: () => import('./apps/apps.module').then(m => m.AppsModule) },
     { path: 'other', loadChildren: () => import('./other/other.module').then(m => m.OtherModule) },
     { path: 'admin', loadChildren: () => import('./admin/admin.module').then(m => m.AdminModule) },
+    { path: 'details', loadChildren: () => import('./details/details.module').then(m => m.DetailsModule) },
     { path: '**', component: Error404Component }
 ];
 
