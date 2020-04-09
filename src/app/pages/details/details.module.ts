@@ -6,13 +6,24 @@ import { TransactionComponent } from './transaction/transaction.component';
 import { PaymentComponent } from './payment/payment.component';
 import { ArticleComponent } from './article/article.component';
 
+import { UIModule } from '../../shared/ui/ui.module';
 import { DetailsRoutingModule } from './details-routing.module';
-
+import { FlatpickrModule } from 'angularx-flatpickr';
+import { NgSelectModule } from '@ng-select/ng-select';
+import { FormsModule } from '@angular/forms';
+import { NgbAlertModule } from '@ng-bootstrap/ng-bootstrap';
+import { NgApexchartsModule } from 'ng-apexcharts';
 @NgModule({
     declarations: [SaleComponent, TransactionComponent, PaymentComponent, ArticleComponent],
     imports: [
         CommonModule,
-        DetailsRoutingModule
+        DetailsRoutingModule,
+        UIModule,
+        NgSelectModule,
+        FlatpickrModule,
+        FormsModule,
+        NgbAlertModule,
+        NgApexchartsModule
     ]
 })
 export class DetailsModule { }

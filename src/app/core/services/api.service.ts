@@ -94,4 +94,16 @@ export class ApiService {
                 return res;
             }))
     }
+    causals(data){
+        return this.http.post(`${api_url}/home/causals_data`, data)
+            .pipe(map(res => {
+                return res;
+            }))
+    }
+    sale_details(data){
+        return this.http.post(`${api_url}/home/sale_details`, data)
+            .pipe(map(res => {
+                return res;
+            }))
+    }
 }

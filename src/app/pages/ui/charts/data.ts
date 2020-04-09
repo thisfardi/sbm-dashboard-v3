@@ -176,7 +176,7 @@ const gradientLineChart: ChartType = {
             shade: 'dark',
             gradientToColors: ['#43d39e'],
             shadeIntensity: 1,
-            type: 'horizontal',
+            type: 'vertical',
             opacityFrom: 1,
             opacityTo: 1,
             stops: [0, 100, 100, 100]

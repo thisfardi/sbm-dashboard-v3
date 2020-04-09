@@ -348,7 +348,7 @@ export class DashboardComponent implements OnInit {
     }
     get_hex_color(c: any, p: any){
         if((c == 0) && (p == 0)){
-            return '#00ff00'; // Green on netural
+            return '#ff00ff'; // Green on netural
         }else if((c == 0) && (p != 0)){
             return '#ff0000'; // red on c == 0
         }else if((c != 0) && (p == 0)){
