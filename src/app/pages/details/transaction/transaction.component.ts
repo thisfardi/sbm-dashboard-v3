@@ -40,6 +40,11 @@ export class TransactionComponent implements OnInit {
     trans_total = 0;
     avg_total = 0;
 
+    peak_data = {
+        date: moment().format('DD MMM'),
+        value: 0
+    }
+
     advanced_filters: Boolean = false;
 
     filter_shop: string;
@@ -297,9 +302,14 @@ export class TransactionComponent implements OnInit {
         return ret;
     }
     trans_data_render(data){
-        console.log(data)
         this.trans_chart.series = [];
         this.avg_chart.series = [];
+
+        this.peak_data = {
+            date: moment().format('DD MMM'),
+            value: 0
+        }
+
         let x_axis = [...this.getXAxis()];
         let transaction = {
             name: 'Transactions',
@@ -367,6 +377,14 @@ export class TransactionComponent implements OnInit {
                 return "Week " + item.split(',')[0] + ',' + item.split(',')[1];
             })
         }
+
+        for(let item of transaction.data){
+            if(this.peak_data.value < item){
+                this.peak_data.value = item;
+            }
+        }
+        this.peak_data.date = x_axis[transaction.data.indexOf(this.peak_data.value)];
+        
         this.trans_chart.xaxis.categories = [...x_axis];
         this.trans_chart.series.push(transaction);
         this.avg_chart.xaxis.categories = [...x_axis];

@@ -155,9 +155,35 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                
+                                <tr class="table-success">
+                                    <td>-</td>
+                                    <td>Total</td>
+                                    <td>{{ trans_total }}</td>
+                                    <td>{{ avg_total | currency }}</td>
+                                </tr>
+                                <tr *ngFor="let item of trans_chart.xaxis.categories; index as idx">
+                                    <ng-container *ngIf="trans_chart.series[0].data[idx] != 0">
+                                        <td>{{ idx }}</td>
+                                        <td>{{ item }}</td>
+                                        <td>{{ trans_chart.series[0].data[idx] }}</td>
+                                        <td>{{ avg_chart.series[0].data[idx] | currency }}</td>
+                                    </ng-container>
+                                </tr>
                             </tbody>
                         </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card">
+                <div class="card-body p-0">
+                    <h5 class="card-title header-title border-bottom p-3 mb-0">Sale stats</h5>
+                    <app-miniloader [display]='trans_loading'></app-miniloader>
+                    <div *ngIf="!trans_loading">
+                        <app-overview class="m-2" value='{{ trans_total }}' icon='globe' title="Total transactions count from {{ filter_date['from'] | date: 'd MMM, yyyy'  }} to {{ filter_date['to'] | date: 'd MMM, yyyy' }}"></app-overview>
+                        <app-overview class="m-2" value='{{ peak_data.value }}' icon='clock' title="Peak transactions on {{ peak_data.date }}, {{ peak_data.value / trans_total | percent:'.1-1' }} of total transactions."></app-overview>
+                        <app-overview class="m-2" value='{{ avg_total | currency }}' icon='dollar-sign' title="Average bill per customers from {{ filter_date['from'] | date: 'd MMM, yyyy'  }} to {{ filter_date['to'] | date: 'd MMM, yyyy' }}"></app-overview>
                     </div>
                 </div>
             </div>

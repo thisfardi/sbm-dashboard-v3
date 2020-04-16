@@ -220,9 +220,9 @@
                         <app-overview class="m-2" value='{{ peak_data.value | currency }}' icon='clock' title="Peak sale on {{ peak_data.date }}, {{ peak_data.value / net_total | percent:'.1-1' }} of total revenue."></app-overview>
                         <app-overview class="m-2" value='{{ trending_causal.value | currency }}' icon='layers' title="The trending causal is {{ trending_causal.name }}, {{ trending_causal.value / net_total | percent:'.1-1' }} of total revenue."></app-overview>
                         <app-overview class="m-2" value='{{ discount_total.amount | currency }}' icon='scissors' title="Total discount from {{ filter_date['from'] | date: 'd MMM, yyyy'  }} to {{ filter_date['to'] | date: 'd MMM, yyyy' }}"></app-overview>
-                        <app-overview class="m-2" value='{{ other_data.tax | currency }}' icon='zap' title="Tax"></app-overview>
-                        <app-overview class="m-2" value='{{ other_data.tip | currency }}' icon='shopping-bag' title="Tip"></app-overview>
-                        <app-overview class="m-2" value='{{ other_data.promotion | currency }}' icon='sunrise' title="Promotion"></app-overview>
+                        <app-overview class="m-2" value='{{ other_data.tax | currency }}' icon='zap' title="Total tax from {{ filter_date['from'] | date: 'd MMM, yyyy'  }} to {{ filter_date['to'] | date: 'd MMM, yyyy' }}"></app-overview>
+                        <app-overview class="m-2" value='{{ other_data.tip | currency }}' icon='shopping-bag' title="Total tip from {{ filter_date['from'] | date: 'd MMM, yyyy'  }} to {{ filter_date['to'] | date: 'd MMM, yyyy' }}"></app-overview>
+                        <app-overview class="m-2" value='{{ other_data.promotion | currency }}' icon='sunrise' title="Total promotion from {{ filter_date['from'] | date: 'd MMM, yyyy'  }} to {{ filter_date['to'] | date: 'd MMM, yyyy' }}"></app-overview>
                     </div>
                 </div>
             </div>
