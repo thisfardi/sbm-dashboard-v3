@@ -106,4 +106,10 @@ export class ApiService {
                 return res;
             }))
     }
+    trans_details(data){
+        return this.http.post(`${api_url}/home/trans_details`, data)
+            .pipe(map(res => {
+                return res;
+            }))
+    }
 }

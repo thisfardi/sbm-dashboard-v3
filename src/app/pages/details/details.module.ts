@@ -13,6 +13,7 @@ import { NgSelectModule } from '@ng-select/ng-select';
 import { FormsModule } from '@angular/forms';
 import { NgbAlertModule } from '@ng-bootstrap/ng-bootstrap';
 import { NgApexchartsModule } from 'ng-apexcharts';
+import { WidgetModule } from '../../shared/widgets/widget.module';
 @NgModule({
     declarations: [SaleComponent, TransactionComponent, PaymentComponent, ArticleComponent],
     imports: [
@@ -23,7 +24,8 @@ import { NgApexchartsModule } from 'ng-apexcharts';
         FlatpickrModule,
         FormsModule,
         NgbAlertModule,
-        NgApexchartsModule
+        NgApexchartsModule,
+        WidgetModule
     ]
 })
 export class DetailsModule { }

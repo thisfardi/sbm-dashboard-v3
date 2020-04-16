@@ -1,6 +1,11 @@
 <div class="container-fluid">
     <!-- <app-page-title title="Sales detail"></app-page-title> -->
     <div class="row mt-4">
+        <div *ngIf='db_error' class="col-md-12">
+            <ngb-alert type="danger" [dismissible]="false">
+                Database connection error. Please try again later.
+            </ngb-alert>
+        </div>
         <div class="col-md-12">
             <div class="card">
                 <div class="card-body p-0">
@@ -12,7 +17,7 @@
                         </div>
                         <div class="form-group mr-2 mb-2">
                             <label class="col-form-label mr-3">Select date range</label>
-                            <ng-select [items]="date_ranges.labels" [(ngModel)]='filter_range' [ngModelOptions]="{standalone: true}" (change)="filter_range_change()"></ng-select>
+                            <ng-select [items]="date_ranges['labels']" [(ngModel)]='filter_range' [ngModelOptions]="{standalone: true}" (change)="filter_range_change()"></ng-select>
                         </div>
                         <div class="form-group mr-2 mb-2">
                             <input id="filter_date_range" type="text" class="form-control" disabled placeholder="2020-01-01 to 2020 01-31" mwlFlatpickr mode="range" [convertModelValue]="true" [(ngModel)]="filter_date" [ngModelOptions]="{standalone: true}"/>
@@ -97,7 +102,7 @@
     </div>
     <div class="row">
         <div class="col-md-8">
-            <div class="card">
+            <div class="card" style="min-height: 450px;">
                 <div class="card-body p-0">
                     <h5 class="card-title header-title border-bottom p-3 mb-0">Sales</h5>
                     <app-miniloader [display]='sale_loading'></app-miniloader>
@@ -109,6 +114,115 @@
                             [xaxis]="sales_chart.xaxis" [colors]="sales_chart.colors"
                             [responsive]="sales_chart.responsive">
                         </apx-chart>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card" style="min-height: 450px;">
+                <div class="card-body p-0">
+                    <h5 class="card-title header-title border-bottom p-3 mb-0">Causals</h5>
+                    <app-miniloader [display]='sale_loading'></app-miniloader>
+                    <div *ngIf="!sale_loading">
+                        <apx-chart [series]="causal_chart.series" [chart]="causal_chart.chart"
+                            [labels]="causal_chart.labels" [dataLabels]="causal_chart.dataLabels"
+                            [legend]="causal_chart.legend" [colors]="causal_chart.colors"
+                            [responsive]="causal_chart.responsive">
+                        </apx-chart>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-8">
+            <div class="card">
+                <div class="card-body">
+                    <a href="javascript: void(0);" class="btn btn-primary btn-sm float-right">
+                        <i class="uil uil-export ml-1"></i> Export
+                    </a>
+                    <h5 class="card-title header-title border-bottom p-3 mb-0">Sales detail</h5>
+                    <app-miniloader [display]='sale_loading'></app-miniloader>
+                    <div *ngIf="!sale_loading && net_total != 0" class="table-responsive" style="height: 250px;">
+                        <table class="table table-sm mb-0 table-striped">
+                            <thead>
+                                <tr>
+                                    <th>#</th>
+                                    <th>Date and time</th>
+                                    <th>Netsale</th>
+                                    <th *ngFor="let item of causal_names">{{ item }}</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr class="table-success">
+                                    <td>-</td>
+                                    <td>Total</td>
+                                    <td>{{ net_total | currency }}</td>
+                                    <td *ngFor="let item of causal_chart.series">{{ item | currency }}({{ item / net_total | percent:'.1-1'}})</td>
+                                </tr>
+                                <tr *ngFor="let item of sales_chart.xaxis.categories; index as idx">
+                                    <ng-container *ngIf="table_data['netsale'][idx] != 0">
+                                        <td>{{ idx + 1 }}</td>
+                                        <td>{{ item }}</td>
+                                        <td>{{ table_data['netsale'][idx] | currency }}</td>
+                                        <td *ngFor="let _item of table_data['causal']">{{ _item.data[idx] | currency }}</td>
+                                    </ng-container>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            <div class="card">
+                <div class="card-body">
+                    <a href="javascript: void(0);" class="btn btn-primary btn-sm float-right">
+                        <i class="uil uil-export ml-1"></i> Export
+                    </a>
+                    <h5 class="card-title header-title border-bottom p-3 mb-0">Discount detail</h5>
+                    <app-miniloader [display]='sale_loading'></app-miniloader>
+                    <div *ngIf="!sale_loading && net_total != 0" class="table-responsive" style="height: 200px;">
+                        <table class="table table-sm mb-0 table-striped">
+                            <thead>
+                                <tr>
+                                    <th>#</th>
+                                    <th>Description</th>
+                                    <th>Amount</th>
+                                    <th>Qty</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr class="table-success">
+                                    <td>-</td>
+                                    <td>Total</td>
+                                    <td>{{ discount_total.amount | currency }}</td>
+                                    <td>{{ discount_total.qty }}</td>
+                                </tr>
+                                <tr *ngFor="let item of discount_data; index as idx">
+                                    <td>{{ idx + 1 }}</td>
+                                    <td>{{ item.description }}</td>
+                                    <td>{{ item.amount | currency }}</td>
+                                    <td>{{ item.qty }}</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card">
+                <div class="card-body p-0">
+                    <h5 class="card-title header-title border-bottom p-3 mb-0">Sale stats</h5>
+                    <app-miniloader [display]='sale_loading'></app-miniloader>
+                    <div *ngIf="!sale_loading">
+                        <app-overview class="m-2" value='{{ net_total | currency }}' icon='package' title="Total netsale from {{ filter_date['from'] | date: 'd MMM, yyyy'  }} to {{ filter_date['to'] | date: 'd MMM, yyyy' }}"></app-overview>
+                        <app-overview class="m-2" value='{{ net_total - discount_total.amount | currency }}' icon='dollar-sign' title="Gross sale"></app-overview>
+                        <app-overview class="m-2" value='{{ peak_data.value | currency }}' icon='clock' title="Peak sale on {{ peak_data.date }}, {{ peak_data.value / net_total | percent:'.1-1' }} of total revenue."></app-overview>
+                        <app-overview class="m-2" value='{{ trending_causal.value | currency }}' icon='layers' title="The trending causal is {{ trending_causal.name }}, {{ trending_causal.value / net_total | percent:'.1-1' }} of total revenue."></app-overview>
+                        <app-overview class="m-2" value='{{ discount_total.amount | currency }}' icon='scissors' title="Total discount from {{ filter_date['from'] | date: 'd MMM, yyyy'  }} to {{ filter_date['to'] | date: 'd MMM, yyyy' }}"></app-overview>
+                        <app-overview class="m-2" value='{{ other_data.tax | currency }}' icon='zap' title="Tax"></app-overview>
+                        <app-overview class="m-2" value='{{ other_data.tip | currency }}' icon='shopping-bag' title="Tip"></app-overview>
+                        <app-overview class="m-2" value='{{ other_data.promotion | currency }}' icon='sunrise' title="Promotion"></app-overview>
                     </div>
                 </div>
             </div>

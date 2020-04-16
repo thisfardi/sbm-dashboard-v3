@@ -1,1 +1,166 @@
-<p>transaction works!</p>
+<div class="container-fluid">
+    <div class="row mt-4">
+        <div *ngIf='db_error' class="col-md-12">
+            <ngb-alert type="danger" [dismissible]="false">
+                Database connection error. Please try again later.
+            </ngb-alert>
+        </div>
+        <div class="col-md-12">
+            <div class="card">
+                <div class="card-body p-0">
+                    <h5 class="card-title header-title border-bottom p-3 mb-0">Filters</h5>
+                    <form class="form-inline m-3 filter-form">
+                        <div class="form-group mr-5 mb-2">
+                            <label class="col-form-label mr-3">Select shop</label>
+                            <ng-select [items]="shops" [(ngModel)]='filter_shop' [ngModelOptions]="{standalone: true}"></ng-select>
+                        </div>
+                        <div class="form-group mr-2 mb-2">
+                            <label class="col-form-label mr-3">Select date range</label>
+                            <ng-select [items]="date_ranges['labels']" [(ngModel)]='filter_range' [ngModelOptions]="{standalone: true}" (change)="filter_range_change()"></ng-select>
+                        </div>
+                        <div class="form-group mr-2 mb-2">
+                            <input id="filter_date_range" type="text" class="form-control" disabled placeholder="2020-01-01 to 2020 01-31" mwlFlatpickr mode="range" [convertModelValue]="true" [(ngModel)]="filter_date" [ngModelOptions]="{standalone: true}"/>
+                        </div>
+                    </form>
+
+                    <div class="row" *ngIf="advanced_filters">
+                        <div class="col-md-3">
+                            <div class="criteria-radio ml-3 mr-3 mb-3">
+                                <label class="col-form-label">Select display criteria</label>
+                                <div class="custom-control custom-radio mb-1" *ngIf="disable_criteria[0] == 0">
+                                    <input type="radio" id="hours" name="criteria_radio" class="custom-control-input" value="hour" (change)="criteria_change($event)" [checked]="f_criteria=='hour'">
+                                    <label class="custom-control-label" for="hours">Hours</label>
+                                </div>
+                                <div class="custom-control custom-radio mb-1" *ngIf="disable_criteria[1] == 0">
+                                    <input type="radio" id="days" name="criteria_radio" class="custom-control-input" checked value="day" (change)="criteria_change($event)" [checked]="f_criteria=='day'">
+                                    <label class="custom-control-label" for="days">Days</label>
+                                </div>
+                                <div class="custom-control custom-radio mb-1" *ngIf="disable_criteria[2] == 0">
+                                    <input type="radio" id="weeks" name="criteria_radio" class="custom-control-input" value="weekday" (change)="criteria_change($event)" [checked]="f_criteria=='weekday'">
+                                    <label class="custom-control-label" for="weeks">Week days (Mon, Tue...)</label>
+                                </div>
+                                <div class="custom-control custom-radio mb-1" *ngIf="disable_criteria[3] == 0">
+                                    <input type="radio" id="week_days" name="criteria_radio" class="custom-control-input" value="week" (change)="criteria_change($event)" [checked]="f_criteria=='week'">
+                                    <label class="custom-control-label" for="week_days">Weeks (1st week, 2nd week...)</label>
+                                </div>
+                                <div class="custom-control custom-radio mb-1" *ngIf="disable_criteria[4] == 0">
+                                    <input type="radio" id="months" name="criteria_radio" class="custom-control-input" value="month" (change)="criteria_change($event)" [checked]="f_criteria=='month'">
+                                    <label class="custom-control-label" for="months">Months</label>
+                                </div>
+                                <div class="custom-control custom-radio mb-1" *ngIf="disable_criteria[5] == 0">
+                                    <input type="radio" id="years" name="criteria_radio" class="custom-control-input" value="year" (change)="criteria_change($event)" [checked]="f_criteria=='year'">
+                                    <label class="custom-control-label" for="years">Years</label>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="group-radio ml-3 mr-3 mb-3">
+                                <label class="col-form-label">Select group by</label>
+                                <div class="custom-control custom-radio mb-1">
+                                    <input type="radio" id="groupa" name="group_radio" class="custom-control-input" value="group_a_id" (change)="group_change($event)" [checked]="f_group=='group_a_id'">
+                                    <label class="custom-control-label" for="groupa">Group A</label>
+                                </div>
+                                <div class="custom-control custom-radio mb-1">
+                                    <input type="radio" id="groupb" name="group_radio" class="custom-control-input" value="group_b_id" (change)="group_change($event)" [checked]="f_group=='group_b_id'">
+                                    <label class="custom-control-label" for="groupb">Group B</label>
+                                </div>
+                                <div class="custom-control custom-radio mb-1">
+                                    <input type="radio" id="groupc" name="group_radio" class="custom-control-input" value="group_c_id" (change)="group_change($event)" [checked]="f_group=='group_c_id'">
+                                    <label class="custom-control-label" for="groupc">Group C</label>
+                                </div>
+                                <div class="custom-control custom-radio mb-1">
+                                    <input type="radio" id="groupd" name="group_radio" class="custom-control-input" value="group_d_id" (change)="group_change($event)" [checked]="f_group=='group_d_id'">
+                                    <label class="custom-control-label" for="groupd">Group D</label>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="group-check ml-3 mr-3 mb-3">
+                                <label class="col-form-label">Select causals</label>
+                                <app-miniloader [display]='causal_loading'></app-miniloader>
+                                <div *ngIf="causal_error">
+                                    <ngb-alert type="danger" [dismissible]="false">
+                                        Causal data fetching error. Please click reload button.
+                                    </ngb-alert>
+                                    <button class="btn btn-sm btn-rounded btn-warning" type="button" name="button" (click)="_fetchCausals()"><i class="uil uil-refresh"></i> Reload</button>
+                                </div>
+                                <div *ngIf="!causal_error">
+                                    <div class="custom-control custom-checkbox mb-1" *ngFor="let item of f_causals; index as idx">
+                                        <input type="checkbox" class="custom-control-input" name="causal_checkbox" id="causal_{{item.id}}" checked value="{{ item.id }}" (change)="causal_change($event)">
+                                        <label class="custom-control-label" for="causal_{{item.id}}">{{ item.description }}</label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <button type="button" name="button" class="btn btn-soft-secondary btn-sm ml-3 mb-3" (click)="toggle_advanced_filter()"><i class="uil uil-angle-double-{{advanced_filters ? 'up' : 'down'}}"></i>{{ !advanced_filters ? 'Show advanced filters' : 'Hide advanced filters' }}</button>
+                    <button type="button" name="button" class="btn btn-primary btn-sm ml-3 mb-3" (click)="apply_filter()"><i class="uil uil-check"></i> Apply filters</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-6">
+            <div class="card" style="min-height: 450px;">
+                <div class="card-body p-0">
+                    <h5 class="card-title header-title border-bottom p-3 mb-0">Transactions count</h5>
+                    <app-miniloader [display]='trans_loading'></app-miniloader>
+                    <div *ngIf="!trans_loading">
+                        <apx-chart [series]="trans_chart.series" [chart]="trans_chart.chart"
+                            [tooltip]="trans_chart.tooltip" [yaxis]="trans_chart.yaxis"
+                            [legend]="trans_chart.legend" [grid]="trans_chart.grid"
+                            [dataLabels]="trans_chart.dataLabels" [stroke]="trans_chart.stroke"
+                            [xaxis]="trans_chart.xaxis" [colors]="trans_chart.colors"
+                            [responsive]="trans_chart.responsive">
+                        </apx-chart>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="card" style="min-height: 450px;">
+                <div class="card-body p-0">
+                    <h5 class="card-title header-title border-bottom p-3 mb-0">Average Bill</h5>
+                    <app-miniloader [display]='trans_loading'></app-miniloader>
+                    <div *ngIf="!trans_loading">
+                        <apx-chart [series]="avg_chart.series" [chart]="avg_chart.chart"
+                            [tooltip]="avg_chart.tooltip" [yaxis]="avg_chart.yaxis"
+                            [legend]="avg_chart.legend" [grid]="avg_chart.grid"
+                            [dataLabels]="avg_chart.dataLabels" [stroke]="avg_chart.stroke"
+                            [xaxis]="avg_chart.xaxis" [colors]="avg_chart.colors"
+                            [responsive]="avg_chart.responsive">
+                        </apx-chart>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-8">
+            <div class="card">
+                <div class="card-body">
+                    <a href="javascript: void(0);" class="btn btn-primary btn-sm float-right">
+                        <i class="uil uil-export ml-1"></i> Export
+                    </a>
+                    <h5 class="card-title header-title border-bottom p-3 mb-0">Transactions detail</h5>
+                    <app-miniloader [display]='trans_loading'></app-miniloader>
+                    <div *ngIf="!trans_loading && trans_total != 0" class="table-responsive" style="height: 250px;">
+                        <table class="table table-sm mb-0 table-striped">
+                            <thead>
+                                <tr>
+                                    <th>#</th>
+                                    <th>Date and time</th>
+                                    <th>Transaction count</th>
+                                    <th>Average bill</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

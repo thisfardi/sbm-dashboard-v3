@@ -11,8 +11,8 @@ import { PagesRoutingModule } from './pages-routing.module';
 import { DashboardComponent } from './dashboard/dashboard.component';
 
 import { WidgetModule } from '../shared/widgets/widget.module';
-import { UiModule } from './ui/ui.module';
-import { AppsModule } from './apps/apps.module';
+// import { UiModule } from './ui/ui.module';
+// import { AppsModule } from './apps/apps.module';
 import { OtherModule } from './other/other.module';
 import { DetailsModule } from './details/details.module';
 
@@ -31,8 +31,8 @@ import { NgbAlertModule } from '@ng-bootstrap/ng-bootstrap';
     UIModule,
     WidgetModule,
     PagesRoutingModule,
-    UiModule,
-    AppsModule,
+    // UiModule,
+    // AppsModule,
     OtherModule,
     DetailsModule,
     NgSelectModule,

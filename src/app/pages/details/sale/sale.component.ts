@@ -7,7 +7,7 @@ import { ParseService } from '../../../core/services/parse.service';
 import { CookieService } from '../../../core/services/cookie.service';
 
 import { ChartType } from '../charts.model';
-import { multipleYAxisChart } from '../data';
+import { salesChart, causalChart } from '../data';
 
 @Component({
     selector: 'app-sale',
@@ -41,6 +41,33 @@ export class SaleComponent implements OnInit {
     causal_error: Boolean = false;
 
     sales_chart: ChartType;
+    causal_chart: ChartType;
+
+
+    // Table data
+    causal_names = [];
+    net_total = 0;
+    peak_data = {
+        date: moment().format('DD MMM'),
+        value: 0
+    }
+    trending_causal = {
+        name: 'Other',
+        value: 0
+    }
+    table_data = {};
+
+    sale_data = [];
+    discount_data = [];
+    discount_total = {
+        amount: 0,
+        qty: 0
+    }
+    other_data = {
+        tip: 0,
+        tax: 0,
+        promotion: 0
+    }
 
     constructor(private apiService: ApiService, private cookieService: CookieService, private parseService: ParseService) { }
 
@@ -97,10 +124,11 @@ export class SaleComponent implements OnInit {
 
         this._fetchCausals();
 
-        this.sales_chart = multipleYAxisChart;
+        this.sales_chart = salesChart;
+        this.causal_chart = causalChart;
     }
 
-    protected _fetchCausals(){
+    public _fetchCausals(){
         this.causal_error = false;
         this.causal_loading = true;
         this.f_causals = [];
@@ -113,6 +141,7 @@ export class SaleComponent implements OnInit {
                     if(data['status'] == 'success'){
                         this.f_causals = [...data['data'].causals];
                         this.f_causals_checked = this.f_causals['map'](item => item.id.toString());
+                        this._fetchSaleDetails();
                     }else{
                         this.causal_error = true;
                     }
@@ -126,10 +155,17 @@ export class SaleComponent implements OnInit {
     }
 
     private _fetchSaleDetails(){
+
         this.db_error = false;
         this.sale_loading = true;
+        this.discount_total.amount = 0;
+        this.discount_total.qty = 0;
         this.filter_date['from'] = moment(this.filter_date['from']).format('YYYY-MM-DD');
-        this.filter_date['to'] = moment(this.filter_date['to']).format('YYYY-MM-DD');
+        this.filter_date['to'] = this.filter_date['to'] ? moment(this.filter_date['to']).format('YYYY-MM-DD') : this.filter_date['from'];
+        // Force to hour view on one day is selected
+        if(this.filter_date['from'] == this.filter_date['to']){
+            this.f_criteria = 'hour';
+        }
         this.apiService.sale_details(this.parseService.encode({
             db: this.database,
             shop: this.filter_shop,
@@ -143,7 +179,23 @@ export class SaleComponent implements OnInit {
             .subscribe(
                 data => {
                     if(data['status'] == 'success'){
-                        this.sale_data_render(data['data'].sale);
+                        this.discount_data = [...data['data'].discount];
+                        for(let item of this.discount_data){
+                            this.discount_total.amount += parseFloat(item.amount);
+                            this.discount_total.qty += parseFloat(item.qty);
+                        }
+                        let others = [...data['data'].others];
+                        for(let item of others){
+                            if(item.description == 'tip'){
+                                this.other_data.tip = item.amount;
+                            }else if(item.description == 'promotion'){
+                                this.other_data.promotion = item.amount;
+                            }else{
+                                this.other_data.tax = item.amount;
+                            }
+                        }
+                        this.sale_data = [...data['data'].sale];
+                        this.sale_data_render(this.sale_data);
                     }else{
                         this.db_error = true;
                     }
@@ -279,8 +331,24 @@ export class SaleComponent implements OnInit {
 
     // Renderers
     sale_data_render(data){
+
+        this.causal_names = [];
+        this.table_data = {};
+        this.net_total = 0;
+
+        this.peak_data = {
+            date: moment().format('DD MMM'),
+            value: 0
+        }
+        this.trending_causal = {
+            name: 'Other',
+            value: 0
+        }
+
         let x_axis = [...this.getXAxis()];
         this.sales_chart.series = [];
+        this.causal_chart.series = [];
+        this.causal_chart.labels = [];
         let netsale = {
             name: 'Netsale',
             type: 'line',
@@ -293,67 +361,120 @@ export class SaleComponent implements OnInit {
         }
         // Init causals
         let _temp_causal = [];
+        let _temp_causal_values = {
+            names: [],
+            values: []
+        };
         for(let item of data){
             if(_temp_causal.indexOf(item.causal_desc) == -1){
                 causals.push({
                     name: item.causal_desc,
-                    type: 'column',
+                    type: 'line',
                     data: [...netsale.data]
                 })
                 _temp_causal.push(item.causal_desc);
             }
         }
+        _temp_causal_values.names = [..._temp_causal];
+        _temp_causal_values.values = [..._temp_causal['map'](item => {
+            return 0;
+        })]
         for(let time of x_axis){
             for(let item of data){
                 if(this.f_criteria == 'hour'){
                     if(moment(time, 'HH, MMM DD').format('MM-DD-HH') == moment(item.d, 'YYYY-MM-DD-HH').format('MM-DD-HH')){
                         netsale.data[x_axis.indexOf(time)] += parseFloat(item.netsale);
                         causals[_temp_causal.indexOf(item.causal_desc)].data[x_axis.indexOf(time)] = item.netsale;
+                        _temp_causal_values.values[_temp_causal.indexOf(item.causal_desc)] += parseFloat(item.netsale);
                     }
                 }else if(this.f_criteria == 'day'){
                     if(moment(time, 'DD MMM, YYYY').format('YYYY-MM-DD') == moment(item.d, 'YYYY-MM-DD').format('YYYY-MM-DD')){
                         netsale.data[x_axis.indexOf(time)] += parseFloat(item.netsale);
                         causals[_temp_causal.indexOf(item.causal_desc)].data[x_axis.indexOf(time)] = item.netsale;
+                        _temp_causal_values.values[_temp_causal.indexOf(item.causal_desc)] += parseFloat(item.netsale);
                     }
                 }else if(this.f_criteria == 'weekday'){
                     if(moment(time, 'ddd, DD MMM').format('YYYY-MM-DD') == moment(item.d, 'YYYY-MM-DD').format('YYYY-MM-DD')){
                         netsale.data[x_axis.indexOf(time)] += parseFloat(item.netsale);
                         causals[_temp_causal.indexOf(item.causal_desc)].data[x_axis.indexOf(time)] = item.netsale;
+                        _temp_causal_values.values[_temp_causal.indexOf(item.causal_desc)] += parseFloat(item.netsale);
                     }
                 }else if(this.f_criteria == 'week'){
                     if(moment(time, 'w, YYYY').format('YYYY-ww') == moment(item.d, 'YYYY-w').format('YYYY-ww')){
                         netsale.data[x_axis.indexOf(time)] += parseFloat(item.netsale);
                         causals[_temp_causal.indexOf(item.causal_desc)].data[x_axis.indexOf(time)] = item.netsale;
+                        _temp_causal_values.values[_temp_causal.indexOf(item.causal_desc)] += parseFloat(item.netsale);
                     }
                 }else if(this.f_criteria == 'month'){
                     if(moment(time, 'MMM, YYYY').format('YYYY-MM') == moment(item.d, 'YYYY-MM').format('YYYY-MM')){
                         netsale.data[x_axis.indexOf(time)] += parseFloat(item.netsale);
                         causals[_temp_causal.indexOf(item.causal_desc)].data[x_axis.indexOf(time)] = item.netsale;
+                        _temp_causal_values.values[_temp_causal.indexOf(item.causal_desc)] += parseFloat(item.netsale);
                     }
                 }else if(this.f_criteria == 'year'){
                     if(moment(time, 'YYYY').format('YYYY') == moment(item.d, 'YYYY').format('YYYY')){
                         netsale.data[x_axis.indexOf(time)] += parseFloat(item.netsale);
                         causals[_temp_causal.indexOf(item.causal_desc)].data[x_axis.indexOf(time)] = item.netsale;
+                        _temp_causal_values.values[_temp_causal.indexOf(item.causal_desc)] += parseFloat(item.netsale);
                     }
                 }else{
 
                 }
             }
         }
-        if(this.f_criteria == 'week'){
-            x_axis = x_axis['map'](item => {
-                return "Week " + item.split(',')[0] + ',' + item.split(',')[1];
-            })
-        }
         if(this.f_criteria == 'hour'){
             x_axis = x_axis['map'](item => {
                 return item.split(',')[0] + ':00';
             })
         }
+        if(this.f_criteria == 'day'){
+            x_axis = x_axis['map'](item => {
+                return moment(item, 'DD MMM, YYYY').format('DD MMM');
+            })
+        }
+        if(this.f_criteria == 'week'){
+            x_axis = x_axis['map'](item => {
+                return "Week " + item.split(',')[0] + ',' + item.split(',')[1];
+            })
+        }
+
         this.sales_chart.xaxis.categories = [...x_axis];
         this.sales_chart.series.push(netsale);
-        // for(let item of causals){
-        //     this.sales_chart.series.push(item);
-        // }
+
+        for(let item of netsale.data){
+            this.net_total += item;
+        }
+
+        for(let item of causals){
+            this.sales_chart.series.push(item);
+        }
+
+        this.table_data = {
+            netsale: [...netsale.data],
+            causal: [...causals]
+        }
+
+        // Peak data
+        for(let item of netsale.data){
+            if(this.peak_data.value < item){
+                this.peak_data.value = item;
+            }
+        }
+        this.peak_data.date = x_axis[netsale.data.indexOf(this.peak_data.value)];
+
+        // trending causal
+        for(let item of _temp_causal_values.values){
+            if(this.trending_causal.value < item){
+                this.trending_causal.value = item
+            }
+        }
+        this.trending_causal.name = _temp_causal_values.names[_temp_causal_values.values.indexOf(this.trending_causal.value)];
+
+        this.causal_chart.series = [..._temp_causal_values.values];
+        this.causal_chart.labels = [..._temp_causal_values.names];
+
+        this.causal_names = [..._temp_causal];
+
+
     }
 }
