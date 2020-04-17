@@ -99,4 +99,91 @@
             </div>
         </div>
     </div>
+    <div class="row">
+        <div class="col-md-8">
+            <div class="card" style="min-height: 450px;">
+                <div class="card-body p-0">
+                    <h5 class="card-title header-title border-bottom p-3 mb-0">Payment details by date</h5>
+                    <app-miniloader [display]='payment_loading'></app-miniloader>
+                    <div *ngIf="!payment_loading">
+                        <apx-chart [series]="payment_detail_chart.series" [chart]="payment_detail_chart.chart"
+                            [tooltip]="payment_detail_chart.tooltip" [yaxis]="payment_detail_chart.yaxis"
+                            [legend]="payment_detail_chart.legend" [grid]="payment_detail_chart.grid"
+                            [dataLabels]="payment_detail_chart.dataLabels" [stroke]="payment_detail_chart.stroke"
+                            [xaxis]="payment_detail_chart.xaxis" [colors]="payment_detail_chart.colors"
+                            [responsive]="payment_detail_chart.responsive">
+                        </apx-chart>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card" style="min-height: 450px;">
+                <div class="card-body p-0">
+                    <h5 class="card-title header-title border-bottom p-3 mb-0">Total payment distribution</h5>
+                    <app-miniloader [display]='payment_loading'></app-miniloader>
+                    <div *ngIf="!payment_loading">
+                        <apx-chart [series]="payment_chart.series" [chart]="payment_chart.chart"
+                            [labels]="payment_chart.labels" [dataLabels]="payment_chart.dataLabels"
+                            [legend]="payment_chart.legend" [colors]="payment_chart.colors"
+                            [responsive]="payment_chart.responsive">
+                        </apx-chart>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-8">
+            <div class="card">
+                <div class="card-body">
+                    <a href="javascript: void(0);" class="btn btn-primary btn-sm float-right">
+                        <i class="uil uil-export ml-1"></i> Export
+                    </a>
+                    <h5 class="card-title header-title border-bottom p-3 mb-0">Payment detail</h5>
+                    <app-miniloader [display]='payment_loading'></app-miniloader>
+                    <div *ngIf="!payment_loading && payment_total != 0" class="table-responsive" style="height: 250px;">
+                        <table class="table table-sm mb-0 table-striped">
+                            <thead>
+                                <tr>
+                                    <th>#</th>
+                                    <th>Date and time</th>
+                                    <th *ngFor="let item of payment_descriptions; index as idx">{{ item }}</th>
+                                    <th>Total</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr class="table-success">
+                                    <td>-</td>
+                                    <td>Total by category</td>
+                                    <td *ngFor="let item of payment_chart.series">{{ item | currency }}({{ item / payment_total | percent: '.1-1' }})</td>
+                                    <td class="text-danger">{{ payment_total | currency }}</td>
+                                </tr>
+                                <tr *ngFor="let item of payment_detail_chart.xaxis.categories; index as idx">
+                                    <ng-container *ngIf="payment_detail_chart.series[0].data[idx] != 0">
+                                        <td>{{ idx + 1 }}</td>
+                                        <td>{{ item }}</td>
+                                        <td *ngFor="let _item of payment_descriptions; index as _idx">{{ payment_detail_chart.series[_idx + 1].data[idx] | currency }}</td>
+                                        <td>{{ payment_detail_chart.series[0].data[idx] | currency }}</td>
+                                    </ng-container>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card">
+                <div class="card-body p-0">
+                    <h5 class="card-title header-title border-bottom p-3 mb-0">Payment stats</h5>
+                    <app-miniloader [display]='sale_loading'></app-miniloader>
+                    <div *ngIf="!sale_loading">
+                        <app-overview class="m-2" value='{{ payment_total | currency }}' icon='package' title="Total payments from {{ filter_date['from'] | date: 'd MMM, yyyy'  }} to {{ filter_date['to'] | date: 'd MMM, yyyy' }}"></app-overview>
+                        <app-overview class="m-2" value='{{ payment_trend.amount | currency }}' icon='clock' title="Most used payment method is {{ payment_trend.name }}."></app-overview>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>

@@ -112,4 +112,10 @@ export class ApiService {
                 return res;
             }))
     }
+    payment_details(data){
+        return this.http.post(`${api_url}/home/payment_details`, data)
+            .pipe(map(res => {
+                return res;
+            }))
+    }
 }

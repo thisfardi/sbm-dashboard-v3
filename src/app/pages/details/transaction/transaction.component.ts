@@ -122,7 +122,7 @@ export class TransactionComponent implements OnInit {
                     if(data['status'] == 'success'){
                         this.f_causals = [...data['data'].causals];
                         this.f_causals_checked = this.f_causals['map'](item => item.id.toString());
-                        this._fetchTransactiosn();
+                        this._fetchTransactios();
                     }else{
                         this.causal_error = true;
                     }
@@ -134,7 +134,7 @@ export class TransactionComponent implements OnInit {
                 }
             )
     }
-    public _fetchTransactiosn(){
+    public _fetchTransactios(){
         this.db_error = false;
         this.trans_loading = true;
 
@@ -248,7 +248,7 @@ export class TransactionComponent implements OnInit {
 
     apply_filter(){
         // Do actions
-        this._fetchTransactiosn();
+        this._fetchTransactios();
     }
     getXAxis(){
         let ret = [];
@@ -384,7 +384,7 @@ export class TransactionComponent implements OnInit {
             }
         }
         this.peak_data.date = x_axis[transaction.data.indexOf(this.peak_data.value)];
-        
+
         this.trans_chart.xaxis.categories = [...x_axis];
         this.trans_chart.series.push(transaction);
         this.avg_chart.xaxis.categories = [...x_axis];
