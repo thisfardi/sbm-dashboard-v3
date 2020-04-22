@@ -118,4 +118,10 @@ export class ApiService {
                 return res;
             }))
     }
+    article_details(data){
+        return this.http.post(`${api_url}/home/article_details`, data)
+            .pipe(map(res => {
+                return res;
+            }))
+    }
 }

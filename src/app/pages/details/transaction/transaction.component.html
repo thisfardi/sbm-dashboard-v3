@@ -53,45 +53,7 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="col-md-3">
-                            <div class="group-radio ml-3 mr-3 mb-3">
-                                <label class="col-form-label">Select group by</label>
-                                <div class="custom-control custom-radio mb-1">
-                                    <input type="radio" id="groupa" name="group_radio" class="custom-control-input" value="group_a_id" (change)="group_change($event)" [checked]="f_group=='group_a_id'">
-                                    <label class="custom-control-label" for="groupa">Group A</label>
-                                </div>
-                                <div class="custom-control custom-radio mb-1">
-                                    <input type="radio" id="groupb" name="group_radio" class="custom-control-input" value="group_b_id" (change)="group_change($event)" [checked]="f_group=='group_b_id'">
-                                    <label class="custom-control-label" for="groupb">Group B</label>
-                                </div>
-                                <div class="custom-control custom-radio mb-1">
-                                    <input type="radio" id="groupc" name="group_radio" class="custom-control-input" value="group_c_id" (change)="group_change($event)" [checked]="f_group=='group_c_id'">
-                                    <label class="custom-control-label" for="groupc">Group C</label>
-                                </div>
-                                <div class="custom-control custom-radio mb-1">
-                                    <input type="radio" id="groupd" name="group_radio" class="custom-control-input" value="group_d_id" (change)="group_change($event)" [checked]="f_group=='group_d_id'">
-                                    <label class="custom-control-label" for="groupd">Group D</label>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-md-3">
-                            <div class="group-check ml-3 mr-3 mb-3">
-                                <label class="col-form-label">Select causals</label>
-                                <app-miniloader [display]='causal_loading'></app-miniloader>
-                                <div *ngIf="causal_error">
-                                    <ngb-alert type="danger" [dismissible]="false">
-                                        Causal data fetching error. Please click reload button.
-                                    </ngb-alert>
-                                    <button class="btn btn-sm btn-rounded btn-warning" type="button" name="button" (click)="_fetchCausals()"><i class="uil uil-refresh"></i> Reload</button>
-                                </div>
-                                <div *ngIf="!causal_error">
-                                    <div class="custom-control custom-checkbox mb-1" *ngFor="let item of f_causals; index as idx">
-                                        <input type="checkbox" class="custom-control-input" name="causal_checkbox" id="causal_{{item.id}}" checked value="{{ item.id }}" (change)="causal_change($event)">
-                                        <label class="custom-control-label" for="causal_{{item.id}}">{{ item.description }}</label>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
+                        
                     </div>
                     <button type="button" name="button" class="btn btn-soft-secondary btn-sm ml-3 mb-3" (click)="toggle_advanced_filter()"><i class="uil uil-angle-double-{{advanced_filters ? 'up' : 'down'}}"></i>{{ !advanced_filters ? 'Show advanced filters' : 'Hide advanced filters' }}</button>
                     <button type="button" name="button" class="btn btn-primary btn-sm ml-3 mb-3" (click)="apply_filter()"><i class="uil uil-check"></i> Apply filters</button>

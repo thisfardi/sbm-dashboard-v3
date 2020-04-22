@@ -311,6 +311,76 @@ const paymentChart: ChartType = {
         }
     }]
 };
+const articleChart: Object = {
+    width: "100%",
+    height: "600",
+    type: "sunburst",
+    dataFormat: "json",
+    dataSource: {
+        chart: {
+            baseFontColor: "#000",
+            showplotborder: "0.1",
+            theme: "gammel",
+            labelDisplay: "Auto",
+            plotToolText: "$label <br> Amount: $dataValue <br> Percent: $percentValue",
+            toolTipBgColor: "#000000",
+            toolTipColor: "#eeeeee",
+            toolTipBgAlpha: "80",
+            showBorder: "0",
+        },
+        data: [],
+        styles: {
+            definition: [{
+                name: "myHTMLFont",
+                type: "font",
+                ishtml: "1"
+            }],
+            application: [{
+                toobject: "TOOLTIP",
+                styles: "myHTMLFont"
+            }]
+        }
+    },
+    events: {
+        dataPlotClick: function(e){
+            console.log(e)
+        }
+    }
+}
+const groupDetailChart: Object = {
+    width: "100%",
+    height: 400,
+    type: "bar2d",
+    dataFormat: "json",
+    dataSource: {
+        chart: {
+            yaxisname: "Qty/Price",
+            aligncaptionwithcanvas: "0",
+            toolTipBgColor: "#000000",
+            toolTipColor: "#eeeeee",
+            toolTipBgAlpha: "80",
+            theme: "fusion"
+        },
+        data: []
+    }
+}
+const articleDetailChart: Object = {
+    width: "100%",
+    height: 400,
+    type: "bar2d",
+    dataFormat: "json",
+    dataSource: {
+        chart: {
+            yaxisname: "Qty/Price",
+            aligncaptionwithcanvas: "0",
+            toolTipBgColor: "#000000",
+            toolTipColor: "#eeeeee",
+            toolTipBgAlpha: "80",
+            theme: "fusion"
+        },
+        data: []
+    }
+}
 export {
-    salesChart, causalChart, transChart, avgChart, paymentChart, paymentDetailChart
+    salesChart, causalChart, transChart, avgChart, paymentChart, paymentDetailChart, articleChart, groupDetailChart, articleDetailChart
 };

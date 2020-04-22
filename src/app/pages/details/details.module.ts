@@ -14,6 +14,21 @@ import { FormsModule } from '@angular/forms';
 import { NgbAlertModule } from '@ng-bootstrap/ng-bootstrap';
 import { NgApexchartsModule } from 'ng-apexcharts';
 import { WidgetModule } from '../../shared/widgets/widget.module';
+
+import { FusionChartsModule } from 'angular-fusioncharts';
+
+// Load FusionCharts
+import * as FusionCharts from 'fusioncharts';
+// Load Charts module
+import * as Charts from 'fusioncharts/fusioncharts.charts';
+// Load fusion theme
+import * as Fusion from 'fusioncharts/themes/fusioncharts.theme.fusion'
+
+import * as Power from "fusioncharts/fusioncharts.powercharts";
+
+// Add dependencies to FusionChartsModule
+FusionChartsModule.fcRoot(FusionCharts, Charts, Fusion, Power);
+
 @NgModule({
     declarations: [SaleComponent, TransactionComponent, PaymentComponent, ArticleComponent],
     imports: [
@@ -25,6 +40,7 @@ import { WidgetModule } from '../../shared/widgets/widget.module';
         FormsModule,
         NgbAlertModule,
         NgApexchartsModule,
+        FusionChartsModule,
         WidgetModule
     ]
 })

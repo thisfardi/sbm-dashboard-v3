@@ -105,7 +105,8 @@ export class PaymentComponent implements OnInit {
         this.payment_chart = paymentChart;
         this.payment_detail_chart = paymentDetailChart;
 
-        this._fetchCausals();
+        //this._fetchCausals();
+        this._fetchPayments();
     }
 
     public _fetchCausals(){
@@ -407,7 +408,6 @@ export class PaymentComponent implements OnInit {
                 return "Week " + item.split(',')[0] + ',' + item.split(',')[1];
             })
         }
-        console.log(payment_sum_values, payment_values, payment_sum_values_by_date)
         this.payment_detail_chart.xaxis.categories = [...x_axis];
         this.payment_detail_chart.series.push({
             name: 'Total payments',

@@ -104,8 +104,9 @@ export class TransactionComponent implements OnInit {
         this.filter_range = this.date_ranges['labels'][4];
         this.filter_date = this.date_ranges['ranges'][4];
 
-        this._fetchCausals();
+        //this._fetchCausals();
 
+        this._fetchTransactios();
         this.trans_chart = transChart;
         this.avg_chart = avgChart;
     }
