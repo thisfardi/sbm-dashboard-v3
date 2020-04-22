@@ -49,6 +49,8 @@ export class DashboardComponent implements OnInit {
     sum_data: Object;
     today_items = [];
 
+    avg = 0;
+
     // Loaders
     sum_loading = false;
     sale_loading = false;
@@ -86,6 +88,7 @@ export class DashboardComponent implements OnInit {
                     this.sum_loading = false;
                     let sum_data = data['data'];
                     if(data['status'] == 'success'){
+                        this.avg = sum_data.avg[0].avg_per_item;
                         // Get netsale
                         for(let item of sum_data.netsale){
                             if(parseInt(item.d.split('-')[1]) < 10){

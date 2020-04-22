@@ -95,11 +95,10 @@
                 <div class="card-body p-0">
                     <h5 class="card-title header-title border-bottom p-3 mb-0">Overview</h5>
                     <!-- Overview data -->
-                    <app-overview value='{{sum_data["grossale"][9] | currency}}' icon='shopping-bag' title="Gross sale" classNames="px-3 py-4">
-                    </app-overview>
-                    <app-overview value='{{sum_data["article_count"][9]}}' icon='shopping-cart' title="Total items sold" classNames="px-3 py-4">
-                    </app-overview>
-                    <app-overview value='{{ sum_data["average_bill"][9] | currency }}' icon='user' title="Average bill per user" classNames="px-3 py-4"></app-overview>
+                    <app-overview value='{{sum_data["grossale"][9] | currency}}' icon='shopping-bag' title="Gross sale" classNames="pt-3 pb-2"></app-overview>
+                    <app-overview value='{{sum_data["article_count"][9]}}' icon='shopping-cart' title="Total items sold" classNames="pt-3 pb-2"></app-overview>
+                    <app-overview value='{{ sum_data["average_bill"][9] | currency }}' icon='user' title="Average bill per user" classNames="pt-3 pb-2"></app-overview>
+                    <app-overview value='{{ avg | currency }}' icon='bar-chart-2' title="Average item price" classNames="pt-3 pb-2"></app-overview>
                 </div>
             </div>
         </div>
