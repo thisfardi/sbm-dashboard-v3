@@ -27,6 +27,7 @@ export class DashboardComponent implements OnInit {
     _15_days    = [];
     weekdays    = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
     weeks       = ['First week', 'Second week', 'Third week', 'Forth week', 'Fifth week'];
+    month3      = ['First 10 days', 'Second 10 days', 'Third 10 days'];
     months      = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
 
     constructor(private apiService: ApiService, private cookieService: CookieService, private parseService: ParseService) { }
@@ -202,6 +203,10 @@ export class DashboardComponent implements OnInit {
                 }
             }
             x_axis = [...this._15_days];
+        }else if(this.sale_division == 10){
+            temp_from = moment(this.dash_date).startOf('month').format('YYYY-MM-DD');
+            temp_to = moment(this.dash_date).endOf('month').format('YYYY-MM-DD');
+            x_axis = [...this.month3];
         }else if(this.sale_division == 30){
             temp_from = moment(this.dash_date).startOf('month').format('YYYY-MM-DD');
             temp_to = moment(this.dash_date).endOf('month').format('YYYY-MM-DD');
@@ -241,6 +246,11 @@ export class DashboardComponent implements OnInit {
                                 for(let item of sale_data){
                                      y_axis[parseInt(item.d) - 16] = parseFloat(item.netsale);
                                 }
+                            }
+                        }else if(this.sale_division == 10){
+                            let idx = 0;
+                            for(let item of sale_data){
+                                 y_axis[idx++] = parseFloat(item.netsale);
                             }
                         }else if(this.sale_division == 30){
                             for(let item of sale_data){

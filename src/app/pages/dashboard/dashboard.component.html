@@ -93,7 +93,7 @@
         <div class="col-xl-3">
             <div class="card">
                 <div class="card-body p-0">
-                    <h5 class="card-title header-title border-bottom p-3 mb-0">Overview</h5>
+                    <h5 class="card-title header-title border-bottom p-3 mb-0">Stats overview</h5>
                     <!-- Overview data -->
                     <app-overview value='{{sum_data["grossale"][9] | currency}}' icon='shopping-bag' title="Gross sale" classNames="pt-3 pb-2"></app-overview>
                     <app-overview value='{{sum_data["article_count"][9]}}' icon='shopping-cart' title="Total items sold" classNames="pt-3 pb-2"></app-overview>
@@ -105,7 +105,7 @@
         <div class="col-xl-5">
             <div class="card">
                 <div class="card-body pb-0">
-                    <ul class="nav card-nav float-right">
+                    <ul class="nav card-nav float-right" style="margin-bottom: 20px;">
                         <li class="nav-item">
                             <a class="nav-link" [ngClass]="{ 'text-danger': sale_division === 7, 'text-muted': sale_division !==7 }" href="javascript: void(0);" (click)="change_division(7)">Week</a>
                         </li>
@@ -113,13 +113,16 @@
                             <a class="nav-link" [ngClass]="{ 'text-danger': sale_division === 15, 'text-muted': sale_division !==15 }" href="javascript: void(0);" (click)="change_division(15)">15 days</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" [ngClass]="{ 'text-danger': sale_division === 30, 'text-muted': sale_division !==30 }" href="javascript: void(0);" (click)="change_division(30)">Month</a>
+                            <a class="nav-link" [ngClass]="{ 'text-danger': sale_division === 10, 'text-muted': sale_division !==10 }" href="javascript: void(0);" (click)="change_division(10)">Month(10 days)</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" [ngClass]="{ 'text-danger': sale_division === 30, 'text-muted': sale_division !==30 }" href="javascript: void(0);" (click)="change_division(30)">Month(Weeks)</a>
                         </li>
                         <li class="nav-item">
                             <a class="nav-link" [ngClass]="{ 'text-danger': sale_division === 365, 'text-muted': sale_division !==365 }" href="javascript: void(0);" (click)="change_division(365)">Year</a>
                         </li>
                     </ul>
-                    <h5 class="card-title header-title mb-0">Netsale details</h5>
+                    <h5 class="card-title header-title mb-0">Netsale trends</h5>
                     <!-- Reenue Area Chart -->
                     <app-miniloader [display]='sale_loading'></app-miniloader>
                     <div *ngIf='!sale_loading' class="mt-3">
