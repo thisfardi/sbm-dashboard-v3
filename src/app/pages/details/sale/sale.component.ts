@@ -26,7 +26,7 @@ export class SaleComponent implements OnInit {
     f_causals: Object = [];
     f_causals_checked: Array<{}> = [];
 
-    disable_criteria = [1, 0, 0, 0, 1, 1]; // hour, day, weekday, week, month, year
+    disable_criteria = [1, 0, 0, 0, 0, 1, 1]; // hour, day, weekday, week, 10days, month, year
     // Loaders
     causal_loading: Boolean = false;
     sale_loading: Boolean = false;
@@ -216,43 +216,43 @@ export class SaleComponent implements OnInit {
         }
         switch(this.filter_range){
             case 'Today':
-                this.disable_criteria = [0, 1, 1, 1, 1, 1];
+                this.disable_criteria = [0, 1, 1, 1, 1, 1, 1];
                 this.f_criteria = 'hour';
                 break;
             case 'Yesterday':
-                this.disable_criteria = [0, 1, 1, 1, 1, 1];
+                this.disable_criteria = [0, 1, 1, 1, 1, 1, 1];
                 this.f_criteria = 'hour';
                 break;
             case 'This week':
-                this.disable_criteria = [1, 0, 0, 1, 1, 1];
+                this.disable_criteria = [1, 0, 0, 1, 1, 1, 1];
                 this.f_criteria = 'day';
                 break;
             case 'Last week':
-                this.disable_criteria = [1, 0, 0, 1, 1, 1];
+                this.disable_criteria = [1, 0, 0, 1, 1, 1, 1];
                 this.f_criteria = 'day';
                 break;
             case 'This month':
-                this.disable_criteria = [1, 0, 0, 0, 1, 1];
+                this.disable_criteria = [1, 0, 0, 0, 0, 1, 1];
                 this.f_criteria = 'day';
                 break;
             case 'Last month':
-                this.disable_criteria = [1, 0, 0, 0, 1, 1];
+                this.disable_criteria = [1, 0, 0, 0, 0, 1, 1];
                 this.f_criteria = 'day';
                 break;
             case 'This year':
-                this.disable_criteria = [1, 0, 0, 0, 0, 1];
+                this.disable_criteria = [1, 0, 0, 0, 1, 0, 1];
                 this.f_criteria = 'month';
                 break;
             case 'Last year':
-                this.disable_criteria = [1, 0, 0, 0, 0, 1];
+                this.disable_criteria = [1, 0, 0, 0, 1, 0, 1];
                 this.f_criteria = 'month';
                 break;
             case 'All time':
-                this.disable_criteria = [1, 0, 0, 0, 0, 0];
+                this.disable_criteria = [1, 0, 0, 0, 1, 0, 0];
                 this.f_criteria = 'year';
                 break;
             case 'Custom range':
-                this.disable_criteria = [0, 0, 0, 0, 0, 0];
+                this.disable_criteria = [0, 0, 0, 0, 0, 0, 0];
                 this.f_criteria = 'day';
                 break;
         }
@@ -307,6 +307,8 @@ export class SaleComponent implements OnInit {
                 ret.push(moment(start).format('w, YYYY'));
                 start = moment(start).add(7, 'days').format('YYYY-MM-DD');
             } while (moment(start).format('w, YYYY') != moment(end).format('w, YYYY'))
+        }else if(this.f_criteria == '10days'){
+            ret = ['First 10 days', 'Second 10 days', 'Third 10 days'];
         }else if(this.f_criteria == 'month'){
             start = moment(start).format('YYYY-MM');
             end = moment(end).format('YYYY-MM');
@@ -331,7 +333,7 @@ export class SaleComponent implements OnInit {
 
     // Renderers
     sale_data_render(data){
-
+        
         this.causal_names = [];
         this.table_data = {};
         this.net_total = 0;
@@ -379,49 +381,68 @@ export class SaleComponent implements OnInit {
         _temp_causal_values.values = [..._temp_causal['map'](item => {
             return 0;
         })]
-        for(let time of x_axis){
+        if(this.f_criteria == '10days'){
             for(let item of data){
-                if(this.f_criteria == 'hour'){
-                    if(moment(time, 'HH, MMM DD').format('MM-DD-HH') == moment(item.d, 'YYYY-MM-DD-HH').format('MM-DD-HH')){
-                        netsale.data[x_axis.indexOf(time)] += parseFloat(item.netsale);
-                        causals[_temp_causal.indexOf(item.causal_desc)].data[x_axis.indexOf(time)] = item.netsale;
-                        _temp_causal_values.values[_temp_causal.indexOf(item.causal_desc)] += parseFloat(item.netsale);
-                    }
-                }else if(this.f_criteria == 'day'){
-                    if(moment(time, 'DD MMM, YYYY').format('YYYY-MM-DD') == moment(item.d, 'YYYY-MM-DD').format('YYYY-MM-DD')){
-                        netsale.data[x_axis.indexOf(time)] += parseFloat(item.netsale);
-                        causals[_temp_causal.indexOf(item.causal_desc)].data[x_axis.indexOf(time)] = item.netsale;
-                        _temp_causal_values.values[_temp_causal.indexOf(item.causal_desc)] += parseFloat(item.netsale);
-                    }
-                }else if(this.f_criteria == 'weekday'){
-                    if(moment(time, 'ddd, DD MMM').format('YYYY-MM-DD') == moment(item.d, 'YYYY-MM-DD').format('YYYY-MM-DD')){
-                        netsale.data[x_axis.indexOf(time)] += parseFloat(item.netsale);
-                        causals[_temp_causal.indexOf(item.causal_desc)].data[x_axis.indexOf(time)] = item.netsale;
-                        _temp_causal_values.values[_temp_causal.indexOf(item.causal_desc)] += parseFloat(item.netsale);
-                    }
-                }else if(this.f_criteria == 'week'){
-                    if(moment(time, 'w, YYYY').format('YYYY-ww') == moment(item.d, 'YYYY-w').format('YYYY-ww')){
-                        netsale.data[x_axis.indexOf(time)] += parseFloat(item.netsale);
-                        causals[_temp_causal.indexOf(item.causal_desc)].data[x_axis.indexOf(time)] = item.netsale;
-                        _temp_causal_values.values[_temp_causal.indexOf(item.causal_desc)] += parseFloat(item.netsale);
-                    }
-                }else if(this.f_criteria == 'month'){
-                    if(moment(time, 'MMM, YYYY').format('YYYY-MM') == moment(item.d, 'YYYY-MM').format('YYYY-MM')){
-                        netsale.data[x_axis.indexOf(time)] += parseFloat(item.netsale);
-                        causals[_temp_causal.indexOf(item.causal_desc)].data[x_axis.indexOf(time)] = item.netsale;
-                        _temp_causal_values.values[_temp_causal.indexOf(item.causal_desc)] += parseFloat(item.netsale);
-                    }
-                }else if(this.f_criteria == 'year'){
-                    if(moment(time, 'YYYY').format('YYYY') == moment(item.d, 'YYYY').format('YYYY')){
-                        netsale.data[x_axis.indexOf(time)] += parseFloat(item.netsale);
-                        causals[_temp_causal.indexOf(item.causal_desc)].data[x_axis.indexOf(time)] = item.netsale;
-                        _temp_causal_values.values[_temp_causal.indexOf(item.causal_desc)] += parseFloat(item.netsale);
-                    }
+                if(item.d == 'first'){
+                    netsale.data[0] += parseFloat(item.netsale);
+                    causals[_temp_causal.indexOf(item.causal_desc)].data[0] = item.netsale;
+                    _temp_causal_values.values[_temp_causal.indexOf(item.causal_desc)] += parseFloat(item.netsale);
+                }else if(item.d == 'second'){
+                    netsale.data[1] += parseFloat(item.netsale);
+                    causals[_temp_causal.indexOf(item.causal_desc)].data[1] = item.netsale;
+                    _temp_causal_values.values[_temp_causal.indexOf(item.causal_desc)] += parseFloat(item.netsale);
                 }else{
+                    netsale.data[2] += parseFloat(item.netsale);
+                    causals[_temp_causal.indexOf(item.causal_desc)].data[2] = item.netsale;
+                    _temp_causal_values.values[_temp_causal.indexOf(item.causal_desc)] += parseFloat(item.netsale);
+                }
+            }
+        }else{
+            for(let time of x_axis){
+                for(let item of data){
+                    if(this.f_criteria == 'hour'){
+                        if(moment(time, 'HH, MMM DD').format('MM-DD-HH') == moment(item.d, 'YYYY-MM-DD-HH').format('MM-DD-HH')){
+                            netsale.data[x_axis.indexOf(time)] += parseFloat(item.netsale);
+                            causals[_temp_causal.indexOf(item.causal_desc)].data[x_axis.indexOf(time)] = item.netsale;
+                            _temp_causal_values.values[_temp_causal.indexOf(item.causal_desc)] += parseFloat(item.netsale);
+                        }
+                    }else if(this.f_criteria == 'day'){
+                        if(moment(time, 'DD MMM, YYYY').format('YYYY-MM-DD') == moment(item.d, 'YYYY-MM-DD').format('YYYY-MM-DD')){
+                            netsale.data[x_axis.indexOf(time)] += parseFloat(item.netsale);
+                            causals[_temp_causal.indexOf(item.causal_desc)].data[x_axis.indexOf(time)] = item.netsale;
+                            _temp_causal_values.values[_temp_causal.indexOf(item.causal_desc)] += parseFloat(item.netsale);
+                        }
+                    }else if(this.f_criteria == 'weekday'){
+                        if(moment(time, 'ddd, DD MMM').format('YYYY-MM-DD') == moment(item.d, 'YYYY-MM-DD').format('YYYY-MM-DD')){
+                            netsale.data[x_axis.indexOf(time)] += parseFloat(item.netsale);
+                            causals[_temp_causal.indexOf(item.causal_desc)].data[x_axis.indexOf(time)] = item.netsale;
+                            _temp_causal_values.values[_temp_causal.indexOf(item.causal_desc)] += parseFloat(item.netsale);
+                        }
+                    }else if(this.f_criteria == 'week'){
+                        if(moment(time, 'w, YYYY').format('YYYY-ww') == moment(item.d, 'YYYY-w').format('YYYY-ww')){
+                            netsale.data[x_axis.indexOf(time)] += parseFloat(item.netsale);
+                            causals[_temp_causal.indexOf(item.causal_desc)].data[x_axis.indexOf(time)] = item.netsale;
+                            _temp_causal_values.values[_temp_causal.indexOf(item.causal_desc)] += parseFloat(item.netsale);
+                        }
+                    }else if(this.f_criteria == 'month'){
+                        if(moment(time, 'MMM, YYYY').format('YYYY-MM') == moment(item.d, 'YYYY-MM').format('YYYY-MM')){
+                            netsale.data[x_axis.indexOf(time)] += parseFloat(item.netsale);
+                            causals[_temp_causal.indexOf(item.causal_desc)].data[x_axis.indexOf(time)] = item.netsale;
+                            _temp_causal_values.values[_temp_causal.indexOf(item.causal_desc)] += parseFloat(item.netsale);
+                        }
+                    }else if(this.f_criteria == 'year'){
+                        if(moment(time, 'YYYY').format('YYYY') == moment(item.d, 'YYYY').format('YYYY')){
+                            netsale.data[x_axis.indexOf(time)] += parseFloat(item.netsale);
+                            causals[_temp_causal.indexOf(item.causal_desc)].data[x_axis.indexOf(time)] = item.netsale;
+                            _temp_causal_values.values[_temp_causal.indexOf(item.causal_desc)] += parseFloat(item.netsale);
+                        }
+                    }else{
 
+                    }
                 }
             }
         }
+
         if(this.f_criteria == 'hour'){
             x_axis = x_axis['map'](item => {
                 return item.split(',')[0] + ':00';

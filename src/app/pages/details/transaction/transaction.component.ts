@@ -26,7 +26,7 @@ export class TransactionComponent implements OnInit {
     f_causals: Object = [];
     f_causals_checked: Array<{}> = [];
 
-    disable_criteria = [1, 0, 0, 0, 1, 1]; // hour, day, weekday, week, month, year
+    disable_criteria = [1, 0, 0, 0, 0, 1, 1]; // hour, day, weekday, week, 10days, month, year
     // Loaders
     causal_loading: Boolean = false;
     trans_loading: Boolean = false;
@@ -189,43 +189,43 @@ export class TransactionComponent implements OnInit {
         }
         switch(this.filter_range){
             case 'Today':
-                this.disable_criteria = [0, 1, 1, 1, 1, 1];
+                this.disable_criteria = [0, 1, 1, 1, 1, 1, 1];
                 this.f_criteria = 'hour';
                 break;
             case 'Yesterday':
-                this.disable_criteria = [0, 1, 1, 1, 1, 1];
+                this.disable_criteria = [0, 1, 1, 1, 1, 1, 1];
                 this.f_criteria = 'hour';
                 break;
             case 'This week':
-                this.disable_criteria = [1, 0, 0, 1, 1, 1];
+                this.disable_criteria = [1, 0, 0, 1, 1, 1, 1];
                 this.f_criteria = 'day';
                 break;
             case 'Last week':
-                this.disable_criteria = [1, 0, 0, 1, 1, 1];
+                this.disable_criteria = [1, 0, 0, 1, 1, 1, 1];
                 this.f_criteria = 'day';
                 break;
             case 'This month':
-                this.disable_criteria = [1, 0, 0, 0, 1, 1];
+                this.disable_criteria = [1, 0, 0, 0, 0, 1, 1];
                 this.f_criteria = 'day';
                 break;
             case 'Last month':
-                this.disable_criteria = [1, 0, 0, 0, 1, 1];
+                this.disable_criteria = [1, 0, 0, 0, 0, 1, 1];
                 this.f_criteria = 'day';
                 break;
             case 'This year':
-                this.disable_criteria = [1, 0, 0, 0, 0, 1];
+                this.disable_criteria = [1, 0, 0, 0, 1, 0, 1];
                 this.f_criteria = 'month';
                 break;
             case 'Last year':
-                this.disable_criteria = [1, 0, 0, 0, 0, 1];
+                this.disable_criteria = [1, 0, 0, 0, 1, 0, 1];
                 this.f_criteria = 'month';
                 break;
             case 'All time':
-                this.disable_criteria = [1, 0, 0, 0, 0, 0];
+                this.disable_criteria = [1, 0, 0, 0, 1, 0, 0];
                 this.f_criteria = 'year';
                 break;
             case 'Custom range':
-                this.disable_criteria = [0, 0, 0, 0, 0, 0];
+                this.disable_criteria = [0, 0, 0, 0, 0, 0, 0];
                 this.f_criteria = 'day';
                 break;
         }
@@ -281,6 +281,8 @@ export class TransactionComponent implements OnInit {
                 ret.push(moment(start).format('w, YYYY'));
                 start = moment(start).add(7, 'days').format('YYYY-MM-DD');
             } while (moment(start).format('w, YYYY') != moment(end).format('w, YYYY'))
+        }else if(this.f_criteria == '10days'){
+            ret = ['First 10 days', 'Second 10 days', 'Third 10 days'];
         }else if(this.f_criteria == 'month'){
             start = moment(start).format('YYYY-MM');
             end = moment(end).format('YYYY-MM');
@@ -326,40 +328,55 @@ export class TransactionComponent implements OnInit {
             transaction.data.push(0);
             avg.data.push(0);
         }
-        for(let time of x_axis){
+        if(this.f_criteria == '10days'){
             for(let item of data){
-                if(this.f_criteria == 'hour'){
-                    if(moment(time, 'HH, MMM DD').format('MM-DD-HH') == moment(item.d, 'YYYY-MM-DD-HH').format('MM-DD-HH')){
-                        transaction.data[x_axis.indexOf(time)] = parseFloat(item.qty);
-                        avg.data[x_axis.indexOf(time)] = parseFloat(item.average_bill);
-                    }
-                }else if(this.f_criteria == 'day'){
-                    if(moment(time, 'DD MMM, YYYY').format('YYYY-MM-DD') == moment(item.d, 'YYYY-MM-DD').format('YYYY-MM-DD')){
-                        transaction.data[x_axis.indexOf(time)] = parseFloat(item.qty);
-                        avg.data[x_axis.indexOf(time)] = parseFloat(item.average_bill);
-                    }
-                }else if(this.f_criteria == 'weekday'){
-                    if(moment(time, 'ddd, DD MMM').format('YYYY-MM-DD') == moment(item.d, 'YYYY-MM-DD').format('YYYY-MM-DD')){
-                        transaction.data[x_axis.indexOf(time)] = parseFloat(item.qty);
-                        avg.data[x_axis.indexOf(time)] = parseFloat(item.average_bill);
-                    }
-                }else if(this.f_criteria == 'week'){
-                    if(moment(time, 'w, YYYY').format('YYYY-ww') == moment(item.d, 'YYYY-w').format('YYYY-ww')){
-                        transaction.data[x_axis.indexOf(time)] = parseFloat(item.qty);
-                        avg.data[x_axis.indexOf(time)] = parseFloat(item.average_bill);
-                    }
-                }else if(this.f_criteria == 'month'){
-                    if(moment(time, 'MMM, YYYY').format('YYYY-MM') == moment(item.d, 'YYYY-MM').format('YYYY-MM')){
-                        transaction.data[x_axis.indexOf(time)] = parseFloat(item.qty);
-                        avg.data[x_axis.indexOf(time)] = parseFloat(item.average_bill);
-                    }
-                }else if(this.f_criteria == 'year'){
-                    if(moment(time, 'YYYY').format('YYYY') == moment(item.d, 'YYYY').format('YYYY')){
-                        transaction.data[x_axis.indexOf(time)] = parseFloat(item.qty);
-                        avg.data[x_axis.indexOf(time)] = parseFloat(item.average_bill);
-                    }
+                if(item.d == 'first'){
+                    transaction.data[0] = parseFloat(item.qty);
+                    avg.data[0] = parseFloat(item.average_bill);
+                }else if(item.d == 'second'){
+                    transaction.data[1] = parseFloat(item.qty);
+                    avg.data[1] = parseFloat(item.average_bill);
                 }else{
+                    transaction.data[2] = parseFloat(item.qty);
+                    avg.data[2] = parseFloat(item.average_bill);
+                }
+            }
+        }else{
+            for(let time of x_axis){
+                for(let item of data){
+                    if(this.f_criteria == 'hour'){
+                        if(moment(time, 'HH, MMM DD').format('MM-DD-HH') == moment(item.d, 'YYYY-MM-DD-HH').format('MM-DD-HH')){
+                            transaction.data[x_axis.indexOf(time)] = parseFloat(item.qty);
+                            avg.data[x_axis.indexOf(time)] = parseFloat(item.average_bill);
+                        }
+                    }else if(this.f_criteria == 'day'){
+                        if(moment(time, 'DD MMM, YYYY').format('YYYY-MM-DD') == moment(item.d, 'YYYY-MM-DD').format('YYYY-MM-DD')){
+                            transaction.data[x_axis.indexOf(time)] = parseFloat(item.qty);
+                            avg.data[x_axis.indexOf(time)] = parseFloat(item.average_bill);
+                        }
+                    }else if(this.f_criteria == 'weekday'){
+                        if(moment(time, 'ddd, DD MMM').format('YYYY-MM-DD') == moment(item.d, 'YYYY-MM-DD').format('YYYY-MM-DD')){
+                            transaction.data[x_axis.indexOf(time)] = parseFloat(item.qty);
+                            avg.data[x_axis.indexOf(time)] = parseFloat(item.average_bill);
+                        }
+                    }else if(this.f_criteria == 'week'){
+                        if(moment(time, 'w, YYYY').format('YYYY-ww') == moment(item.d, 'YYYY-w').format('YYYY-ww')){
+                            transaction.data[x_axis.indexOf(time)] = parseFloat(item.qty);
+                            avg.data[x_axis.indexOf(time)] = parseFloat(item.average_bill);
+                        }
+                    }else if(this.f_criteria == 'month'){
+                        if(moment(time, 'MMM, YYYY').format('YYYY-MM') == moment(item.d, 'YYYY-MM').format('YYYY-MM')){
+                            transaction.data[x_axis.indexOf(time)] = parseFloat(item.qty);
+                            avg.data[x_axis.indexOf(time)] = parseFloat(item.average_bill);
+                        }
+                    }else if(this.f_criteria == 'year'){
+                        if(moment(time, 'YYYY').format('YYYY') == moment(item.d, 'YYYY').format('YYYY')){
+                            transaction.data[x_axis.indexOf(time)] = parseFloat(item.qty);
+                            avg.data[x_axis.indexOf(time)] = parseFloat(item.average_bill);
+                        }
+                    }else{
 
+                    }
                 }
             }
         }

@@ -25,7 +25,7 @@ export class PaymentComponent implements OnInit {
     f_causals: Object = [];
     f_causals_checked: Array<{}> = [];
 
-    disable_criteria = [1, 0, 0, 0, 1, 1]; // hour, day, weekday, week, month, year
+    disable_criteria = [1, 0, 0, 0, 0, 1, 1]; // hour, day, weekday, week, 10days, month, year
     // Loaders
     causal_loading: Boolean = false;
     payment_loading: Boolean = false;
@@ -186,43 +186,43 @@ export class PaymentComponent implements OnInit {
         }
         switch(this.filter_range){
             case 'Today':
-                this.disable_criteria = [0, 1, 1, 1, 1, 1];
+                this.disable_criteria = [0, 1, 1, 1, 1, 1, 1];
                 this.f_criteria = 'hour';
                 break;
             case 'Yesterday':
-                this.disable_criteria = [0, 1, 1, 1, 1, 1];
+                this.disable_criteria = [0, 1, 1, 1, 1, 1, 1];
                 this.f_criteria = 'hour';
                 break;
             case 'This week':
-                this.disable_criteria = [1, 0, 0, 1, 1, 1];
+                this.disable_criteria = [1, 0, 0, 1, 1, 1, 1];
                 this.f_criteria = 'day';
                 break;
             case 'Last week':
-                this.disable_criteria = [1, 0, 0, 1, 1, 1];
+                this.disable_criteria = [1, 0, 0, 1, 1, 1, 1];
                 this.f_criteria = 'day';
                 break;
             case 'This month':
-                this.disable_criteria = [1, 0, 0, 0, 1, 1];
+                this.disable_criteria = [1, 0, 0, 0, 0, 1, 1];
                 this.f_criteria = 'day';
                 break;
             case 'Last month':
-                this.disable_criteria = [1, 0, 0, 0, 1, 1];
+                this.disable_criteria = [1, 0, 0, 0, 0, 1, 1];
                 this.f_criteria = 'day';
                 break;
             case 'This year':
-                this.disable_criteria = [1, 0, 0, 0, 0, 1];
+                this.disable_criteria = [1, 0, 0, 0, 1, 0, 1];
                 this.f_criteria = 'month';
                 break;
             case 'Last year':
-                this.disable_criteria = [1, 0, 0, 0, 0, 1];
+                this.disable_criteria = [1, 0, 0, 0, 1, 0, 1];
                 this.f_criteria = 'month';
                 break;
             case 'All time':
-                this.disable_criteria = [1, 0, 0, 0, 0, 0];
+                this.disable_criteria = [1, 0, 0, 0, 1, 0, 0];
                 this.f_criteria = 'year';
                 break;
             case 'Custom range':
-                this.disable_criteria = [0, 0, 0, 0, 0, 0];
+                this.disable_criteria = [0, 0, 0, 0, 0, 0, 0];
                 this.f_criteria = 'day';
                 break;
         }
@@ -278,6 +278,8 @@ export class PaymentComponent implements OnInit {
                 ret.push(moment(start).format('w, YYYY'));
                 start = moment(start).add(7, 'days').format('YYYY-MM-DD');
             } while (moment(start).format('w, YYYY') != moment(end).format('w, YYYY'))
+        }else if(this.f_criteria == '10days'){
+            ret = ['First 10 days', 'Second 10 days', 'Third 10 days'];
         }else if(this.f_criteria == 'month'){
             start = moment(start).format('YYYY-MM');
             end = moment(end).format('YYYY-MM');
@@ -344,52 +346,73 @@ export class PaymentComponent implements OnInit {
             }
             idx ++;
         }
-        for(let time of x_axis){
+        if(this.f_criteria == '10days'){
             for(let item of data){
-                if(this.f_criteria == 'hour'){
-                    if(moment(time, 'HH, MMM DD').format('MM-DD-HH') == moment(item.d, 'YYYY-MM-DD-HH').format('MM-DD-HH')){
-                        payment_values[this.payment_descriptions.indexOf(item.payment_detail)].amount[x_axis.indexOf(time)] = Math.abs(parseFloat(item.amount));
-                        payment_values[this.payment_descriptions.indexOf(item.payment_detail)].qty[x_axis.indexOf(time)] = item.qty;
-                        payment_sum_values_by_date.amount[x_axis.indexOf(time)] += parseFloat(item.amount);
-                        payment_sum_values_by_date.qty[x_axis.indexOf(time)] += parseFloat(item.qty);
-                    }
-                }else if(this.f_criteria == 'day'){
-                    if(moment(time, 'DD MMM, YYYY').format('YYYY-MM-DD') == moment(item.d, 'YYYY-MM-DD').format('YYYY-MM-DD')){
-                        payment_values[this.payment_descriptions.indexOf(item.payment_detail)].amount[x_axis.indexOf(time)] = Math.abs(parseFloat(item.amount));
-                        payment_values[this.payment_descriptions.indexOf(item.payment_detail)].qty[x_axis.indexOf(time)] = item.qty;
-                        payment_sum_values_by_date.amount[x_axis.indexOf(time)] += parseFloat(item.amount);
-                        payment_sum_values_by_date.qty[x_axis.indexOf(time)] += parseFloat(item.qty);
-                    }
-                }else if(this.f_criteria == 'weekday'){
-                    if(moment(time, 'ddd, DD MMM').format('YYYY-MM-DD') == moment(item.d, 'YYYY-MM-DD').format('YYYY-MM-DD')){
-                        payment_values[this.payment_descriptions.indexOf(item.payment_detail)].amount[x_axis.indexOf(time)] = Math.abs(parseFloat(item.amount));
-                        payment_values[this.payment_descriptions.indexOf(item.payment_detail)].qty[x_axis.indexOf(time)] = item.qty;
-                        payment_sum_values_by_date.amount[x_axis.indexOf(time)] += parseFloat(item.amount);
-                        payment_sum_values_by_date.qty[x_axis.indexOf(time)] += parseFloat(item.qty);
-                    }
-                }else if(this.f_criteria == 'week'){
-                    if(moment(time, 'w, YYYY').format('YYYY-ww') == moment(item.d, 'YYYY-w').format('YYYY-ww')){
-                        payment_values[this.payment_descriptions.indexOf(item.payment_detail)].amount[x_axis.indexOf(time)] = Math.abs(parseFloat(item.amount));
-                        payment_values[this.payment_descriptions.indexOf(item.payment_detail)].qty[x_axis.indexOf(time)] = item.qty;
-                        payment_sum_values_by_date.amount[x_axis.indexOf(time)] += parseFloat(item.amount);
-                        payment_sum_values_by_date.qty[x_axis.indexOf(time)] += parseFloat(item.qty);
-                    }
-                }else if(this.f_criteria == 'month'){
-                    if(moment(time, 'MMM, YYYY').format('YYYY-MM') == moment(item.d, 'YYYY-MM').format('YYYY-MM')){
-                        payment_values[this.payment_descriptions.indexOf(item.payment_detail)].amount[x_axis.indexOf(time)] = Math.abs(parseFloat(item.amount));
-                        payment_values[this.payment_descriptions.indexOf(item.payment_detail)].qty[x_axis.indexOf(time)] = item.qty;
-                        payment_sum_values_by_date.amount[x_axis.indexOf(time)] += parseFloat(item.amount);
-                        payment_sum_values_by_date.qty[x_axis.indexOf(time)] += parseFloat(item.qty);
-                    }
-                }else if(this.f_criteria == 'year'){
-                    if(moment(time, 'YYYY').format('YYYY') == moment(item.d, 'YYYY').format('YYYY')){
-                        payment_values[this.payment_descriptions.indexOf(item.payment_detail)].amount[x_axis.indexOf(time)] = Math.abs(parseFloat(item.amount));
-                        payment_values[this.payment_descriptions.indexOf(item.payment_detail)].qty[x_axis.indexOf(time)] = item.qty;
-                        payment_sum_values_by_date.amount[x_axis.indexOf(time)] += parseFloat(item.amount);
-                        payment_sum_values_by_date.qty[x_axis.indexOf(time)] += parseFloat(item.qty);
-                    }
+                if(item.d == 'first'){
+                    payment_values[this.payment_descriptions.indexOf(item.payment_detail)].amount[0] = Math.abs(parseFloat(item.amount));
+                    payment_values[this.payment_descriptions.indexOf(item.payment_detail)].qty[0] = item.qty;
+                    payment_sum_values_by_date.amount[0] += parseFloat(item.amount);
+                    payment_sum_values_by_date.qty[0] += parseFloat(item.qty);
+                }else if(item.d == 'second'){
+                    payment_values[this.payment_descriptions.indexOf(item.payment_detail)].amount[1] = Math.abs(parseFloat(item.amount));
+                    payment_values[this.payment_descriptions.indexOf(item.payment_detail)].qty[1] = item.qty;
+                    payment_sum_values_by_date.amount[1] += parseFloat(item.amount);
+                    payment_sum_values_by_date.qty[1] += parseFloat(item.qty);
                 }else{
+                    payment_values[this.payment_descriptions.indexOf(item.payment_detail)].amount[2] = Math.abs(parseFloat(item.amount));
+                    payment_values[this.payment_descriptions.indexOf(item.payment_detail)].qty[2] = item.qty;
+                    payment_sum_values_by_date.amount[2] += parseFloat(item.amount);
+                    payment_sum_values_by_date.qty[2] += parseFloat(item.qty);
+                }
+            }
+        }else{
+            for(let time of x_axis){
+                for(let item of data){
+                    if(this.f_criteria == 'hour'){
+                        if(moment(time, 'HH, MMM DD').format('MM-DD-HH') == moment(item.d, 'YYYY-MM-DD-HH').format('MM-DD-HH')){
+                            payment_values[this.payment_descriptions.indexOf(item.payment_detail)].amount[x_axis.indexOf(time)] = Math.abs(parseFloat(item.amount));
+                            payment_values[this.payment_descriptions.indexOf(item.payment_detail)].qty[x_axis.indexOf(time)] = item.qty;
+                            payment_sum_values_by_date.amount[x_axis.indexOf(time)] += parseFloat(item.amount);
+                            payment_sum_values_by_date.qty[x_axis.indexOf(time)] += parseFloat(item.qty);
+                        }
+                    }else if(this.f_criteria == 'day'){
+                        if(moment(time, 'DD MMM, YYYY').format('YYYY-MM-DD') == moment(item.d, 'YYYY-MM-DD').format('YYYY-MM-DD')){
+                            payment_values[this.payment_descriptions.indexOf(item.payment_detail)].amount[x_axis.indexOf(time)] = Math.abs(parseFloat(item.amount));
+                            payment_values[this.payment_descriptions.indexOf(item.payment_detail)].qty[x_axis.indexOf(time)] = item.qty;
+                            payment_sum_values_by_date.amount[x_axis.indexOf(time)] += parseFloat(item.amount);
+                            payment_sum_values_by_date.qty[x_axis.indexOf(time)] += parseFloat(item.qty);
+                        }
+                    }else if(this.f_criteria == 'weekday'){
+                        if(moment(time, 'ddd, DD MMM').format('YYYY-MM-DD') == moment(item.d, 'YYYY-MM-DD').format('YYYY-MM-DD')){
+                            payment_values[this.payment_descriptions.indexOf(item.payment_detail)].amount[x_axis.indexOf(time)] = Math.abs(parseFloat(item.amount));
+                            payment_values[this.payment_descriptions.indexOf(item.payment_detail)].qty[x_axis.indexOf(time)] = item.qty;
+                            payment_sum_values_by_date.amount[x_axis.indexOf(time)] += parseFloat(item.amount);
+                            payment_sum_values_by_date.qty[x_axis.indexOf(time)] += parseFloat(item.qty);
+                        }
+                    }else if(this.f_criteria == 'week'){
+                        if(moment(time, 'w, YYYY').format('YYYY-ww') == moment(item.d, 'YYYY-w').format('YYYY-ww')){
+                            payment_values[this.payment_descriptions.indexOf(item.payment_detail)].amount[x_axis.indexOf(time)] = Math.abs(parseFloat(item.amount));
+                            payment_values[this.payment_descriptions.indexOf(item.payment_detail)].qty[x_axis.indexOf(time)] = item.qty;
+                            payment_sum_values_by_date.amount[x_axis.indexOf(time)] += parseFloat(item.amount);
+                            payment_sum_values_by_date.qty[x_axis.indexOf(time)] += parseFloat(item.qty);
+                        }
+                    }else if(this.f_criteria == 'month'){
+                        if(moment(time, 'MMM, YYYY').format('YYYY-MM') == moment(item.d, 'YYYY-MM').format('YYYY-MM')){
+                            payment_values[this.payment_descriptions.indexOf(item.payment_detail)].amount[x_axis.indexOf(time)] = Math.abs(parseFloat(item.amount));
+                            payment_values[this.payment_descriptions.indexOf(item.payment_detail)].qty[x_axis.indexOf(time)] = item.qty;
+                            payment_sum_values_by_date.amount[x_axis.indexOf(time)] += parseFloat(item.amount);
+                            payment_sum_values_by_date.qty[x_axis.indexOf(time)] += parseFloat(item.qty);
+                        }
+                    }else if(this.f_criteria == 'year'){
+                        if(moment(time, 'YYYY').format('YYYY') == moment(item.d, 'YYYY').format('YYYY')){
+                            payment_values[this.payment_descriptions.indexOf(item.payment_detail)].amount[x_axis.indexOf(time)] = Math.abs(parseFloat(item.amount));
+                            payment_values[this.payment_descriptions.indexOf(item.payment_detail)].qty[x_axis.indexOf(time)] = item.qty;
+                            payment_sum_values_by_date.amount[x_axis.indexOf(time)] += parseFloat(item.amount);
+                            payment_sum_values_by_date.qty[x_axis.indexOf(time)] += parseFloat(item.qty);
+                        }
+                    }else{
 
+                    }
                 }
             }
         }
