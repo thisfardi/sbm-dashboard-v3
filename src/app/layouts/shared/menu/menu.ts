@@ -37,7 +37,7 @@ export const MENU: MenuItem[] = [
     {
         label: 'Shop compare',
         icon: 'award',
-        link: '/compare/shops',
+        link: '/compare/shop',
     },
     {
         label: 'Period compare',

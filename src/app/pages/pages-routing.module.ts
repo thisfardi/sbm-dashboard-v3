@@ -11,6 +11,7 @@ const routes: Routes = [
     { path: 'other', loadChildren: () => import('./other/other.module').then(m => m.OtherModule) },
     { path: 'admin', loadChildren: () => import('./admin/admin.module').then(m => m.AdminModule) },
     { path: 'details', loadChildren: () => import('./details/details.module').then(m => m.DetailsModule) },
+    { path: 'compare', loadChildren: () => import('./compare/compare.module').then(m => m.CompareModule) },
     { path: '**', component: Error404Component }
 ];
 
