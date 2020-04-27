@@ -1,1 +1,159 @@
-<p>shop works!</p>
+<div class="container-fluid">
+    <div class="row mt-4">
+        <div *ngIf='db_error' class="col-md-12">
+            <ngb-alert type="danger" [dismissible]="false">
+                Database connection error. Please try again later.
+            </ngb-alert>
+        </div>
+        <div class="col-md-12">
+            <div class="card">
+                <div class="card-body p-0">
+                    <form class="form-inline m-3 filter-form">
+                        <div class="form-group mr-2 mb-2">
+                            <label class="col-form-label mr-3">Select date range</label>
+                            <ng-select [items]="date_ranges['labels']" [(ngModel)]='filter_range' [ngModelOptions]="{standalone: true}" (change)="filter_range_change()"></ng-select>
+                        </div>
+                        <div class="form-group mr-2 mb-2">
+                            <input id="filter_date_range" type="text" class="form-control" disabled placeholder="2020-01-01 to 2020 01-31" mwlFlatpickr mode="range" [convertModelValue]="true" [(ngModel)]="filter_date" [ngModelOptions]="{standalone: true}"/>
+                        </div>
+                        <button type="button" name="button" class="btn btn-primary btn-sm mt-2 ml-3 mb-3" (click)="apply_filter()"><i class="uil uil-check"></i> Apply filters</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-4">
+            <div class="card" style="min-height: 450px;">
+                <div class="card-body p-0">
+                    <app-miniloader [display]='sale_loading'></app-miniloader>
+                    <div *ngIf="!sale_loading">
+                        <fusioncharts
+                            [width]="sale_chart['width']"
+                            [height]="sale_chart['height']"
+                            [type]="sale_chart['type']"
+                            [dataFormat]="sale_chart['dataFormat']"
+                            [dataSource]="sale_chart['dataSource']">
+                        </fusioncharts>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-8">
+            <div class="card" style="min-height: 450px;">
+                <div class="card-body p-0">
+                    <app-miniloader [display]='sale_loading'></app-miniloader>
+                    <div *ngIf="!sale_loading">
+                        <fusioncharts
+                            [width]="sale_detail_chart['width']"
+                            [height]="sale_detail_chart['height']"
+                            [type]="sale_detail_chart['type']"
+                            [dataFormat]="sale_detail_chart['dataFormat']"
+                            [dataSource]="sale_detail_chart['dataSource']">
+                        </fusioncharts>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-3">
+            <div class="card" style="min-height: 350px;">
+                <div class="card-body p-0">
+                    <app-miniloader [display]='sale_loading'></app-miniloader>
+                    <div *ngIf="!sale_loading">
+                        <fusioncharts
+                            [width]="avg_chart['width']"
+                            [height]="avg_chart['height']"
+                            [type]="avg_chart['type']"
+                            [dataFormat]="avg_chart['dataFormat']"
+                            [dataSource]="avg_chart['dataSource']">
+                        </fusioncharts>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card" style="min-height: 350px;">
+                <div class="card-body p-0">
+                    <app-miniloader [display]='other_loading'></app-miniloader>
+                    <div *ngIf="!other_loading">
+                        <fusioncharts
+                            [width]="promotion_chart['width']"
+                            [height]="promotion_chart['height']"
+                            [type]="promotion_chart['type']"
+                            [dataFormat]="promotion_chart['dataFormat']"
+                            [dataSource]="promotion_chart['dataSource']">
+                        </fusioncharts>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card" style="min-height: 350px;">
+                <div class="card-body p-0">
+                    <app-miniloader [display]='other_loading'></app-miniloader>
+                    <div *ngIf="!other_loading">
+                        <fusioncharts
+                            [width]="tip_chart['width']"
+                            [height]="tip_chart['height']"
+                            [type]="tip_chart['type']"
+                            [dataFormat]="tip_chart['dataFormat']"
+                            [dataSource]="tip_chart['dataSource']">
+                        </fusioncharts>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card" style="min-height: 350px;">
+                <div class="card-body p-0">
+                    <app-miniloader [display]='other_loading'></app-miniloader>
+                    <div *ngIf="!other_loading">
+                        <fusioncharts
+                            [width]="tax_chart['width']"
+                            [height]="tax_chart['height']"
+                            [type]="tax_chart['type']"
+                            [dataFormat]="tax_chart['dataFormat']"
+                            [dataSource]="tax_chart['dataSource']">
+                        </fusioncharts>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-6">
+            <div class="card" style="min-height: 600px;">
+                <div class="card-body p-0">
+                    <app-miniloader [display]='payment_loading'></app-miniloader>
+                    <div *ngIf="!payment_loading">
+                        <fusioncharts
+                            [width]="payment_chart['width']"
+                            [height]="payment_chart['height']"
+                            [type]="payment_chart['type']"
+                            [dataFormat]="payment_chart['dataFormat']"
+                            [dataSource]="payment_chart['dataSource']">
+                        </fusioncharts>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="card" style="min-height: 600px;">
+                <div class="card-body p-0">
+                    <app-miniloader [display]='payment_loading'></app-miniloader>
+                    <div *ngIf="!payment_loading">
+                        <fusioncharts
+                            [width]="article_chart['width']"
+                            [height]="article_chart['height']"
+                            [type]="article_chart['type']"
+                            [dataFormat]="article_chart['dataFormat']"
+                            [dataSource]="article_chart['dataSource']">
+                        </fusioncharts>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

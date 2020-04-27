@@ -124,4 +124,22 @@ export class ApiService {
                 return res;
             }))
     }
+    sale_compare(data){
+        return this.http.post(`${api_url}/home/sale_compare`, data)
+            .pipe(map(res => {
+                return res;
+            }))
+    }
+    other_compare(data){
+        return this.http.post(`${api_url}/home/other_compare`, data)
+            .pipe(map(res => {
+                return res;
+            }))
+    }
+    payment_compare(data){
+        return this.http.post(`${api_url}/home/payment_compare`, data)
+            .pipe(map(res => {
+                return res;
+            }))
+    }
 }

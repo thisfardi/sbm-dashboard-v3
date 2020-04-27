@@ -340,17 +340,12 @@ const articleChart: Object = {
                 styles: "myHTMLFont"
             }]
         }
-    },
-    events: {
-        dataPlotClick: function(e){
-            console.log(e)
-        }
     }
 }
 const groupDetailChart: Object = {
     width: "100%",
     height: 400,
-    type: "bar2d",
+    type: "bar3d",
     dataFormat: "json",
     dataSource: {
         chart: {
@@ -359,6 +354,7 @@ const groupDetailChart: Object = {
             toolTipBgColor: "#000000",
             toolTipColor: "#eeeeee",
             toolTipBgAlpha: "80",
+            showvalues: "1",
             theme: "fusion"
         },
         data: []
@@ -367,7 +363,7 @@ const groupDetailChart: Object = {
 const articleDetailChart: Object = {
     width: "100%",
     height: 400,
-    type: "bar2d",
+    type: "bar3d",
     dataFormat: "json",
     dataSource: {
         chart: {
@@ -376,6 +372,7 @@ const articleDetailChart: Object = {
             toolTipBgColor: "#000000",
             toolTipColor: "#eeeeee",
             toolTipBgAlpha: "80",
+            showvalues: "1",
             theme: "fusion"
         },
         data: []
