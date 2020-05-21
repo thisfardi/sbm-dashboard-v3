@@ -103,7 +103,7 @@
         <div class="col-md-8">
             <div class="card">
                 <div class="card-body">
-                    <a href="javascript: void(0);" class="btn btn-primary btn-sm float-right">
+                    <a href="javascript: void(0);" class="btn btn-primary btn-sm float-right" (click)="exportService.exportToCSV($event, 'Payment detail for ' + filter_shop + ' from ' + filter_date['from'] + ' to ' + filter_date['to'])">
                         <i class="uil uil-export ml-1"></i> Export
                     </a>
                     <h5 class="card-title header-title border-bottom p-3 mb-0">Payment detail</h5>

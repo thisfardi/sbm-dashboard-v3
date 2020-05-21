@@ -5,6 +5,7 @@ import { first } from 'rxjs/operators';
 import { ApiService } from '../../../core/services/api.service';
 import { ParseService } from '../../../core/services/parse.service';
 import { CookieService } from '../../../core/services/cookie.service';
+import { ExportService } from '../../../core/services/export.service';
 
 import { ChartType } from '../charts.model';
 import { salesChart, causalChart } from '../data';
@@ -69,7 +70,7 @@ export class SaleComponent implements OnInit {
         promotion: 0
     }
 
-    constructor(private apiService: ApiService, private cookieService: CookieService, private parseService: ParseService) { }
+    constructor(private apiService: ApiService, private cookieService: CookieService, private parseService: ParseService, public exportService: ExportService) { }
 
     ngOnInit() {
         this.filter_shop = this.shops[0];
@@ -333,7 +334,7 @@ export class SaleComponent implements OnInit {
 
     // Renderers
     sale_data_render(data){
-        
+
         this.causal_names = [];
         this.table_data = {};
         this.net_total = 0;

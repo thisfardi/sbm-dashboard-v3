@@ -171,7 +171,7 @@
         <div class="col-xl-7">
             <div class="card">
                 <div class="card-body">
-                    <a href="javascript: void(0);" class="btn btn-primary btn-sm float-right">
+                    <a href="javascript: void(0);" class="btn btn-primary btn-sm float-right" (click)="exportService.exportToCSV($event, 'Top items sold in ' + current_shop + ' on ' + dash_date)">
                         <i class="uil uil-export ml-1"></i> Export
                     </a>
                     <h5 class="card-title header-title mt-0 mb-0">Today's items</h5>

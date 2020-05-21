@@ -5,6 +5,7 @@ import { first } from 'rxjs/operators';
 import { ApiService } from '../../../core/services/api.service';
 import { ParseService } from '../../../core/services/parse.service';
 import { CookieService } from '../../../core/services/cookie.service';
+import { ExportService } from '../../../core/services/export.service';
 
 import { ChartType } from '../charts.model';
 import { transChart, avgChart } from '../data';
@@ -51,7 +52,7 @@ export class TransactionComponent implements OnInit {
     filter_range: string;
     filter_date: Object;
 
-    constructor(private apiService: ApiService, private cookieService: CookieService, private parseService: ParseService) { }
+    constructor(private apiService: ApiService, private cookieService: CookieService, private parseService: ParseService, public exportService: ExportService) { }
 
     ngOnInit() {
         this.filter_shop = this.shops[0];

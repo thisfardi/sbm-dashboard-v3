@@ -73,7 +73,7 @@ export class LoginComponent implements OnInit, AfterViewInit {
                             this.cookieService.setCookie('rememberCredentials', JSON.stringify({
                                 name: this.f.username.value,
                                 password: this.f.password.value
-                            }), 1);
+                            }), 10);
                         }else{
                             this.cookieService.deleteCookie('rememberCredentials');
                         }

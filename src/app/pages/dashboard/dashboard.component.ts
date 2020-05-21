@@ -5,6 +5,9 @@ import { first } from 'rxjs/operators';
 import { ApiService } from '../../core/services/api.service';
 import { ParseService } from '../../core/services/parse.service';
 import { CookieService } from '../../core/services/cookie.service';
+
+import { ExportService } from '../../core/services/export.service';
+
 import { revenueAreaChart, targetsBarChart, salesDonutChart, ordersData } from './data';
 
 import { ChartType, OrdersTable } from './dashboard.model';
@@ -30,7 +33,7 @@ export class DashboardComponent implements OnInit {
     month3      = ['First 10 days', 'Second 10 days', 'Third 10 days'];
     months      = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
 
-    constructor(private apiService: ApiService, private cookieService: CookieService, private parseService: ParseService) { }
+    constructor(private apiService: ApiService, private cookieService: CookieService, private parseService: ParseService, public exportService: ExportService) { }
 
     revenueAreaChart: ChartType;
     targetsBarChart: ChartType;
