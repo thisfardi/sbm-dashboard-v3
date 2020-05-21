@@ -1,1 +1,308 @@
-<p>period works!</p>
+<div class="container-fluid">
+    <div class="row mt-4">
+        <div *ngIf='db_error' class="col-md-12">
+            <ngb-alert type="danger" [dismissible]="false">
+                Database connection error. Please try again later.
+            </ngb-alert>
+        </div>
+        <div class="col-md-12">
+            <div class="card">
+                <div class="card-body p-0">
+                    <div class="row">
+                        <div class="col-md-4">
+                            <form class="form-inline mt-3 ml-3 mr-3 filter-form">
+                                <div class="form-group mr-5 mb-2">
+                                    <label class="col-form-label mr-3">Select shop</label>
+                                    <ng-select [items]="shops" [(ngModel)]='filter_shop' [ngModelOptions]="{standalone: true}"></ng-select>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-12">
+                            <form class="form-inline ml-3 mr-3 filter-form">
+                                <div class="form-group mr-2 mb-2">
+                                    <label class="col-form-label mr-3">Select date range</label>
+                                    <ng-select [items]="date_ranges['labels']" [(ngModel)]='filter_range' [ngModelOptions]="{standalone: true}" (change)="filter_range_change()"></ng-select>
+                                </div>
+                                <div class="form-group mr-2 mb-2">
+                                    <input id="filter_date_range" type="text" class="form-control" disabled placeholder="2020-01-01 to 2020 01-31" mwlFlatpickr mode="range" [convertModelValue]="true" [(ngModel)]="filter_date" [ngModelOptions]="{standalone: true}"/>
+                                </div>
+                                <div class="form-group mr-2 mb-2">
+                                    <label class="col-form-label mr-3">Select compare date range</label>
+                                    <ng-select [items]="date_ranges['labels']" [(ngModel)]='filter_range_secondary' [ngModelOptions]="{standalone: true}" (change)="filter_range_secondary_change()"></ng-select>
+                                </div>
+                                <div class="form-group mr-2 mb-2">
+                                    <input id="filter_date_range_secondary" type="text" class="form-control" disabled placeholder="2020-01-01 to 2020 01-31" mwlFlatpickr mode="range" [convertModelValue]="true" [(ngModel)]="filter_date_secondary" [ngModelOptions]="{standalone: true}"/>
+                                </div>
+                                <button type="button" name="button" class="btn btn-primary btn-sm mt-2 ml-3 mb-3" (click)="apply_filter()"><i class="uil uil-check"></i> Apply filters</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-4">
+            <div class="card" style="min-height: 300px;">
+                <div class="card-body p-0">
+                    <app-miniloader [display]='sale_loading'></app-miniloader>
+                    <div *ngIf="!sale_loading">
+                        <fusioncharts
+                            [width]="netsale_period_chart['width']"
+                            [height]="netsale_period_chart['height']"
+                            [type]="netsale_period_chart['type']"
+                            [dataFormat]="netsale_period_chart['dataFormat']"
+                            [dataSource]="netsale_period_chart['dataSource']">
+                        </fusioncharts>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card" style="min-height: 300px;">
+                <div class="card-body p-0">
+                    <app-miniloader [display]='sale_loading'></app-miniloader>
+                    <div *ngIf="!sale_loading">
+                        <fusioncharts
+                            [width]="transaction_period_chart['width']"
+                            [height]="transaction_period_chart['height']"
+                            [type]="transaction_period_chart['type']"
+                            [dataFormat]="transaction_period_chart['dataFormat']"
+                            [dataSource]="transaction_period_chart['dataSource']">
+                        </fusioncharts>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card" style="min-height: 300px;">
+                <div class="card-body p-0">
+                    <app-miniloader [display]='sale_loading'></app-miniloader>
+                    <div *ngIf="!sale_loading">
+                        <fusioncharts
+                            [width]="avg_period_chart['width']"
+                            [height]="avg_period_chart['height']"
+                            [type]="avg_period_chart['type']"
+                            [dataFormat]="avg_period_chart['dataFormat']"
+                            [dataSource]="avg_period_chart['dataSource']">
+                        </fusioncharts>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card" style="min-height: 300px;">
+                <div class="card-body p-0">
+                    <app-miniloader [display]='sale_loading'></app-miniloader>
+                    <div *ngIf="!sale_loading">
+                        <fusioncharts
+                            [width]="discount_period_chart['width']"
+                            [height]="discount_period_chart['height']"
+                            [type]="discount_period_chart['type']"
+                            [dataFormat]="discount_period_chart['dataFormat']"
+                            [dataSource]="discount_period_chart['dataSource']">
+                        </fusioncharts>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card" style="min-height: 300px;">
+                <div class="card-body p-0">
+                    <app-miniloader [display]='sale_loading'></app-miniloader>
+                    <div *ngIf="!sale_loading">
+                        <fusioncharts
+                            [width]="tip_period_chart['width']"
+                            [height]="tip_period_chart['height']"
+                            [type]="tip_period_chart['type']"
+                            [dataFormat]="tip_period_chart['dataFormat']"
+                            [dataSource]="tip_period_chart['dataSource']">
+                        </fusioncharts>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card" style="min-height: 300px;">
+                <div class="card-body p-0">
+                    <app-miniloader [display]='sale_loading'></app-miniloader>
+                    <div *ngIf="!sale_loading">
+                        <fusioncharts
+                            [width]="tax_period_chart['width']"
+                            [height]="tax_period_chart['height']"
+                            [type]="tax_period_chart['type']"
+                            [dataFormat]="tax_period_chart['dataFormat']"
+                            [dataSource]="tax_period_chart['dataSource']">
+                        </fusioncharts>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card" style="min-height: 300px;">
+                <div class="card-body p-0">
+                    <app-miniloader [display]='sale_loading'></app-miniloader>
+                    <div *ngIf="!sale_loading">
+                        <fusioncharts
+                            [width]="promotion_period_chart['width']"
+                            [height]="promotion_period_chart['height']"
+                            [type]="promotion_period_chart['type']"
+                            [dataFormat]="promotion_period_chart['dataFormat']"
+                            [dataSource]="promotion_period_chart['dataSource']">
+                        </fusioncharts>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-12">
+            <div class="card">
+                <div class="card-body">
+                    <a href="javascript: void(0);" class="btn btn-primary btn-sm float-right">
+                        <i class="uil uil-export ml-1"></i> Export
+                    </a>
+                    <h5 class="card-title header-title border-bottom p-3 mb-0">{{ filter_shop }} period comparison</h5>
+                    <app-miniloader [display]='sale_loading'></app-miniloader>
+                    <div *ngIf="!sale_loading" class="table-responsive">
+                        <table class="table table-sm mb-0 table-striped">
+                            <thead>
+                                <tr>
+                                    <th>Criteria</th>
+                                    <th colspan="3">{{ filter_date['from'] }} ~ {{ filter_date['to'] }} ({{ filter_range }})</th>
+                                    <th colspan="3">{{ filter_date_secondary['from'] }} ~ {{ filter_date_secondary['to'] }} ({{ filter_range_secondary }})</th>
+                                    <th colspan="2">Difference</th>
+                                </tr>
+                                <tr>
+                                    <th></th>
+                                    <th class="text-info">Amount</th>
+                                    <th class="text-primary">Qty</th>
+                                    <th class="text-warning">% sales</th>
+                                    <th class="text-info">Amount</th>
+                                    <th class="text-primary">Qty</th>
+                                    <th class="text-warning">% sales</th>
+                                    <th>Amount</th>
+                                    <th>Qty</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td style="font-weight: bolder;" class="text-danger">Netsale</td>
+                                    <td class="text-info">{{ netsale_f | currency }}</td>
+                                    <td>-</td>
+                                    <td>-</td>
+                                    <td class="text-info">{{ netsale_s | currency }}</td>
+                                    <td>-</td>
+                                    <td>-</td>
+                                    <td>{{ netsale_f - netsale_s | currency }}</td>
+                                    <td>-</td>
+                                </tr>
+                                <tr>
+                                    <td style="font-weight: bolder;" class="text-danger">Transaction count</td>
+                                    <td>-</td>
+                                    <td class="text-primary">{{ transaction_count_f }}</td>
+                                    <td>-</td>
+                                    <td>-</td>
+                                    <td class="text-primary">{{ transaction_count_s }}</td>
+                                    <td>-</td>
+                                    <td>-</td>
+                                    <td>{{ transaction_count_f - transaction_count_s }}</td>
+                                </tr>
+                                <tr>
+                                    <td style="font-weight: bolder;" class="text-danger">Average bill</td>
+                                    <td class="text-info">{{ average_bill_f | currency }}</td>
+                                    <td>-</td>
+                                    <td>-</td>
+                                    <td class="text-info">{{ average_bill_s | currency }}</td>
+                                    <td>-</td>
+                                    <td>-</td>
+                                    <td>{{ average_bill_f - average_bill_s | currency }}</td>
+                                    <td>-</td>
+                                </tr>
+                                <tr>
+                                    <td style="font-weight: bolder;" class="text-danger">Tax</td>
+                                    <td class="text-info">{{ tax_f | currency }}</td>
+                                    <td>-</td>
+                                    <td class="text-warning">{{ tax_f / netsale_f | percent: '.1-1' }}</td>
+                                    <td class="text-info">{{ tax_s | currency }}</td>
+                                    <td>-</td>
+                                    <td class="text-warning">{{ tax_s / netsale_s | percent: '.1-1' }}</td>
+                                    <td>{{ tax_f - tax_s | currency }}</td>
+                                    <td>-</td>
+                                </tr>
+                                <tr>
+                                    <td style="font-weight: bolder;" class="text-danger">Tip</td>
+                                    <td class="text-info">{{ tip_f | currency }}</td>
+                                    <td>-</td>
+                                    <td class="text-warning">{{ tip_f / netsale_f | percent: '.1-1' }}</td>
+                                    <td class="text-info">{{ tip_s | currency }}</td>
+                                    <td>-</td>
+                                    <td class="text-warning">{{ tip_s / netsale_s | percent: '.1-1' }}</td>
+                                    <td>{{ tip_f - tip_s | currency }}</td>
+                                    <td>-</td>
+                                </tr>
+                                <tr>
+                                    <td style="font-weight: bolder;" class="text-danger">Promotion</td>
+                                    <td class="text-info">{{ promotion_f | currency }}</td>
+                                    <td>-</td>
+                                    <td class="text-warning">{{ promotion_f / netsale_f | percent: '.1-1' }}</td>
+                                    <td class="text-info">{{ promotion_s | currency }}</td>
+                                    <td>-</td>
+                                    <td class="text-warning">{{ promotion_s / netsale_f | percent: '.1-1' }}</td>
+                                    <td>{{ promotion_f - promotion_s | currency }}</td>
+                                    <td>-</td>
+                                </tr>
+                                <tr>
+                                    <td style="font-weight: bolder;" class="text-danger">Discount</td>
+                                    <td class="text-info">{{ discount_amount_f | currency }}</td>
+                                    <td class="text-primary">{{ discount_qty_f }}</td>
+                                    <td class="text-warning">{{ discount_amount_f / netsale_f | percent: '.1-1' }}</td>
+                                    <td class="text-info">{{ discount_amount_s | currency }}</td>
+                                    <td class="text-primary">{{ discount_qty_s }}</td>
+                                    <td class="text-warning">{{ discount_amount_s / netsale_s | percent: '.1-1' }}</td>
+                                    <td>{{ discount_amount_f - discount_amount_s | currency }}</td>
+                                    <td>{{ discount_qty_f - discount_qty_s }}</td>
+                                </tr>
+                                <tr *ngFor="let item of discount_descriptions; index as idx">
+                                    <td style="text-align: center; font-size: 12px;">{{ item }}</td>
+                                    <td class="text-info">{{ discount_detail_amount_f[idx] | currency }}</td>
+                                    <td class="text-primary">{{ discount_detail_qty_f[idx] }}</td>
+                                    <td class="text-warning">{{ discount_detail_amount_f[idx] / discount_amount_f | percent: '.1-1' }}</td>
+                                    <td class="text-info">{{ discount_detail_amount_s[idx] | currency }}</td>
+                                    <td class="text-primary">{{ discount_detail_qty_s[idx] }}</td>
+                                    <td class="text-warning">{{ discount_detail_amount_s[idx] / discount_amount_s | percent: '.1-1' }}</td>
+                                    <td>{{ discount_detail_amount_f[idx] - discount_detail_amount_s[idx] | currency }}</td>
+                                    <td>{{ discount_detail_qty_f[idx] - discount_detail_qty_s[idx] }}</td>
+                                </tr>
+                                <tr>
+                                    <td style="font-weight: bolder;" class="text-danger">Payment</td>
+                                    <td class="text-info">{{ payment_amount_f | currency }}</td>
+                                    <td class="text-primary">{{ payment_qty_f }}</td>
+                                    <td>-</td>
+                                    <td class="text-info">{{ payment_amount_s | currency }}</td>
+                                    <td class="text-primary">{{ payment_qty_s }}</td>
+                                    <td>-</td>
+                                    <td>{{ payment_amount_f - payment_amount_s | currency }}</td>
+                                    <td>{{ payment_qty_f - payment_qty_s }}</td>
+                                </tr>
+                                <tr *ngFor="let item of payment_descriptions; index as idx">
+                                    <td style="text-align: center; font-size: 12px;">{{ item }}</td>
+                                    <td class="text-info">{{ payment_detail_amount_f[idx] | currency }}</td>
+                                    <td class="text-primary">{{ payment_detail_qty_f[idx] }}</td>
+                                    <td class="text-warning">{{ payment_detail_amount_f[idx] / payment_amount_f | percent: '.1-1' }}</td>
+                                    <td class="text-info">{{ payment_detail_amount_s[idx] | currency }}</td>
+                                    <td class="text-primary">{{ payment_detail_qty_s[idx] }}</td>
+                                    <td class="text-warning">{{ payment_detail_amount_s[idx] / payment_amount_s | percent: '.1-1' }}</td>
+                                    <td>{{ payment_detail_amount_f[idx] - payment_detail_amount_s[idx] | currency }}</td>
+                                    <td>{{ payment_detail_qty_f[idx] - payment_detail_qty_s[idx] }}</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

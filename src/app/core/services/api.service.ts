@@ -142,4 +142,22 @@ export class ApiService {
                 return res;
             }))
     }
+    sale_date_compare(data){
+        return this.http.post(`${api_url}/home/sale_date_compare`, data)
+            .pipe(map(res => {
+                return res;
+            }))
+    }
+    other_date_compare(data){
+        return this.http.post(`${api_url}/home/other_date_compare`, data)
+            .pipe(map(res => {
+                return res;
+            }))
+    }
+    payment_date_compare(data){
+        return this.http.post(`${api_url}/home/payment_date_compare`, data)
+            .pipe(map(res => {
+                return res;
+            }))
+    }
 }

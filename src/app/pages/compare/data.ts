@@ -168,6 +168,150 @@ const articleChart: Object = {
         }
     }
 }
+
+const netsalePeriodChart: Object = {
+    type: "column3d",
+    width: "100%",
+    height: "100%",
+    dataFormat: "json",
+    dataSource: {
+        chart: {
+            caption: "Netsale compare",
+            yaxisname: "Netsale [USD]",
+            showvalues: "1",
+            numberprefix: "$",
+            theme: "fusion"
+        },
+        data: []
+    }
+}
+const transactionPeriodChart: Object = {
+    type: "column3d",
+    width: "100%",
+    height: "100%",
+    dataFormat: "json",
+    dataSource: {
+        chart: {
+            caption: "Transaction compare",
+            yaxisname: "Transaction count",
+            showvalues: "1",
+            numberprefix: "",
+            theme: "fusion"
+        },
+        data: []
+    }
+}
+const avgPeriodChart: Object = {
+    type: "column3d",
+    width: "100%",
+    height: "100%",
+    dataFormat: "json",
+    dataSource: {
+        chart: {
+            caption: "Average bill",
+            yaxisname: "USD",
+            showvalues: "1",
+            numberprefix: "$",
+            theme: "fusion"
+        },
+        data: []
+    }
+}
+const taxPeriodChart: Object = {
+    type: "column3d",
+    width: "100%",
+    height: "100%",
+    dataFormat: "json",
+    dataSource: {
+        chart: {
+            caption: "Tax compare",
+            yaxisname: "USD",
+            showvalues: "1",
+            numberprefix: "$",
+            theme: "fusion"
+        },
+        data: []
+    }
+}
+const tipPeriodChart: Object = {
+    type: "column3d",
+    width: "100%",
+    height: "100%",
+    dataFormat: "json",
+    dataSource: {
+        chart: {
+            caption: "Tip compare",
+            yaxisname: "USD",
+            showvalues: "1",
+            numberprefix: "$",
+            theme: "fusion"
+        },
+        data: []
+    }
+}
+const promotionPeriodChart: Object = {
+    type: "column3d",
+    width: "100%",
+    height: "100%",
+    dataFormat: "json",
+    dataSource: {
+        chart: {
+            caption: "Promotion compare",
+            yaxisname: "USD",
+            showvalues: "1",
+            numberprefix: "$",
+            theme: "fusion"
+        },
+        data: []
+    }
+}
+const discountPeriodChart: Object = {
+    type: "column3d",
+    width: "100%",
+    height: "100%",
+    dataFormat: "json",
+    dataSource: {
+        chart: {
+            caption: "Discount compare",
+            yaxisname: "USD",
+            showvalues: "1",
+            numberprefix: "",
+            theme: "fusion"
+        },
+        data: []
+    }
+}
+const paymentPeriodChart: Object = {
+    type: "column3d",
+    width: "100%",
+    height: "100%",
+    dataFormat: "json",
+    dataSource: {
+        chart: {
+            caption: "Payment compare",
+            yaxisname: "USD",
+            showvalues: "1",
+            numberprefix: "",
+            theme: "fusion"
+        },
+        data: []
+    }
+}
 export{
-    saleChart, saleDetailChart, avgChart, promotionChart, tipChart, taxChart, paymentChart, articleChart
+    saleChart,
+    saleDetailChart,
+    avgChart,
+    promotionChart,
+    tipChart,
+    taxChart,
+    paymentChart,
+    articleChart,
+    netsalePeriodChart,
+    transactionPeriodChart,
+    avgPeriodChart,
+    taxPeriodChart,
+    tipPeriodChart,
+    promotionPeriodChart,
+    discountPeriodChart,
+    paymentPeriodChart
 }
