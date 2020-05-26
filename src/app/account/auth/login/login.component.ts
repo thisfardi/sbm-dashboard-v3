@@ -21,6 +21,8 @@ export class LoginComponent implements OnInit, AfterViewInit {
     loading = false;
     remember = true; // Remember credentials on cookie
 
+    bg = '';
+
     constructor(private formBuilder: FormBuilder, private route: ActivatedRoute, private router: Router, private authenticationService: AuthenticationService, private cookieService: CookieService) { }
 
     ngOnInit() {
@@ -48,6 +50,13 @@ export class LoginComponent implements OnInit, AfterViewInit {
     ngAfterViewInit() {
         document.body.classList.add('authentication-bg');
         document.body.classList.add('authentication-bg-pattern');
+        let idx = 1;
+        setInterval(function(){
+            document.querySelector('.auth-img').setAttribute('src',`assets/images/bg/bg${ ++idx }.png`);
+            if(idx > 2){
+                idx = 0;
+            }
+        }, 3000);
     }
 
     // convenience getter for easy access to form fields
