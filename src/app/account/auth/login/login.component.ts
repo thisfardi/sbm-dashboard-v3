@@ -23,6 +23,8 @@ export class LoginComponent implements OnInit, AfterViewInit {
 
     bg = '';
 
+    interval: number;
+
     constructor(private formBuilder: FormBuilder, private route: ActivatedRoute, private router: Router, private authenticationService: AuthenticationService, private cookieService: CookieService) { }
 
     ngOnInit() {
@@ -51,7 +53,7 @@ export class LoginComponent implements OnInit, AfterViewInit {
         document.body.classList.add('authentication-bg');
         document.body.classList.add('authentication-bg-pattern');
         let idx = 1;
-        setInterval(function(){
+        this.interval = setInterval(function(){
             document.querySelector('.auth-img').setAttribute('src',`assets/images/bg/bg${ ++idx }.png`);
             if(idx > 2){
                 idx = 0;
@@ -78,6 +80,7 @@ export class LoginComponent implements OnInit, AfterViewInit {
             .subscribe(
                 data => {
                     if(data['status'] == 'success'){
+                        clearInterval(this.interval);
                         if(this.remember){
                             this.cookieService.setCookie('rememberCredentials', JSON.stringify({
                                 name: this.f.username.value,
