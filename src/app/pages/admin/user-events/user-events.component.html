@@ -1,0 +1,59 @@
+
+<div class="container-fluid">
+    <div class="row mt-4">
+        <div class="col-md-12">
+            <div class="card">
+                <div class="card-body p-0">
+                    <h5 class="card-title header-title border-bottom p-3 mb-0">Filters</h5>
+                    <form class="form-inline m-3 filter-form">
+                        <div class="form-group mr-5 mb-2">
+                            <label class="col-form-label mr-3">Select user</label>
+                            <ng-select [items]="users" [(ngModel)]='filter_user' [ngModelOptions]="{standalone: true}"></ng-select>
+                        </div>
+                        <div class="form-group mr-2 mb-2">
+                            <label class="col-form-label mr-3">Select date range</label>
+                            <ng-select [items]="date_ranges['labels']" [(ngModel)]='filter_range' [ngModelOptions]="{standalone: true}" (change)="filter_range_change()"></ng-select>
+                        </div>
+                        <div class="form-group mr-2 mb-2">
+                            <input id="filter_date_range" type="text" class="form-control" disabled placeholder="2020-01-01 to 2020 01-31" mwlFlatpickr mode="range" [convertModelValue]="true" [(ngModel)]="filter_date" [ngModelOptions]="{standalone: true}"/>
+                        </div>
+                        <button type="button" name="button" class="btn btn-primary btn-sm ml-3 mb-2" (click)="apply_filter()"><i class="uil uil-check"></i> Apply filters</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-8">
+            <div class="card">
+                <div class="card-body p-0">
+                    <h5 class="card-title header-title border-bottom p-3 mb-0">User events</h5>
+                    <div class="table-responsive slimscroll" appSlimScroll>
+                        <table class="table table-hover mb-0">
+                            <thead>
+                                <tr>
+                                    <th>#</th>
+                                    <th>Event</th>
+                                    <th>Timestamp</th>
+                                </tr>
+                            </thead>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card">
+                <div class="card-body p-0">
+                    <h5 class="card-title header-title border-bottom p-3 mb-0">User summary</h5>
+                    <app-overview class="m-2" value='TBD' icon='thumbs-up' title="Member since"></app-overview>
+                    <app-overview class="m-2" value='TBD' icon='unlock' title="Login counts"></app-overview>
+                    <app-overview class="m-2" value='TBD' icon='book-open' title="Page visits"></app-overview>
+                    <app-overview class="m-2" value='TBD' icon='save' title="Export counts"></app-overview>
+                    <app-overview class="m-2" value='TBD' icon='zap' title="Current status"></app-overview>
+                    <app-overview class="m-2" value='TBD' icon='info' title="Last login"></app-overview>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

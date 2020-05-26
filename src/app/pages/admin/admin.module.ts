@@ -7,9 +7,12 @@ import { AdminRoutingModule } from './admin-routing.module';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { NgbTabsetModule, NgbTooltipModule, NgbProgressbarModule, NgbAlertModule } from '@ng-bootstrap/ng-bootstrap';
 import { NgSelectModule } from '@ng-select/ng-select';
+import { FlatpickrModule } from 'angularx-flatpickr';
+import { WidgetModule } from '../../shared/widgets/widget.module';
 
 import { UsersComponent } from './users/users.component';
 import { ShopsComponent } from './shops/shops.component';
+import { UserEventsComponent } from './user-events/user-events.component';
 
 @NgModule({
     imports: [
@@ -22,10 +25,12 @@ import { ShopsComponent } from './shops/shops.component';
         NgSelectModule,
         FormsModule,
         ReactiveFormsModule,
-        NgbAlertModule
+        NgbAlertModule,
+        FlatpickrModule,
+        WidgetModule
     ],
     // tslint:disable-next-line: max-line-length
-    declarations: [UsersComponent, ShopsComponent]
+    declarations: [UsersComponent, ShopsComponent, UserEventsComponent]
 })
 
 export class AdminModule { }
