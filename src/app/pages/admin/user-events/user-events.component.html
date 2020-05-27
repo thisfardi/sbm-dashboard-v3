@@ -34,7 +34,7 @@
             <div class="card">
                 <div class="card-body p-0">
                     <h5 class="card-title header-title border-bottom p-3 mb-0">User events</h5>
-                    <div *ngIf="logs.length > 0">
+                    <div *ngIf="logs['length'] > 0">
                         <div class="table-responsive slimscroll" appSlimScroll>
                             <table class="table table-hover mb-0">
                                 <thead>
@@ -54,7 +54,7 @@
                             </table>
                         </div>
                     </div>
-                    <div *ngIf="logs.length == 0">
+                    <div *ngIf="logs['length'] == 0">
                         <h4 class="header-title mt-2 mb-2 text-center text-warning">There are no activities for this user.</h4>
                     </div>
                 </div>
