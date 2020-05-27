@@ -6,6 +6,7 @@ import { ApiService } from '../../../core/services/api.service';
 import { ParseService } from '../../../core/services/parse.service';
 import { CookieService } from '../../../core/services/cookie.service';
 import { ExportService } from '../../../core/services/export.service';
+import { HistoryService } from '../../../core/services/history.service';
 
 import { ChartType } from '../charts.model';
 import { salesChart, causalChart } from '../data';
@@ -70,7 +71,7 @@ export class SaleComponent implements OnInit {
         promotion: 0
     }
 
-    constructor(private apiService: ApiService, private cookieService: CookieService, private parseService: ParseService, public exportService: ExportService) { }
+    constructor(private apiService: ApiService, private cookieService: CookieService, private parseService: ParseService, public exportService: ExportService, public historyService: HistoryService) { }
 
     ngOnInit() {
         this.filter_shop = this.shops[0];
@@ -124,6 +125,8 @@ export class SaleComponent implements OnInit {
         this.filter_date = this.date_ranges['ranges'][4];
 
         this._fetchCausals();
+
+        this.historyService.logHistory('page', 'Sale detail visit. Checked sale detail data for ' + this.filter_shop + ' from ' + this.filter_date['from'] + ' ~ ' + this.filter_date['to']);
 
         this.sales_chart = salesChart;
         this.causal_chart = causalChart;
@@ -276,6 +279,7 @@ export class SaleComponent implements OnInit {
     }
 
     apply_filter(){
+        this.historyService.logHistory('page', 'Sale detail visit. Checked sale detail data for ' + this.filter_shop + ' from ' + this.filter_date['from'] + ' ~ ' + this.filter_date['to']);
         this._fetchSaleDetails();
     }
     getXAxis(){

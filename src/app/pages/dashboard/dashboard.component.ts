@@ -5,6 +5,7 @@ import { first } from 'rxjs/operators';
 import { ApiService } from '../../core/services/api.service';
 import { ParseService } from '../../core/services/parse.service';
 import { CookieService } from '../../core/services/cookie.service';
+import { HistoryService } from '../../core/services/history.service';
 
 import { ExportService } from '../../core/services/export.service';
 
@@ -33,7 +34,7 @@ export class DashboardComponent implements OnInit {
     month3      = ['First 10 days', 'Second 10 days', 'Third 10 days'];
     months      = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
 
-    constructor(private apiService: ApiService, private cookieService: CookieService, private parseService: ParseService, public exportService: ExportService) { }
+    constructor(private apiService: ApiService, private cookieService: CookieService, private parseService: ParseService, public exportService: ExportService, public historyService: HistoryService) { }
 
     revenueAreaChart: ChartType;
     targetsBarChart: ChartType;
@@ -67,6 +68,8 @@ export class DashboardComponent implements OnInit {
 
         this._fetchData();
         this._fetchSumData();
+
+        this.historyService.logHistory('page', 'Dashboard visit. Checked dashboard data for ' + this.current_shop + ' on ' + this.dash_date);
     }
 
 
@@ -347,6 +350,7 @@ export class DashboardComponent implements OnInit {
         this.dash_date = moment(this.dash_date).format('YYYY-MM-DD');
         this.refresh_values();
         this._fetchSumData();
+        this.historyService.logHistory('page', 'Dashboard visit. Checked dashboard data for ' + this.current_shop + ' on ' + this.dash_date);
     }
     // Sumdata functions
     get_percent(c: any, p: any){

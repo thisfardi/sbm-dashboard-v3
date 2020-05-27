@@ -6,6 +6,7 @@ import { ApiService } from '../../../core/services/api.service';
 import { ParseService } from '../../../core/services/parse.service';
 import { CookieService } from '../../../core/services/cookie.service';
 import { ExportService } from '../../../core/services/export.service';
+import { HistoryService } from '../../../core/services/history.service';
 
 import { ChartType } from '../charts.model';
 
@@ -58,7 +59,7 @@ export class ArticleComponent implements OnInit {
     group_by = 'qty';
     article_by = 'qty';
 
-    constructor(private apiService: ApiService, private cookieService: CookieService, private parseService: ParseService, public exportService: ExportService) { }
+    constructor(private apiService: ApiService, private cookieService: CookieService, private parseService: ParseService, public exportService: ExportService, public historyService: HistoryService) { }
 
     ngOnInit() {
         this.filter_shop = this.shops[0];
@@ -110,6 +111,8 @@ export class ArticleComponent implements OnInit {
         }
         this.filter_range = this.date_ranges['labels'][4];
         this.filter_date = this.date_ranges['ranges'][4];
+
+        this.historyService.logHistory('page', 'Article detail visit. Checked article detail data for ' + this.filter_shop + ' from ' + this.filter_date['from'] + ' ~ ' + this.filter_date['to']);
 
         this.article_chart = articleChart;
         this.group_detail_chart = groupDetailChart;
@@ -220,6 +223,7 @@ export class ArticleComponent implements OnInit {
 
     apply_filter(){
         // Do actions
+        this.historyService.logHistory('page', 'Article detail visit. Checked article detail data for ' + this.filter_shop + ' from ' + this.filter_date['from'] + ' ~ ' + this.filter_date['to']);
         this._fetchArticles();
     }
     select_group(id){

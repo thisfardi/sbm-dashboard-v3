@@ -1,12 +1,15 @@
 // Service for making object data to form data, so that API can accept
 import { Injectable } from '@angular/core';
 import * as moment from 'moment';
+
+import { HistoryService } from '../services/history.service';
+
 @Injectable({
     providedIn: 'root'
 })
 export class ExportService {
 
-    constructor() { }
+    constructor(private historyService: HistoryService) { }
 
     exportToCSV(el, name){
         let table = el.target.parentElement.querySelector('table');
@@ -29,6 +32,7 @@ export class ExportService {
         downloadLink.style.display = "none";
         document.body.appendChild(downloadLink);
         downloadLink.click();
+        this.historyService.logHistory('export', name);
     }
 
     exportToExcel(){

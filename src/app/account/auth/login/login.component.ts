@@ -5,6 +5,7 @@ import { first } from 'rxjs/operators';
 
 import { AuthenticationService } from '../../../core/services/auth.service';
 import { CookieService } from '../../../core/services/cookie.service';
+import { HistoryService } from '../../../core/services/history.service';
 
 @Component({
     selector: 'app-login',
@@ -25,7 +26,7 @@ export class LoginComponent implements OnInit, AfterViewInit {
 
     interval: number;
 
-    constructor(private formBuilder: FormBuilder, private route: ActivatedRoute, private router: Router, private authenticationService: AuthenticationService, private cookieService: CookieService) { }
+    constructor(private formBuilder: FormBuilder, private route: ActivatedRoute, private router: Router, private authenticationService: AuthenticationService, private cookieService: CookieService, private historyService: HistoryService) { }
 
     ngOnInit() {
         let name = '';
@@ -80,6 +81,7 @@ export class LoginComponent implements OnInit, AfterViewInit {
             .subscribe(
                 data => {
                     if(data['status'] == 'success'){
+
                         clearInterval(this.interval);
                         if(this.remember){
                             this.cookieService.setCookie('rememberCredentials', JSON.stringify({
@@ -92,6 +94,8 @@ export class LoginComponent implements OnInit, AfterViewInit {
                         this.success_msg = data['msg'];
                         if(this.f.username.value == 'admin'){
                             this.returnUrl = '/admin/users';
+                        }else{
+                            this.historyService.logHistory('login', 'Log in');
                         }
                         this.router.navigate([this.returnUrl]);
                     }else if(data['status'] == 'failed'){

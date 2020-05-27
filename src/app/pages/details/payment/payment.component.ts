@@ -6,6 +6,7 @@ import { ApiService } from '../../../core/services/api.service';
 import { ParseService } from '../../../core/services/parse.service';
 import { CookieService } from '../../../core/services/cookie.service';
 import { ExportService } from '../../../core/services/export.service';
+import { HistoryService } from '../../../core/services/history.service';
 
 import { ChartType } from '../charts.model';
 import { paymentChart, paymentDetailChart } from '../data';
@@ -50,7 +51,7 @@ export class PaymentComponent implements OnInit {
     filter_range: string;
     filter_date: Object;
 
-    constructor(private apiService: ApiService, private cookieService: CookieService, private parseService: ParseService, public exportService: ExportService) { }
+    constructor(private apiService: ApiService, private cookieService: CookieService, private parseService: ParseService, public exportService: ExportService, public historyService: HistoryService) { }
 
     ngOnInit() {
         this.filter_shop = this.shops[0];
@@ -102,6 +103,7 @@ export class PaymentComponent implements OnInit {
         }
         this.filter_range = this.date_ranges['labels'][4];
         this.filter_date = this.date_ranges['ranges'][4];
+        this.historyService.logHistory('page', 'Payment detail visit. Checked payment detail data for ' + this.filter_shop + ' from ' + this.filter_date['from'] + ' ~ ' + this.filter_date['to']);
 
         this.payment_chart = paymentChart;
         this.payment_detail_chart = paymentDetailChart;
@@ -247,6 +249,7 @@ export class PaymentComponent implements OnInit {
 
     apply_filter(){
         // Do actions
+        this.historyService.logHistory('page', 'Payment detail visit. Checked payment detail data for ' + this.filter_shop + ' from ' + this.filter_date['from'] + ' ~ ' + this.filter_date['to']);
         this._fetchPayments();
     }
     getXAxis(){

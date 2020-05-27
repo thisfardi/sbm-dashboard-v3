@@ -5,6 +5,7 @@ import { first } from 'rxjs/operators';
 import { ApiService } from '../../../core/services/api.service';
 import { ParseService } from '../../../core/services/parse.service';
 import { CookieService } from '../../../core/services/cookie.service';
+import { HistoryService } from '../../../core/services/history.service';
 
 import { saleChart, saleDetailChart, avgChart, promotionChart, tipChart, taxChart, paymentChart, articleChart } from '../data';
 
@@ -38,7 +39,7 @@ export class ShopComponent implements OnInit {
     payment_chart: Object;
     article_chart: Object;
 
-    constructor(private apiService: ApiService, private cookieService: CookieService, private parseService: ParseService) { }
+    constructor(private apiService: ApiService, private cookieService: CookieService, private parseService: ParseService, public historyService: HistoryService) { }
 
     ngOnInit() {
         this.date_ranges = {
@@ -88,6 +89,8 @@ export class ShopComponent implements OnInit {
         }
         this.filter_range = this.date_ranges['labels'][4];
         this.filter_date = this.date_ranges['ranges'][4];
+
+        this.historyService.logHistory('page', 'Shops compare visit. Checked compare data for ' + this.shops.toString() + ' from ' + this.filter_date['from'] + ' ~ ' + this.filter_date['to']);
 
         this.sale_chart = saleChart;
         this.sale_detail_chart = saleDetailChart;
@@ -194,6 +197,7 @@ export class ShopComponent implements OnInit {
         }
     }
     apply_filter(){
+        this.historyService.logHistory('page', 'Shops compare visit. Checked compare data for ' + this.shops.toString() + ' from ' + this.filter_date['from'] + ' ~ ' + this.filter_date['to']);
         this._fetchSaleComparison();
     }
     getXAxis(){

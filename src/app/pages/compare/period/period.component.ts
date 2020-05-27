@@ -6,6 +6,7 @@ import { ApiService } from '../../../core/services/api.service';
 import { ParseService } from '../../../core/services/parse.service';
 import { CookieService } from '../../../core/services/cookie.service';
 import { ExportService } from '../../../core/services/export.service';
+import { HistoryService } from '../../../core/services/history.service';
 
 import { netsalePeriodChart, transactionPeriodChart, avgPeriodChart, taxPeriodChart, tipPeriodChart, promotionPeriodChart, discountPeriodChart, paymentPeriodChart } from '../data';
 
@@ -90,7 +91,7 @@ export class PeriodComponent implements OnInit {
     discount_period_chart: Object;
     payment_period_chart: Object;
 
-    constructor(private apiService: ApiService, private cookieService: CookieService, private parseService: ParseService, public exportService: ExportService) { }
+    constructor(private apiService: ApiService, private cookieService: CookieService, private parseService: ParseService, public exportService: ExportService, public historyService: HistoryService) { }
 
     ngOnInit() {
 
@@ -148,6 +149,8 @@ export class PeriodComponent implements OnInit {
         this.filter_range_secondary = this.date_ranges['labels'][5];
         this.filter_date_secondary = this.date_ranges['ranges'][5];
 
+        this.historyService.logHistory('page', 'Period compare page visit. Checked compare data data for ' + this.filter_shop + ' between from ' + this.filter_date['from'] + ' ~ ' + this.filter_date['to'] + ' and ' + this.filter_date_secondary['from'] + ' ~ ' + this.filter_date_secondary['to'] );
+
         this.netsale_period_chart = netsalePeriodChart;
         this.transaction_period_chart = transactionPeriodChart;
         this.avg_period_chart = avgPeriodChart;
@@ -175,6 +178,7 @@ export class PeriodComponent implements OnInit {
         }
     }
     apply_filter(){
+        this.historyService.logHistory('page', 'Period compare page visit. Checked compare data data for ' + this.filter_shop + ' between from ' + this.filter_date['from'] + ' ~ ' + this.filter_date['to'] + ' and ' + this.filter_date_secondary['from'] + ' ~ ' + this.filter_date_secondary['to'] );
         this._fetchSaleComparison();
     }
 

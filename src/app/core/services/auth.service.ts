@@ -7,12 +7,13 @@ import { CookieService } from '../services/cookie.service';
 import { ApiService } from '../services/api.service';
 import { ParseService } from '../services/parse.service';
 import { User } from '../models/auth.models';
+import { HistoryService } from '../services/history.service';
 
 @Injectable({ providedIn: 'root' })
 export class AuthenticationService {
     user: User;
 
-    constructor(private http: HttpClient, private cookieService: CookieService, private apiService: ApiService, private parseService: ParseService) {
+    constructor(private http: HttpClient, private cookieService: CookieService, private apiService: ApiService, private parseService: ParseService, private historyService: HistoryService) {
     }
 
     /**
@@ -41,6 +42,7 @@ export class AuthenticationService {
      * Logout the user
      */
     logout() {
+        //this.historyService.logHistory('logout', 'Log out');
         // remove user from local storage to log user out
         this.cookieService.deleteCookie('currentUser');
         this.user = null;

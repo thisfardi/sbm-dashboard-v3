@@ -11,7 +11,7 @@ const api_url = 'http://198.11.172.117/sbm-dashboard';
     providedIn: 'root'
 })
 export class ApiService {
-    constructor( private http: HttpClient, private cookieService: CookieService ) { }
+    constructor( private http: HttpClient, private cookieService: CookieService) { }
 
     // Admin APIs
     login(data) {
