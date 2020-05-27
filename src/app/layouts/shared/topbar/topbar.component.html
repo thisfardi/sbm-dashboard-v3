@@ -49,64 +49,8 @@
             <img src="assets/images/flags/italy.jpg" alt="user-image" class="mr-2" height="12"> <span
               class="align-middle">Italian</span>
           </a>
-
-          <!-- item-->
-          <a href="javascript:void(0);" class="dropdown-item notify-item" ngbDropdownItem>
-            <img src="assets/images/flags/spain.jpg" alt="user-image" class="mr-2" height="12"> <span
-              class="align-middle">Spanish</span>
-          </a>
-
-          <!-- item-->
-          <a href="javascript:void(0);" class="dropdown-item notify-item" ngbDropdownItem>
-            <img src="assets/images/flags/russia.jpg" alt="user-image" class="mr-2" height="12"> <span
-              class="align-middle">Russian</span>
-          </a>
         </div>
       </li>
-
-      <li class="dropdown notification-list" placement="left" ngbTooltip="8 new unread notifications" ngbDropdown>
-        <a class="nav-link dropdown-toggle" ngbDropdownToggle href="javascript: void(0);" role="button">
-          <i [attr.data-feather]="'bell'" appFeatherIcon></i>
-          <span class="noti-icon-badge"></span>
-        </a>
-        <div class="dropdown-menu dropdown-menu-right dropdown-lg" ngbDropdownMenu>
-
-          <!-- item-->
-          <div class="dropdown-item noti-title border-bottom" ngbDropdownItem>
-            <h5 class="m-0 font-size-16">
-              <span class="float-right">
-                <a href="javascript: void(0);" class="text-dark">
-                  <small>Clear All</small>
-                </a>
-              </span>Notification
-            </h5>
-          </div>
-
-          <div class="slimscroll noti-scroll" appSlimScroll>
-
-            <!-- items-->
-            <a href="javascript:void(0);" *ngFor="let item of notificationItems"
-              class="dropdown-item notify-item border-bottom" ngbDropdownItem>
-              <div class="notify-icon bg-{{ item.color }}" *ngIf="item.icon"><i class="{{ item.icon }}"></i></div>
-              <div class="notify-icon" *ngIf="item.image">
-                <img src="{{ item.image }}" class="img-fluid rounded-circle" alt="" />
-              </div>
-              <p class="notify-details">{{ item.title }}<small class="text-muted">{{ item.text }}</small>
-              </p>
-            </a>
-
-          </div>
-
-          <!-- All-->
-          <a href="javascript:void(0);"
-            class="dropdown-item text-center text-primary notify-item notify-all border-top">
-            View all
-            <i class="fi-arrow-right"></i>
-          </a>
-
-        </div>
-      </li>
-
       <li class="dropdown notification-list" placement="left" ngbTooltip="Settings">
         <a href="javascript:void(0);" class="nav-link right-bar-toggle" (click)="toggleRightSidebar()">
           <i [attr.data-feather]="'settings'" class="right-bar-toggle" appFeatherIcon></i>
