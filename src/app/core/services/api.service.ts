@@ -26,6 +26,18 @@ export class ApiService {
                 return res;
             }));
     }
+    logHistory(data) {
+        return this.http.post(`${api_url}/auth/logHistory`, data)
+            .pipe(map(res => {
+                return res;
+            }));
+    }
+    getHistory(data) {
+        return this.http.post(`${api_url}/auth/getHistory`, data)
+            .pipe(map(res => {
+                return res;
+            }));
+    }
     users() {
         return this.http.post(`${api_url}/auth/users`, {})
             .pipe(map(res => {

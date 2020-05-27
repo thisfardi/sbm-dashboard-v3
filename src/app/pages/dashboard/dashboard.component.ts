@@ -69,7 +69,7 @@ export class DashboardComponent implements OnInit {
         this._fetchData();
         this._fetchSumData();
 
-        this.historyService.logHistory('page', 'Dashboard visit. Checked dashboard data for ' + this.current_shop + ' on ' + this.dash_date);
+        //this.historyService.logHistory('page', 'Dashboard visit. Checked dashboard data for ' + this.current_shop + ' on ' + this.dash_date);
     }
 
 

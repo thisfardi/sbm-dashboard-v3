@@ -8,6 +8,7 @@ import { ApiService } from '../../../core/services/api.service';
 import { ParseService } from '../../../core/services/parse.service';
 import { CookieService } from '../../../core/services/cookie.service';
 import { ExportService } from '../../../core/services/export.service';
+import { HistoryService } from '../../../core/services/history.service';
 
 import { AdminService } from '../admin.service';
 
@@ -31,7 +32,15 @@ export class UserEventsComponent implements OnInit {
     db_error: Boolean = false;
     server_user_fetching_error = false;
 
-    constructor(private adminService: AdminService, private apiService: ApiService, private cookieService: CookieService, private parseService: ParseService, public exportService: ExportService) { }
+    logs: Object = [];
+    member_since: string;
+    login_counts: string = '0';
+    page_visits: string = '0';
+    export_counts: string = '0';
+    current_status: string = 'Offline';
+    last_login: string;
+
+    constructor(private adminService: AdminService, private apiService: ApiService, private cookieService: CookieService, private parseService: ParseService, public exportService: ExportService, public historyService: HistoryService) { }
 
     ngOnInit() {
         //console.log(this.adminService.users)
@@ -42,6 +51,7 @@ export class UserEventsComponent implements OnInit {
         }else{
             this.users = [...this.adminService.users['map'](item => item.name)];
             this.filter_user = this.users[0];
+            this.apply_filter();
         }
 
         this.date_ranges = {
@@ -91,6 +101,7 @@ export class UserEventsComponent implements OnInit {
         }
         this.filter_range = this.date_ranges['labels'][4];
         this.filter_date = this.date_ranges['ranges'][4];
+
     }
     filter_range_change(){
         this.filter_date = this.date_ranges['ranges'][this.date_ranges['labels'].indexOf(this.filter_range)];
@@ -102,6 +113,36 @@ export class UserEventsComponent implements OnInit {
     }
     apply_filter(){
         //
+        this.loading = true;
+        this.member_since = '';
+        this.last_login = '';
+        this.login_counts = '0';
+        this.page_visits = '0';
+        this.export_counts = '0';
+        this.logs = [];
+        this.historyService.getHistory(this.filter_user)
+            .pipe(first())
+            .subscribe(
+                data => {
+                    if(data['status'] == 'success'){
+                        if(data['data']['events']['events'].length == 0){
+
+                        }else{
+                            this.member_since = data['data']['events'].member_since;
+                            this.last_login = data['data']['events'].last_login;
+                            this.login_counts = data['data']['events']['events'][0].login_counts;
+                            this.page_visits = data['data']['events']['events'][0].page_visits;
+                            this.export_counts = data['data']['events']['events'][0].export_counts;
+                        }
+                        this.logs = [...data['data']['logs']];
+                    }
+                    this.loading = false;
+                },
+                error => {
+                    console.log(error);
+                    this.loading = false;
+                }
+            )
     }
     _fetchUserList() {
         this.apiService.users()
@@ -113,6 +154,7 @@ export class UserEventsComponent implements OnInit {
                     this.adminService.users = [...data['data']];
                     this.users = [...data['data']['map'](item => item.name)];
                     this.filter_user = this.users[0];
+                    this.apply_filter();
                 },
                 error => {
                     this.server_user_fetching_error = true;

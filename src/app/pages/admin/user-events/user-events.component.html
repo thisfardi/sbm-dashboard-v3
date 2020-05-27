@@ -1,9 +1,15 @@
 
 <div class="container-fluid">
+    <app-ui-preloader [display]="loading"></app-ui-preloader>
     <div class="row mt-4">
         <div class="col-md-12">
             <div class="card">
                 <div class="card-body p-0">
+                    <div *ngIf='server_user_fetching_error'>
+                        <h4 class="header-title mt-0 mb-1">The server is not responding at the moment.
+                            <i class="uil-refresh ml-3 icon-dual-info" placement="bottom" ngbTooltip="Click here to refresh" (click)="ngOnInit()"></i>
+                        </h4>
+                    </div>
                     <h5 class="card-title header-title border-bottom p-3 mb-0">Filters</h5>
                     <form class="form-inline m-3 filter-form">
                         <div class="form-group mr-5 mb-2">
@@ -28,16 +34,28 @@
             <div class="card">
                 <div class="card-body p-0">
                     <h5 class="card-title header-title border-bottom p-3 mb-0">User events</h5>
-                    <div class="table-responsive slimscroll" appSlimScroll>
-                        <table class="table table-hover mb-0">
-                            <thead>
-                                <tr>
-                                    <th>#</th>
-                                    <th>Event</th>
-                                    <th>Timestamp</th>
-                                </tr>
-                            </thead>
-                        </table>
+                    <div *ngIf="logs.length > 0">
+                        <div class="table-responsive slimscroll" appSlimScroll>
+                            <table class="table table-hover mb-0">
+                                <thead>
+                                    <tr>
+                                        <th width="10%">#</th>
+                                        <th width="70%">Event</th>
+                                        <th width="20%">Timestamp</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr *ngFor="let item of logs; index as idx">
+                                        <td>{{ idx + 1 }}</td>
+                                        <td>{{ item['event_description'] }}</td>
+                                        <td>{{ item['timestamp'] }}</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    <div *ngIf="logs.length == 0">
+                        <h4 class="header-title mt-2 mb-2 text-center text-warning">There are no activities for this user.</h4>
                     </div>
                 </div>
             </div>
@@ -46,12 +64,12 @@
             <div class="card">
                 <div class="card-body p-0">
                     <h5 class="card-title header-title border-bottom p-3 mb-0">User summary</h5>
-                    <app-overview class="m-2" value='TBD' icon='thumbs-up' title="Member since"></app-overview>
-                    <app-overview class="m-2" value='TBD' icon='unlock' title="Login counts"></app-overview>
-                    <app-overview class="m-2" value='TBD' icon='book-open' title="Page visits"></app-overview>
-                    <app-overview class="m-2" value='TBD' icon='save' title="Export counts"></app-overview>
-                    <app-overview class="m-2" value='TBD' icon='zap' title="Current status"></app-overview>
-                    <app-overview class="m-2" value='TBD' icon='info' title="Last login"></app-overview>
+                    <app-overview class="m-2" value='{{ member_since }}' icon='thumbs-up' title="Member since"></app-overview>
+                    <app-overview class="m-2" value='{{ login_counts }}' icon='unlock' title="Login counts"></app-overview>
+                    <app-overview class="m-2" value='{{ page_visits }}' icon='book-open' title="Page visits"></app-overview>
+                    <app-overview class="m-2" value='{{ export_counts }}' icon='save' title="Export counts"></app-overview>
+                    <app-overview class="m-2" value='{{ current_status }}' icon='zap' title="Current status"></app-overview>
+                    <app-overview class="m-2" value='{{ last_login }}' icon='info' title="Last login"></app-overview>
                 </div>
             </div>
         </div>

@@ -1,4 +1,5 @@
 import { Injectable } from '@angular/core';
+import { first } from 'rxjs/operators';
 
 import { CookieService } from '../services/cookie.service';
 import { ApiService } from '../services/api.service';
@@ -19,12 +20,21 @@ export class HistoryService {
     logHistory(event_detail: string, event_string: string){
         this.user = JSON.parse(this.cookieService.getCookie('currentUser'));
         let log_event = {
-            user_id: this.user.id,
+            user_id: this.user['id'],
             event_description: event_string,
             event_detail: event_detail
         };
-        console.log(log_event)
-
+        this.apiService.logHistory(this.parseService.encode(log_event))
+            .pipe(first())
+            .subscribe(data => {
+                    //console.log(data)
+                },
+                error => {
+                    console.log(error)
+                }
+            )
     }
-
+    getHistory(user_name){
+        return this.apiService.getHistory(this.parseService.encode({ user_name: user_name }));
+    }
 }
