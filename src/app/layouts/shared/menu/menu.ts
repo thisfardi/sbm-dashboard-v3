@@ -43,6 +43,19 @@ export const MENU: MenuItem[] = [
         label: 'Period compare',
         icon: 'calendar',
         link: '/compare/period',
+    },
+    {
+        label: 'Kitchen',
+        isTitle: true
+    },
+    {
+        label: 'Item history',
+        icon: 'gift',
+        link: '/kitchen/item',
+    },
+    {
+        label: 'Raw material history',
+        icon: 'briefcase',
+        link: '/kitchen/raw',
     }
-
 ];
