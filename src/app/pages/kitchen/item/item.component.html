@@ -65,4 +65,38 @@
             </div>
         </div>
     </div>
+    <div class="row">
+        <div class="col-md-8">
+            <div class="card" style="min-height: 450px;">
+                <div class="card-body p-0">
+                    <h5 class="card-title header-title border-bottom p-3 mb-0">Cook/Dispose history</h5>
+                    <app-miniloader [display]='item_loading'></app-miniloader>
+                    <div *ngIf="!item_loading">
+                        <apx-chart [series]="item_chart.series" [chart]="item_chart.chart"
+                            [tooltip]="item_chart.tooltip" [yaxis]="item_chart.yaxis"
+                            [legend]="item_chart.legend" [grid]="item_chart.grid"
+                            [dataLabels]="item_chart.dataLabels" [stroke]="item_chart.stroke"
+                            [xaxis]="item_chart.xaxis" [colors]="item_chart.colors"
+                            [responsive]="item_chart.responsive">
+                        </apx-chart>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card" style="min-height: 450px;">
+                <div class="card-body p-0">
+                    <h5 class="card-title header-title border-bottom p-3 mb-0">Disposal ratio</h5>
+                    <app-miniloader [display]='item_loading'></app-miniloader>
+                    <div *ngIf="!item_loading">
+                        <apx-chart [series]="ratio_chart.series" [chart]="ratio_chart.chart"
+                            [labels]="ratio_chart.labels" [dataLabels]="ratio_chart.dataLabels"
+                            [legend]="ratio_chart.legend" [colors]="ratio_chart.colors"
+                            [responsive]="ratio_chart.responsive">
+                        </apx-chart>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>

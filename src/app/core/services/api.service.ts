@@ -172,4 +172,10 @@ export class ApiService {
                 return res;
             }))
     }
+    item_history(data){
+        return this.http.post(`${api_url}/kitchen/getHistory`, data)
+            .pipe(map(res => {
+                return res;
+            }))
+    }
 }
