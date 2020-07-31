@@ -5,7 +5,7 @@ import { UIModule } from '../../shared/ui/ui.module';
 
 import { AdminRoutingModule } from './admin-routing.module';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { NgbTabsetModule, NgbTooltipModule, NgbProgressbarModule, NgbAlertModule } from '@ng-bootstrap/ng-bootstrap';
+import { NgbTabsetModule, NgbTooltipModule, NgbProgressbarModule, NgbAlertModule, NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { NgSelectModule } from '@ng-select/ng-select';
 import { FlatpickrModule } from 'angularx-flatpickr';
 import { WidgetModule } from '../../shared/widgets/widget.module';
@@ -21,6 +21,7 @@ import { UserEventsComponent } from './user-events/user-events.component';
         NgbTabsetModule,
         NgbTooltipModule,
         NgbProgressbarModule,
+        NgbModule,
         UIModule,
         NgSelectModule,
         FormsModule,

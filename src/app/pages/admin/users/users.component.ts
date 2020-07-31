@@ -138,10 +138,11 @@ export class UsersComponent implements OnInit {
                 }
             )
     }
-    _updateUser(id, name, shops){
+    _updateUser(id, name, password, shops){
         this.apiService.update_user(this.parseService.encode({
             id: id,
             name: name,
+            password: password,
             shop: JSON.stringify(shops)
         }))
             .pipe(first())
@@ -198,7 +199,7 @@ export class UsersComponent implements OnInit {
             )
     }
 
-    
+
     // Selects user from user list table
     select_user(item){
         this.currentUser = item;
@@ -207,7 +208,7 @@ export class UsersComponent implements OnInit {
 
         this._name = item.name;
         this._email = item.email;
-
+        this._password = item.password;
         // select_database() without reseting selected_shops
         this.shop_loading = true;
         this._fetchShops(this.selected_database);
@@ -275,7 +276,7 @@ export class UsersComponent implements OnInit {
         this.validation_error = false;
         if(this._name && (this.selected_shops['length'] != 0)){
 
-            this._updateUser(this.currentUser['id'], this._name, this.selected_shops);
+            this._updateUser(this.currentUser['id'], this._name, this._password, this.selected_shops);
 
         }else{
 
