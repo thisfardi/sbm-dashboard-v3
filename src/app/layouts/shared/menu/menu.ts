@@ -7,6 +7,11 @@ export const MENU: MenuItem[] = [
         link: '/',
     },
     {
+        label: 'Weekly overview',
+        icon: 'bar-chart-2',
+        link: '/details/weekly',
+    },
+    {
         label: 'DETAILS',
         isTitle: true
     },
