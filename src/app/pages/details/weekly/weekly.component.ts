@@ -338,7 +338,7 @@ export class WeeklyComponent implements OnInit {
                 }
             })
             netsale[idx] = value;
-            _netsale += parseFloat(value);
+            _netsale += value;
             value = 0;
             data.weekly_tax.forEach(_item => {
                 if(moment(_item.d, 'YYYY-M-D').format('YYYY-MM-DD') == item){
@@ -346,7 +346,7 @@ export class WeeklyComponent implements OnInit {
                 }
             })
             tax[idx] = value;
-            _tax += parseFloat(value);
+            _tax += value;
             value = 0;
             data.weekly_tip.forEach(_item => {
                 if(moment(_item.d, 'YYYY-M-D').format('YYYY-MM-DD') == item){
@@ -354,7 +354,7 @@ export class WeeklyComponent implements OnInit {
                 }
             })
             tip[idx] = value;
-            _tip += parseFloat(value);
+            _tip += value;
             value = 0;
             data.weekly_discount.forEach(_item => {
                 if(moment(_item.d, 'YYYY-M-D').format('YYYY-MM-DD') == item){
@@ -362,7 +362,7 @@ export class WeeklyComponent implements OnInit {
                 }
             })
             discount[idx] = value;
-            _discount += parseFloat(value);
+            _discount += value;
         })
 
         tag += `
