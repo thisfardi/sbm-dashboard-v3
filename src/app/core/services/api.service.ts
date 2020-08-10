@@ -178,4 +178,10 @@ export class ApiService {
                 return res;
             }))
     }
+    weekly_detail(data){
+        return this.http.post(`${api_url}/kitchen/weekly_detail`, data)
+            .pipe(map(res => {
+                return res;
+            }))
+    }
 }
