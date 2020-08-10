@@ -52,4 +52,40 @@
             </div>
         </div>
     </div>
+    <div class="row">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-body">
+                    <a href="javascript: void(0);" class="btn btn-primary btn-sm float-right">
+                        <i class="uil uil-export ml-1"></i> Export
+                    </a>
+                    <h5 class="card-title header-title mt-0 mb-0">Weekly report</h5>
+                    <div class="table-responsive table-sm mt-4 slimscroll" appSlimScroll style="max-height: 500px">
+                        <app-miniloader [display]='weekly_loading'></app-miniloader>
+                        <table class="table table-hover table-nowrap mb-0 report-view">
+                            <thead>
+                                <tr>
+                                    <th scope="col" width="25%">Date</th>
+                                    <th scope="col" *ngFor="let item of week_days">{{ format_date(item) }}</th>
+                                    <th scope="col" width="10%">Total</th>
+                                    <th scope="col" width="5%">%</th>
+                                </tr>
+                                <tr>
+                                    <th scope="col"></th>
+                                    <th scope="col" *ngFor="let item of week_days">{{ get_weekday(item) }}</th>
+                                    <th scope="col"></th>
+                                    <th scope="col"></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+
+                            </tbody>
+                        </table>
+                    </div>
+                    <!-- end table -->
+                </div>
+                <!-- end card-body -->
+            </div>
+        </div>
+    </div>
 </div>

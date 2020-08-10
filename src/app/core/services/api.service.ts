@@ -179,7 +179,7 @@ export class ApiService {
             }))
     }
     weekly_detail(data){
-        return this.http.post(`${api_url}/kitchen/weekly_detail`, data)
+        return this.http.post(`${api_url}/home/weekly_detail`, data)
             .pipe(map(res => {
                 return res;
             }))

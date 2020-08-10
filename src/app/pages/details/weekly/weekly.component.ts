@@ -27,7 +27,6 @@ export class WeeklyComponent implements OnInit {
 
     disable_criteria = [1, 0, 0, 0, 1, 1]; // hour, day, weekday, week, month, year
     // Loaders
-    causal_loading: Boolean = false;
     weekly_loading: Boolean = false;
 
     group_data = [];
@@ -35,6 +34,12 @@ export class WeeklyComponent implements OnInit {
     selected_group_id = 0;
     selected_group = {};
     selected_articles = [];
+
+    week_group_data = [];
+    groups = [];
+    articles = [];
+
+    week_days = [];
 
     db_error: Boolean = false;
 
@@ -100,6 +105,21 @@ export class WeeklyComponent implements OnInit {
         this.historyService.logHistory('page', 'Weekly detail visit. Checked weekly detail data for ' + this.filter_shop + ' from ' + this.filter_date['from'] + ' ~ ' + this.filter_date['to']);
 
         this._fetchWeeklyData();
+    }
+
+    get_weekdays(from, to) {
+        this.week_days = [];
+        while(from != to){
+            this.week_days.push(from);
+            from = moment(from, 'YYYY-MM-DD').add(1, 'days').format('YYYY-MM-DD');
+        }
+        this.week_days.push(to);
+    }
+    get_weekday(date){
+        return moment(date, 'YYYY-MM-DD').format('dddd');
+    }
+    format_date(date){
+        return moment(date, 'YYYY-MM-DD').format('DD-MMM');
     }
     filter_range_change(){
         this.filter_date = this.date_ranges['ranges'][this.date_ranges['labels'].indexOf(this.filter_range)];
@@ -173,17 +193,287 @@ export class WeeklyComponent implements OnInit {
             }
         }
     }
+    render_weekly_table(data){
+        this.week_group_data = [...data['weekly_group_detail']];
+        console.log(data)
 
+        // Group data
+        let group_ids = [];
+        let group_items = [];
+        for(let item of this.week_group_data){
+            if(group_ids.indexOf(item.group_id) == -1){
+                group_ids.push(item.group_id);
+            }
+        }
+        for(let g_id of group_ids){
+            let a_ids = [];
+            for(let item of this.week_group_data){
+                if((g_id == item.group_id) && (a_ids.indexOf(item.article_id)) == -1){
+                    a_ids.push(item.article_id);
+                }
+            }
+            group_items.push({
+                g_id: g_id,
+                a_id: [...a_ids]
+            })
+        }
+        let tag = ``;
+        let global_total = 0;
+        for(let item of group_items){
+            let group_total = 0;
+            for(let _item of item.a_id){
+                let sub_total = 0;
+                this.week_days.forEach(day => {
+                    sub_total += this.get_price(item.g_id, _item, day);
+                })
+                group_total += sub_total;
+            }
+            global_total += group_total;
+        }
+        for(let item of group_items){
+            tag += `
+            <tr>
+                <td style="background: #eeeeaa; font-weight: bolder">${ this.get_group_name(item.g_id) } (${ item.a_id.length })</td>
+                ${ (() => {
+                    let ret = '';
+                    this.week_days.forEach(day => {
+                        ret += `<td style="background: #eeeeaa"></td>`;
+                    })
+                    return ret;
+                })() }
+                <td style="background: #eeeeaa"></td>
+                <td style="background: #eeeeaa"></td>
+            <tr>`;
+            let group_total = 0;
+            let day_total = [];
+            this.week_days.forEach(day => {
+                day_total.push(0);
+            })
+            for(let _item of item.a_id){
+                let sub_total = 0;
+                this.week_days.forEach(day => {
+                    sub_total += this.get_price(item.g_id, _item, day);
+                })
+                group_total += sub_total;
+            }
+            for(let _item of item.a_id){
+                let sub_tag = ``;
+                let sub_total = 0;
+                this.week_days.forEach((day, idx) => {
+                    day_total[idx] += this.get_price(item.g_id, _item, day);
+                    sub_tag += `<td>$${ this.get_price(item.g_id, _item, day) }</td>`;
+                    sub_total += this.get_price(item.g_id, _item, day);
+                })
+                tag += `<tr><td style="text-align: right;">${ this.get_article_name(_item) }</td>${ sub_tag }<td style="background: lightgray">$${ sub_total.toFixed(2) }</td><td style="background: lightgray">${ (sub_total / group_total * 100).toFixed(2) + '%' }</td></tr>`
+            }
+            tag += `
+            <tr><td style="background: lightgray">${ this.get_group_name(item.g_id) } total</td>
+                ${ (() => {
+                    let ret = '';
+                    for(let item of day_total){
+                        ret += `<td style="background: lightgray">$${ item.toFixed(2) }</td>`
+                    }
+                    return ret;
+                })() }
+                <td style="background: lightgray">
+                    $${ (() => {
+                        let ret = 0;
+                        day_total.forEach(value => {
+                            ret += Math.floor(value * 100);
+                        })
+                        return ret / 100;
+                    })() }
+                </td>
+                <td style="background: lightgray">
+                    ${ (() => {
+                        let ret = 0;
+                        day_total.forEach(value => {
+                            ret += Math.floor(value * 100);
+                        })
+                        return (ret / global_total).toFixed(2) + '%';
+                    })() }
+                </td>
+            </tr>`;
+        }
+
+        // Sale data
+        tag += `
+        <tr>
+            <td style="background: #eeeeaa; font-weight: bolder">Sales summary</td>
+            ${ (() => {
+                let ret = '';
+                this.week_days.forEach(day => {
+                    ret += `<td style="background: #eeeeaa"></td>`;
+                })
+                return ret;
+            })() }
+            <td style="background: #eeeeaa"></td>
+            <td style="background: #eeeeaa"></td>
+        <tr>`;
+        let total_sale = [];
+        let _total_sale = 0;
+        let tax = [];
+        let _tax = 0;
+        let tip = [];
+        let _tip = 0;
+        let grossale = [];
+        let _grossale = 0;
+        let discount = [];
+        let _discount = 0;
+        let netsale = [];
+        let _netsale = 0;
+        this.week_days.forEach(item => {
+            total_sale.push(0);
+            tax.push(0);
+            tip.push(0);
+            grossale.push(0);
+            discount.push(0);
+            netsale.push(0);
+        })
+        this.week_days.forEach((item, idx) => {
+            let value = 0;
+            data.weekly_netsale.forEach(_item => {
+                if(moment(_item.d, 'YYYY-M-D').format('YYYY-MM-DD') == item){
+                    value = parseFloat(_item.netsale);
+                }
+            })
+            netsale[idx] = value;
+            _netsale += parseFloat(value);
+            value = 0;
+            data.weekly_tax.forEach(_item => {
+                if(moment(_item.d, 'YYYY-M-D').format('YYYY-MM-DD') == item){
+                    value = parseFloat(_item.tax);
+                }
+            })
+            tax[idx] = value;
+            _tax += parseFloat(value);
+            value = 0;
+            data.weekly_tip.forEach(_item => {
+                if(moment(_item.d, 'YYYY-M-D').format('YYYY-MM-DD') == item){
+                    value = parseFloat(_item.tip);
+                }
+            })
+            tip[idx] = value;
+            _tip += parseFloat(value);
+            value = 0;
+            data.weekly_discount.forEach(_item => {
+                if(moment(_item.d, 'YYYY-M-D').format('YYYY-MM-DD') == item){
+                    value = parseFloat(_item.discount);
+                }
+            })
+            discount[idx] = value;
+            _discount += parseFloat(value);
+        })
+
+        tag += `
+        <tr><td>Total sales amount</td>
+            ${ (() => {
+                let ret = '';
+                this.week_days.forEach((day, idx) => {
+                    ret += `<td>$${ (netsale[idx] - discount[idx] + tax[idx] + tip[idx]).toFixed(2) }</td>`;
+                })
+                return ret;
+            })() }
+            <td>$${ (_netsale -_discount + _tax + _tip).toFixed(2) }</td>
+            <td></td>
+        </tr>
+        <tr><td>Tax amount</td>
+            ${ (() => {
+                let ret = '';
+                this.week_days.forEach((day, idx) => {
+                    ret += `<td>$${ (tax[idx]).toFixed(2) }</td>`;
+                })
+                return ret;
+            })() }
+            <td>$${ (_tax).toFixed(2) }</td>
+            <td></td>
+        </tr>
+        <tr><td>Tips amount</td>
+            ${ (() => {
+                let ret = '';
+                this.week_days.forEach((day, idx) => {
+                    ret += `<td>$${ (tip[idx]).toFixed(2) }</td>`;
+                })
+                return ret;
+            })() }
+            <td>$${ (_tip).toFixed(2) }</td>
+            <td></td>
+        </tr>
+        <tr><td>Gross sales amount</td>
+            ${ (() => {
+                let ret = '';
+                this.week_days.forEach((day, idx) => {
+                    ret += `<td>$${ (netsale[idx] - discount[idx]).toFixed(2) }</td>`;
+                })
+                return ret;
+            })() }
+            <td>$${ (_netsale -_discount).toFixed(2) }</td>
+            <td></td>
+        </tr>
+        <tr><td>Discount amount</td>
+            ${ (() => {
+                let ret = '';
+                this.week_days.forEach((day, idx) => {
+                    ret += `<td>$${ (discount[idx]).toFixed(2) }</td>`;
+                })
+                return ret;
+            })() }
+            <td>$${ (_discount).toFixed(2) }</td>
+            <td></td>
+        </tr>
+        <tr><td>Net sales</td>
+            ${ (() => {
+                let ret = '';
+                this.week_days.forEach((day, idx) => {
+                    ret += `<td>$${ (netsale[idx]).toFixed(2) }</td>`;
+                })
+                return ret;
+            })() }
+            <td>$${ (_netsale).toFixed(2) }</td>
+            <td></td>
+        </tr>
+        `;
+
+        document.querySelector('.report-view tbody').innerHTML = tag;
+    }
+    get_price(g_id, a_id, date){
+        let ret = 0;
+        this.week_group_data.forEach(item => {
+            if((item.group_id == g_id) && (item.article_id == a_id) && (moment(item.d, 'YYYY-M-D').format('YYYY-MM-DD') == date)){
+                ret = Math.floor(parseFloat(item.price) * item.amount * 100) / 100;
+            }
+        })
+        return ret;
+    }
+    get_group_name(g_id){
+        let ret = '';
+        this.week_group_data.forEach(item => {
+            if(item.group_id == g_id){
+                ret = item.group_description;
+            }
+        })
+        return ret;
+    }
+    get_article_name(a_id){
+        let ret = '';
+        this.week_group_data.forEach(item => {
+            if((item.article_id == a_id)){
+                ret = item.article_description;
+            }
+        })
+        return ret;
+    }
     public _fetchWeeklyData(){
         this.db_error = false;
         this.weekly_loading = true;
         this.filter_date['from'] = moment(this.filter_date['from']).format('YYYY-MM-DD');
         this.filter_date['to'] = this.filter_date['to'] ? moment(this.filter_date['to']).format('YYYY-MM-DD') : this.filter_date['from'];
+        this.get_weekdays(this.filter_date['from'], this.filter_date['to']);
         // Force to hour view on one day is selected
         if(this.filter_date['from'] == this.filter_date['to']){
             this.f_criteria = 'hour';
         }
-        let data = {
+        let _data = {
             db: this.database,
             shop: this.filter_shop,
             from: this.filter_date['from'],
@@ -191,23 +481,21 @@ export class WeeklyComponent implements OnInit {
             d: this.f_criteria,
             group_id: this.f_group
         };
-        console.log(data)
-        // this.apiService.weekly_detail(this.parseService.encode(data))
-        //     .pipe(first())
-        //     .subscribe(
-        //         data => {
-        //             console.log(data)
-        //             if(data['status'] == 'success'){
-        //
-        //             }else{
-        //                 this.db_error = true;
-        //             }
-        //             this.weekly_loading = false;
-        //         },
-        //         error => {
-        //             this.db_error = true;
-        //             this.weekly_loading = false;
-        //         }
-        //     )
+        this.apiService.weekly_detail(this.parseService.encode(_data))
+            .pipe(first())
+            .subscribe(
+                data => {
+                    if(data['status'] == 'success'){
+                        this.render_weekly_table(data['data']);
+                    }else{
+                        this.db_error = true;
+                    }
+                    this.weekly_loading = false;
+                },
+                error => {
+                    this.db_error = true;
+                    this.weekly_loading = false;
+                }
+            )
     }
 }
