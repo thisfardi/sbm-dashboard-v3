@@ -322,6 +322,12 @@ export class WeeklyComponent implements OnInit {
         let _discount = 0;
         let netsale = [];
         let _netsale = 0;
+
+        let trans_count = [];
+        let _trans_count = 0;
+        let avg = [];
+        let _avg = 0;
+
         this.week_days.forEach(item => {
             total_sale.push(0);
             tax.push(0);
@@ -329,6 +335,8 @@ export class WeeklyComponent implements OnInit {
             grossale.push(0);
             discount.push(0);
             netsale.push(0);
+            trans_count.push(0);
+            avg.push(0);
         })
         this.week_days.forEach((item, idx) => {
             let value = 0;
@@ -363,6 +371,22 @@ export class WeeklyComponent implements OnInit {
             })
             discount[idx] = value;
             _discount += value;
+            value = 0;
+            data.weekly_trans.forEach(_item => {
+                if(moment(_item.d, 'YYYY-M-D').format('YYYY-MM-DD') == item){
+                    value = parseFloat(_item.qty);
+                }
+            })
+            trans_count[idx] = value;
+            _trans_count += value;
+            value = 0;
+            data.weekly_trans.forEach(_item => {
+                if(moment(_item.d, 'YYYY-M-D').format('YYYY-MM-DD') == item){
+                    value = parseFloat(_item.average_bill);
+                }
+            })
+            avg[idx] = value;
+            _avg += value;
         })
 
         tag += `
@@ -374,7 +398,7 @@ export class WeeklyComponent implements OnInit {
                 })
                 return ret;
             })() }
-            <td>$${ (_netsale -_discount + _tax + _tip).toFixed(2) }</td>
+            <td style="background: lightgray">$${ (_netsale -_discount + _tax + _tip).toFixed(2) }</td>
             <td></td>
         </tr>
         <tr><td>Tax amount</td>
@@ -385,7 +409,7 @@ export class WeeklyComponent implements OnInit {
                 })
                 return ret;
             })() }
-            <td>$${ (_tax).toFixed(2) }</td>
+            <td style="background: lightgray">$${ (_tax).toFixed(2) }</td>
             <td></td>
         </tr>
         <tr><td>Tips amount</td>
@@ -396,7 +420,7 @@ export class WeeklyComponent implements OnInit {
                 })
                 return ret;
             })() }
-            <td>$${ (_tip).toFixed(2) }</td>
+            <td style="background: lightgray">$${ (_tip).toFixed(2) }</td>
             <td></td>
         </tr>
         <tr><td>Gross sales amount</td>
@@ -407,7 +431,7 @@ export class WeeklyComponent implements OnInit {
                 })
                 return ret;
             })() }
-            <td>$${ (_netsale -_discount).toFixed(2) }</td>
+            <td style="background: lightgray">$${ (_netsale -_discount).toFixed(2) }</td>
             <td></td>
         </tr>
         <tr><td>Discount amount</td>
@@ -418,7 +442,7 @@ export class WeeklyComponent implements OnInit {
                 })
                 return ret;
             })() }
-            <td>$${ (_discount).toFixed(2) }</td>
+            <td style="background: lightgray">$${ (_discount).toFixed(2) }</td>
             <td></td>
         </tr>
         <tr><td>Net sales</td>
@@ -429,11 +453,85 @@ export class WeeklyComponent implements OnInit {
                 })
                 return ret;
             })() }
-            <td>$${ (_netsale).toFixed(2) }</td>
+            <td style="background: lightgray">$${ (_netsale).toFixed(2) }</td>
             <td></td>
         </tr>
         `;
 
+        // Payment details
+        let payment_details = [...data.weekly_payment];
+        console.log(payment_details)
+        let payment_names = [];
+        payment_details.forEach(item => {
+            if(payment_names.indexOf(item.payment_detail) == -1){
+                payment_names.push(item.payment_detail)
+            }
+        })
+        let payment_data = [];
+        payment_names.forEach(item => {
+            payment_data.push({
+                name: item,
+                values: (() => {
+                    let ret = [];
+                    this.week_days.forEach(day => {
+                        ret.push(0)
+                    })
+                    return ret;
+                })(),
+                total: 0
+            })
+        })
+
+        payment_data.forEach(item => {
+            this.week_days.forEach((day, idx) => {
+                for(let _item of payment_details){
+                    if((moment(_item.d, 'YYYY-M-D').format('YYYY-MM-DD') == day) && (item.name == _item.payment_detail)){
+                        item.values[idx] = parseFloat(_item.amount);
+                        item.total += parseFloat(_item.amount)
+                    }
+                }
+            })
+        })
+        payment_data.forEach(item => {
+            tag += `
+                <tr>
+                    <td>${ item.name }</td>
+                    ${ (() => {
+                        let ret = '';
+                        item.values.forEach(value => {
+                            ret += `<td>$${ value.toFixed(2) }</td>`
+                        })
+                        return ret;
+                    })() }
+                    <td style="background: lightgray">$${ item.total.toFixed(2) }</td>
+                </tr>
+            `;
+        })
+        // Trans details
+        tag += `
+        <tr><td>Customer count</td>
+            ${ (() => {
+                let ret = '';
+                this.week_days.forEach((day, idx) => {
+                    ret += `<td>${ (trans_count[idx]) }</td>`;
+                })
+                return ret;
+            })() }
+            <td style="background: lightgray">${ (_trans_count) }</td>
+            <td></td>
+        </tr>
+        <tr><td>Average check</td>
+            ${ (() => {
+                let ret = '';
+                this.week_days.forEach((day, idx) => {
+                    ret += `<td>$${ (avg[idx]).toFixed(2) }</td>`;
+                })
+                return ret;
+            })() }
+            <td style="background: lightgray">$${ (_avg / this.week_days.length).toFixed(2) }</td>
+            <td></td>
+        </tr>
+        `;
         document.querySelector('.report-view tbody').innerHTML = tag;
     }
     get_price(g_id, a_id, date){
