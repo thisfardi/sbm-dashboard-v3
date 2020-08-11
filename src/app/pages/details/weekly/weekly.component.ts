@@ -195,7 +195,6 @@ export class WeeklyComponent implements OnInit {
     }
     render_weekly_table(data){
         this.week_group_data = [...data['weekly_group_detail']];
-        console.log(data)
 
         // Group data
         let group_ids = [];
@@ -460,7 +459,6 @@ export class WeeklyComponent implements OnInit {
 
         // Payment details
         let payment_details = [...data.weekly_payment];
-        console.log(payment_details)
         let payment_names = [];
         payment_details.forEach(item => {
             if(payment_names.indexOf(item.payment_detail) == -1){
