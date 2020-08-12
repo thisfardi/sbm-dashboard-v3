@@ -6,6 +6,7 @@ import { TransactionComponent } from './transaction/transaction.component';
 import { PaymentComponent } from './payment/payment.component';
 import { ArticleComponent } from './article/article.component';
 import { WeeklyComponent } from './weekly/weekly.component';
+import { HourlyComponent } from './hourly/hourly.component';
 const routes: Routes = [
     {
         path: 'sale',
@@ -26,6 +27,10 @@ const routes: Routes = [
     {
         path: 'weekly',
         component: WeeklyComponent
+    },
+    {
+        path: 'hourly',
+        component: HourlyComponent
     }
 ];
 

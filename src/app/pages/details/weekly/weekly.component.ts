@@ -232,16 +232,16 @@ export class WeeklyComponent implements OnInit {
         for(let item of group_items){
             tag += `
             <tr>
-                <td style="background: #eeeeaa; font-weight: bolder">${ this.get_group_name(item.g_id) } (${ item.a_id.length })</td>
+                <td class="bg-soft-success" style="font-weight: bolder">${ this.get_group_name(item.g_id) } (${ item.a_id.length })</td>
                 ${ (() => {
                     let ret = '';
                     this.week_days.forEach(day => {
-                        ret += `<td style="background: #eeeeaa"></td>`;
+                        ret += `<td class="bg-soft-success"></td>`;
                     })
                     return ret;
                 })() }
-                <td style="background: #eeeeaa"></td>
-                <td style="background: #eeeeaa"></td>
+                <td class="bg-soft-success"></td>
+                <td class="bg-soft-success"></td>
             <tr>`;
             let group_total = 0;
             let day_total = [];
@@ -263,18 +263,18 @@ export class WeeklyComponent implements OnInit {
                     sub_tag += `<td>$${ this.get_price(item.g_id, _item, day) }</td>`;
                     sub_total += this.get_price(item.g_id, _item, day);
                 })
-                tag += `<tr><td style="text-align: right;">${ this.get_article_name(_item) }</td>${ sub_tag }<td style="background: lightgray">$${ sub_total.toFixed(2) }</td><td style="background: lightgray">${ (sub_total / group_total * 100).toFixed(2) + '%' }</td></tr>`
+                tag += `<tr><td style="text-align: right;">${ this.get_article_name(_item) }</td>${ sub_tag }<td class="bg-soft-primary">$${ sub_total.toFixed(2) }</td><td class="bg-soft-primary">${ (sub_total / group_total * 100).toFixed(2) + '%' }</td></tr>`
             }
             tag += `
-            <tr><td style="background: lightgray">${ this.get_group_name(item.g_id) } total</td>
+            <tr><td class="bg-soft-primary">${ this.get_group_name(item.g_id) } total</td>
                 ${ (() => {
                     let ret = '';
                     for(let item of day_total){
-                        ret += `<td style="background: lightgray">$${ item.toFixed(2) }</td>`
+                        ret += `<td class="bg-soft-primary">$${ item.toFixed(2) }</td>`
                     }
                     return ret;
                 })() }
-                <td style="background: lightgray">
+                <td class="bg-soft-primary">
                     $${ (() => {
                         let ret = 0;
                         day_total.forEach(value => {
@@ -283,7 +283,7 @@ export class WeeklyComponent implements OnInit {
                         return ret / 100;
                     })() }
                 </td>
-                <td style="background: lightgray">
+                <td class="bg-soft-primary">
                     ${ (() => {
                         let ret = 0;
                         day_total.forEach(value => {
@@ -298,16 +298,16 @@ export class WeeklyComponent implements OnInit {
         // Sale data
         tag += `
         <tr>
-            <td style="background: #eeeeaa; font-weight: bolder">Sales summary</td>
+            <td class="bg-soft-success" style="font-weight: bolder">Sales summary</td>
             ${ (() => {
                 let ret = '';
                 this.week_days.forEach(day => {
-                    ret += `<td style="background: #eeeeaa"></td>`;
+                    ret += `<td class="bg-soft-success"></td>`;
                 })
                 return ret;
             })() }
-            <td style="background: #eeeeaa"></td>
-            <td style="background: #eeeeaa"></td>
+            <td class="bg-soft-success"></td>
+            <td class="bg-soft-success"></td>
         <tr>`;
         let total_sale = [];
         let _total_sale = 0;
@@ -397,7 +397,7 @@ export class WeeklyComponent implements OnInit {
                 })
                 return ret;
             })() }
-            <td style="background: lightgray">$${ (_netsale -_discount + _tax + _tip).toFixed(2) }</td>
+            <td class="bg-soft-primary">$${ (_netsale -_discount + _tax + _tip).toFixed(2) }</td>
             <td></td>
         </tr>
         <tr><td>Tax amount</td>
@@ -408,7 +408,7 @@ export class WeeklyComponent implements OnInit {
                 })
                 return ret;
             })() }
-            <td style="background: lightgray">$${ (_tax).toFixed(2) }</td>
+            <td class="bg-soft-primary">$${ (_tax).toFixed(2) }</td>
             <td></td>
         </tr>
         <tr><td>Tips amount</td>
@@ -419,7 +419,7 @@ export class WeeklyComponent implements OnInit {
                 })
                 return ret;
             })() }
-            <td style="background: lightgray">$${ (_tip).toFixed(2) }</td>
+            <td class="bg-soft-primary">$${ (_tip).toFixed(2) }</td>
             <td></td>
         </tr>
         <tr><td>Gross sales amount</td>
@@ -430,7 +430,7 @@ export class WeeklyComponent implements OnInit {
                 })
                 return ret;
             })() }
-            <td style="background: lightgray">$${ (_netsale -_discount).toFixed(2) }</td>
+            <td class="bg-soft-primary">$${ (_netsale -_discount).toFixed(2) }</td>
             <td></td>
         </tr>
         <tr><td>Discount amount</td>
@@ -441,7 +441,7 @@ export class WeeklyComponent implements OnInit {
                 })
                 return ret;
             })() }
-            <td style="background: lightgray">$${ (_discount).toFixed(2) }</td>
+            <td class="bg-soft-primary">$${ (_discount).toFixed(2) }</td>
             <td></td>
         </tr>
         <tr><td>Net sales</td>
@@ -452,7 +452,7 @@ export class WeeklyComponent implements OnInit {
                 })
                 return ret;
             })() }
-            <td style="background: lightgray">$${ (_netsale).toFixed(2) }</td>
+            <td class="bg-soft-primary">$${ (_netsale).toFixed(2) }</td>
             <td></td>
         </tr>
         `;
@@ -501,7 +501,7 @@ export class WeeklyComponent implements OnInit {
                         })
                         return ret;
                     })() }
-                    <td style="background: lightgray">$${ item.total.toFixed(2) }</td>
+                    <td class="bg-soft-primary">$${ item.total.toFixed(2) }</td>
                 </tr>
             `;
         })
@@ -515,7 +515,7 @@ export class WeeklyComponent implements OnInit {
                 })
                 return ret;
             })() }
-            <td style="background: lightgray">${ (_trans_count) }</td>
+            <td class="bg-soft-primary">${ (_trans_count) }</td>
             <td></td>
         </tr>
         <tr><td>Average check</td>
@@ -526,7 +526,7 @@ export class WeeklyComponent implements OnInit {
                 })
                 return ret;
             })() }
-            <td style="background: lightgray">$${ (_avg / this.week_days.length).toFixed(2) }</td>
+            <td class="bg-soft-primary">$${ (_avg / this.week_days.length).toFixed(2) }</td>
             <td></td>
         </tr>
         `;

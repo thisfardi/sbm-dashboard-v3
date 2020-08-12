@@ -8,8 +8,13 @@ export const MENU: MenuItem[] = [
     },
     {
         label: 'Weekly overview',
-        icon: 'bar-chart-2',
+        icon: 'align-center',
         link: '/details/weekly',
+    },
+    {
+        label: 'Hourly overview',
+        icon: 'clock',
+        link: '/details/hourly',
     },
     {
         label: 'DETAILS',
