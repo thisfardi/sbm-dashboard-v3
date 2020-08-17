@@ -56,7 +56,7 @@
         <div class="col-12">
             <div class="card">
                 <div class="card-body">
-                    <a href="javascript: void(0);" class="btn btn-primary btn-sm float-right">
+                    <a href="javascript: void(0);" class="btn btn-primary btn-sm float-right" (click)="exportService.exportToCSV($event, 'Weekly detail report for ' + filter_shop + ' from ' + filter_date['from'] + ' to ' + filter_date['to'])">
                         <i class="uil uil-export ml-1"></i> Export
                     </a>
                     <h5 class="card-title header-title mt-0 mb-0">Weekly report</h5>
