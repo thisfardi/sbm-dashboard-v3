@@ -190,4 +190,10 @@ export class ApiService {
                 return res;
             }))
     }
+    hourly_detail_article(data){
+        return this.http.post(`${api_url}/home/hourly_detail_article`, data)
+            .pipe(map(res => {
+                return res;
+            }))
+    }
 }

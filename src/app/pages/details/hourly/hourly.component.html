@@ -1,4 +1,3 @@
-<app-ui-preloader [display]="hourly_loading"></app-ui-preloader>
 <div class="container-fluid">
     <!-- Controls  -->
     <div class="row page-title align-items-center">
@@ -47,7 +46,7 @@
         <div class="col-12">
             <div class="card">
                 <div class="card-body">
-                    <a href="javascript: void(0);" class="btn btn-primary btn-sm float-right">
+                    <a href="javascript: void(0);" class="btn btn-primary btn-sm float-right" (click)="export_hourly_data($event)">
                         <i class="uil uil-export ml-1"></i> Export
                     </a>
                     <h5 class="card-title header-title mt-0 mb-0">Hourly report</h5>
@@ -86,7 +85,33 @@
                     </div>
                     <!-- end table -->
                 </div>
+
                 <!-- end card-body -->
+            </div>
+            <div class="card">
+                <div class="card-body">
+                    <a href="javascript: void(0);" class="btn btn-primary btn-sm float-right"  (click)="export_hourly_article_data($event)">
+                        <i class="uil uil-export ml-1"></i> Export
+                    </a>
+                    <h5 class="card-title header-title mt-0 mb-0">Groups and articles detail</h5>
+                    <div class="table-responsive table-sm mt-4 slimscroll" appSlimScroll style="max-height: 600px">
+                        <app-miniloader [display]='article_loading'></app-miniloader>
+                        <table class="table table-hover table-striped table-nowrap mb-0 report-view-articles">
+                            <thead>
+                                <tr>
+                                    <th scope="col">Group name</th>
+                                    <th scope="col">Article name</th>
+                                    <th scope="col">Qty</th>
+                                    <th scope="col">Price</th>
+                                    <th scope="col">% Price</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
