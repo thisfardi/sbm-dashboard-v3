@@ -1,1 +1,93 @@
-<p>hourly works!</p>
+<app-ui-preloader [display]="hourly_loading"></app-ui-preloader>
+<div class="container-fluid">
+    <!-- Controls  -->
+    <div class="row page-title align-items-center">
+        <div *ngIf='db_error' class="col-md-12">
+            <ngb-alert type="danger" [dismissible]="false">
+                Database connection error. Please try again later.
+            </ngb-alert>
+        </div>
+        <div class="col-sm-6 col-xl-6">
+            <form class="form-inline float-sm-left mt-3 mt-sm-0 d-flex justify-content-between filter-form">
+                <div class="form-group mr-2 mb-2">
+                    <ng-select [items]="user_shops" [(ngModel)]='current_shop' [ngModelOptions]="{standalone: true}"></ng-select>
+                </div>
+                <div class="form-group mr-2 mb-2">
+                    <input type="text" class="form-control" id="dashdate" style="min-width: 208px;" placeholder="2020-01-01" mwlFlatpickr [convertModelValue]="true" [(ngModel)]="dash_date" [ngModelOptions]="{standalone: true}"/>
+                </div>
+                <div class="btn-group mb-2" ngbDropdown>
+                    <button type="button" class="btn btn-primary" (click)="apply_filter()">
+                        <i class='uil uil-check mr-1'></i>Apply
+                    </button>
+                </div>
+            </form>
+        </div>
+        <div class="col-sm-6 col-xl-6">
+            <form class="form-inline">
+                <div class="custom-control custom-radio mb-1 mr-4">
+                    <input type="radio" id="groupa" name="group_radio" class="custom-control-input" value="group_a_id" (change)="group_change($event)" [checked]="f_group=='group_a_id'">
+                    <label class="custom-control-label" for="groupa">Group A</label>
+                </div>
+                <div class="custom-control custom-radio mb-1 mr-4">
+                    <input type="radio" id="groupb" name="group_radio" class="custom-control-input" value="group_b_id" (change)="group_change($event)" [checked]="f_group=='group_b_id'">
+                    <label class="custom-control-label" for="groupb">Group B</label>
+                </div>
+                <div class="custom-control custom-radio mb-1 mr-4">
+                    <input type="radio" id="groupc" name="group_radio" class="custom-control-input" value="group_c_id" (change)="group_change($event)" [checked]="f_group=='group_c_id'">
+                    <label class="custom-control-label" for="groupc">Group C</label>
+                </div>
+                <div class="custom-control custom-radio mb-1 mr-4">
+                    <input type="radio" id="groupd" name="group_radio" class="custom-control-input" value="group_d_id" (change)="group_change($event)" [checked]="f_group=='group_d_id'">
+                    <label class="custom-control-label" for="groupd">Group D</label>
+                </div>
+            </form>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-body">
+                    <a href="javascript: void(0);" class="btn btn-primary btn-sm float-right">
+                        <i class="uil uil-export ml-1"></i> Export
+                    </a>
+                    <h5 class="card-title header-title mt-0 mb-0">Hourly report</h5>
+                    <div class="table-responsive table-sm mt-4 slimscroll" appSlimScroll style="max-height: 600px">
+                        <app-miniloader [display]='hourly_loading'></app-miniloader>
+                        <table class="table table-hover table-striped table-nowrap mb-0 report-view">
+                            <thead>
+                                <tr>
+                                    <th scope="col">Time strip</th>
+                                    <th scope="col">Num trans</th>
+                                    <th scope="col">Guests</th>
+                                    <th scope="col">Sold articles</th>
+                                    <th scope="col">Amount</th>
+                                    <th scope="col">% Amount</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr *ngFor="let item of hourly_data; index as idx" (click)="item_details(item.h)">
+                                    <td>{{ item.h }}:00 - {{ item.h + 1 }}:00</td>
+                                    <td>{{ item.trans_count }}</td>
+                                    <td>0</td>
+                                    <td>{{ item.article_count }}</td>
+                                    <td>{{ item.netsale | currency }}</td>
+                                    <td>{{ item.netsale / total_amount | percent:'.1-1' }}</td>
+                                </tr>
+                                <tr>
+                                    <td class="bg-soft-primary">Total</td>
+                                    <td class="bg-soft-primary">{{ total_trans }}</td>
+                                    <td class="bg-soft-primary">0</td>
+                                    <td class="bg-soft-primary">{{ total_article }}</td>
+                                    <td class="bg-soft-primary">{{ total_amount | currency }}</td>
+                                    <td class="bg-soft-primary">100 %</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <!-- end table -->
+                </div>
+                <!-- end card-body -->
+            </div>
+        </div>
+    </div>
+</div>
