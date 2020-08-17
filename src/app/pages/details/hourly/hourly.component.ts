@@ -201,6 +201,6 @@ export class HourlyComponent implements OnInit {
         this.exportService.exportToCSV(el, 'Hourly report for ' + this.current_shop + ', On ' + moment(this.dash_date).format('DD, MMM YYYY'));
     }
     export_hourly_article_data(el){
-        this.exportService.exportToCSV(el, 'Hourly article details report for ' + this.current_shop + ', On ' + moment(this.dash_date).format('DD, MMM YYYY') + ', ' + this._h + ':00 ~ ' + (parseInt(this._h) + 1).toString() + ':00');
+        this.exportService.exportToCSV(el, 'Hourly article details report for ' + this.current_shop + ', On ' + moment(this.dash_date).format('DD, MMM YYYY') + ', ' + this._h + ':00 ~ ' + (this._h + 1).toString() + ':00');
     }
 }
