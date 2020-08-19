@@ -52,7 +52,7 @@
                     <h5 class="card-title header-title mt-0 mb-0">Hourly report</h5>
                     <div class="table-responsive table-sm mt-4 slimscroll" appSlimScroll style="max-height: 600px">
                         <app-miniloader [display]='hourly_loading'></app-miniloader>
-                        <table class="table table-hover table-striped table-nowrap mb-0 report-view">
+                        <table class="table table-striped table-nowrap mb-0 report-view">
                             <thead>
                                 <tr>
                                     <th scope="col">Time strip</th>
@@ -64,11 +64,11 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                <tr *ngFor="let item of hourly_data; index as idx" (click)="item_details(item.h)">
+                                <tr *ngFor="let item of hourly_data; index as idx">
                                     <td>{{ item.h }}:00 - {{ item.h + 1 }}:00</td>
                                     <td>{{ item.trans_count }}</td>
                                     <td>0</td>
-                                    <td>{{ item.article_count }}</td>
+                                    <td class="text-danger" style="cursor: pointer" (click)="item_details(item.h)">{{ item.article_count }}</td>
                                     <td>{{ item.netsale | currency }}</td>
                                     <td>{{ item.netsale / total_amount | percent:'.1-1' }}</td>
                                 </tr>
