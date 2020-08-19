@@ -37,6 +37,8 @@ export class HourlyComponent implements OnInit {
     hourly_loading = false;
     article_loading = false;
 
+    table_title = "Click articles count to see group/article details";
+
     constructor(private apiService: ApiService, private cookieService: CookieService, private parseService: ParseService, public exportService: ExportService, public historyService: HistoryService) { }
 
     ngOnInit() {
@@ -87,6 +89,7 @@ export class HourlyComponent implements OnInit {
         this._fetch_hourly_details();
     }
     render_item_details(data){
+        this.table_title = `Groups and articles detail on ${ this._h }:00 ~ ${ this._h + 1 }:00, Article group ${ this.f_group.split('_')[1].toUpperCase() }`;
         let group_ids = [];
         let group_names = [];
         data.forEach(item => {

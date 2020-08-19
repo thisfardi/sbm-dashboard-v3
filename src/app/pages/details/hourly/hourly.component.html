@@ -93,7 +93,7 @@
                     <a href="javascript: void(0);" class="btn btn-primary btn-sm float-right"  (click)="export_hourly_article_data($event)">
                         <i class="uil uil-export ml-1"></i> Export
                     </a>
-                    <h5 class="card-title header-title mt-0 mb-0">Groups and articles detail</h5>
+                    <h5 class="card-title header-title mt-0 mb-0">{{ table_title }}</h5>
                     <div class="table-responsive table-sm mt-4 slimscroll" appSlimScroll style="max-height: 600px">
                         <app-miniloader [display]='article_loading'></app-miniloader>
                         <table class="table table-hover table-striped table-nowrap mb-0 report-view-articles">
