@@ -195,7 +195,6 @@ export class WeeklyComponent implements OnInit {
     }
     render_weekly_table(data){
         this.week_group_data = [...data['weekly_group_detail']];
-
         // Group data
         let group_ids = [];
         let group_items = [];
@@ -536,7 +535,7 @@ export class WeeklyComponent implements OnInit {
         let ret = 0;
         this.week_group_data.forEach(item => {
             if((item.group_id == g_id) && (item.article_id == a_id) && (moment(item.d, 'YYYY-M-D').format('YYYY-MM-DD') == date)){
-                ret = Math.floor(parseFloat(item.price) * item.amount * 100) / 100;
+                ret = Math.floor(parseFloat(item.price) * 100) / 100;
             }
         })
         return ret;
