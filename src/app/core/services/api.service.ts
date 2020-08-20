@@ -196,4 +196,10 @@ export class ApiService {
                 return res;
             }))
     }
+    monthly_detail(data){
+        return this.http.post(`${api_url}/home/monthly_detail`, data)
+            .pipe(map(res => {
+                return res;
+            }))
+    }
 }

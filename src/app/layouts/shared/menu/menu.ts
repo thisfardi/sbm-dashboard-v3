@@ -7,6 +7,11 @@ export const MENU: MenuItem[] = [
         link: '/',
     },
     {
+        label: 'Monthly overview',
+        icon: 'calendar',
+        link: '/details/monthly',
+    },
+    {
         label: 'Weekly overview',
         icon: 'align-center',
         link: '/details/weekly',
