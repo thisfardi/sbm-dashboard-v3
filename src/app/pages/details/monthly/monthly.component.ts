@@ -84,7 +84,7 @@ export class MonthlyComponent implements OnInit {
         this.filter_range = this.date_ranges['labels'][4];
         this.filter_date = this.date_ranges['ranges'][4];
         this.historyService.logHistory('page', 'Monthly detail visit. Checked monthly detail data for ' + this.filter_shop + ' from ' + this.filter_date['from'] + ' ~ ' + this.filter_date['to']);
-
+        this._fetchMonthlyDetails()
     }
 
     filter_range_change(){
@@ -196,7 +196,7 @@ export class MonthlyComponent implements OnInit {
                     _item.ac_sales = ac_sales;
                     _item.ac_netsale = ac_netsale;
                     _item.ac_projected = ac_projected;
-                    _item.achievements = parseFloat(item.sale) / _item.projected * 100;
+                    _item.achievements = parseFloat(item.sale) / _item.projected;
                 }
             }
         })
@@ -240,6 +240,5 @@ export class MonthlyComponent implements OnInit {
                 }
             }
         })
-        console.log(this.monthly_detail_data);
     }
 }
