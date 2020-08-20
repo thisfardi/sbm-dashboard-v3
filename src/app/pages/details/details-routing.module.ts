@@ -8,6 +8,9 @@ import { ArticleComponent } from './article/article.component';
 import { WeeklyComponent } from './weekly/weekly.component';
 import { HourlyComponent } from './hourly/hourly.component';
 import { MonthlyComponent } from './monthly/monthly.component';
+import { OperatorComponent } from './operator/operator.component';
+import { PresenceComponent } from './presence/presence.component';
+
 const routes: Routes = [
     {
         path: 'sale',
@@ -36,6 +39,14 @@ const routes: Routes = [
     {
         path: 'monthly',
         component: MonthlyComponent
+    },
+    {
+        path: 'operators',
+        component: OperatorComponent
+    },
+    {
+        path: 'presence',
+        component: PresenceComponent
     }
 ];
 

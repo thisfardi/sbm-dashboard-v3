@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { first } from 'rxjs/operators';
+import * as moment from 'moment';
 
 import { CookieService } from '../services/cookie.service';
 import { ApiService } from '../services/api.service';
@@ -34,7 +35,10 @@ export class HistoryService {
                 }
             )
     }
-    getHistory(user_name){
-        return this.apiService.getHistory(this.parseService.encode({ user_name: user_name }));
+    getHistory(data){
+        if(data.from == data.to){
+            data.to = moment(data.from).add(1, 'days').format('YYYY-MM-DD');
+        }
+        return this.apiService.getHistory(this.parseService.encode({ user_name: data.user, from: data.from, to: data.to }));
     }
 }

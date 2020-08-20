@@ -120,7 +120,11 @@ export class UserEventsComponent implements OnInit {
         this.page_visits = '0';
         this.export_counts = '0';
         this.logs = [];
-        this.historyService.getHistory(this.filter_user)
+        this.historyService.getHistory({
+            user: this.filter_user,
+            from: this.filter_date['from'],
+            to: this.filter_date['to'],
+        })
             .pipe(first())
             .subscribe(
                 data => {

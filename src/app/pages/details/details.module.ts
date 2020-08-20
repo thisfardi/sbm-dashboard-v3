@@ -8,6 +8,8 @@ import { ArticleComponent } from './article/article.component';
 import { WeeklyComponent } from './weekly/weekly.component';
 import { HourlyComponent } from './hourly/hourly.component';
 import { MonthlyComponent } from './monthly/monthly.component';
+import { OperatorComponent } from './operator/operator.component';
+import { PresenceComponent } from './presence/presence.component';
 
 import { UIModule } from '../../shared/ui/ui.module';
 import { DetailsRoutingModule } from './details-routing.module';
@@ -30,11 +32,12 @@ import * as Fusion from 'fusioncharts/themes/fusioncharts.theme.fusion'
 import * as Power from "fusioncharts/fusioncharts.powercharts";
 
 
+
 // Add dependencies to FusionChartsModule
 FusionChartsModule.fcRoot(FusionCharts, Charts, Fusion, Power);
 
 @NgModule({
-    declarations: [SaleComponent, TransactionComponent, PaymentComponent, ArticleComponent, WeeklyComponent, HourlyComponent, MonthlyComponent],
+    declarations: [SaleComponent, TransactionComponent, PaymentComponent, ArticleComponent, WeeklyComponent, HourlyComponent, MonthlyComponent, OperatorComponent, PresenceComponent],
     imports: [
         CommonModule,
         DetailsRoutingModule,

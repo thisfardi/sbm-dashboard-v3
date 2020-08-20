@@ -60,6 +60,20 @@ export const MENU: MenuItem[] = [
         link: '/compare/period',
     },
     {
+        label: 'Operators',
+        isTitle: true
+    },
+    {
+        label: 'Operators',
+        icon: 'users',
+        link: '/details/operators',
+    },
+    {
+        label: 'Presence control',
+        icon: 'user-check',
+        link: '/details/presence',
+    },
+    {
         label: 'Kitchen',
         isTitle: true
     },
