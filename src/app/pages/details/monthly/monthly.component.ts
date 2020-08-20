@@ -21,13 +21,15 @@ export class MonthlyComponent implements OnInit {
     date_ranges: Object;
 
     db_error: Boolean = false;
-    monthly_loading: false;
+    monthly_loading:Boolean = false;
 
     f_criteria: string = 'day';
 
     filter_shop: string;
     filter_range: string;
     filter_date: Object;
+
+    monthly_detail_data = [];
 
     constructor(private apiService: ApiService, private cookieService: CookieService, private parseService: ParseService, public exportService: ExportService, public historyService: HistoryService) { }
 
@@ -110,7 +112,7 @@ export class MonthlyComponent implements OnInit {
             .subscribe(
                 data => {
                     if(data['status'] == 'success'){
-                        console.log(data['data']);
+                        this.process_data(data['data'])
                     }else{
                         this.db_error = true;
                     }
@@ -124,5 +126,120 @@ export class MonthlyComponent implements OnInit {
     }
     apply_filter(){
         this._fetchMonthlyDetails();
+    }
+    format_date(date){
+        return moment(date).format('DD, MMM');
+    }
+    process_data(data){
+        this.monthly_detail_data = [];
+        let start = this.filter_date['from'];
+        let end = this.filter_date['to'];
+        let dates = [];
+        while(start != end){
+            dates.push(start);
+            start = moment(start).add(1, 'days').format('YYYY-MM-DD');
+        }
+        dates.push(end);
+        dates.forEach(item => {
+            this.monthly_detail_data.push({
+                date: item,
+                day: moment(item).format('ddd'),
+                temp: '',
+                projected: (() =>{
+                    let ret = 3200;
+                    if(moment(item).format('ddd') == 'Fri'){
+                        ret = 3400;
+                    }else if(moment(item).format('ddd') == 'Sat'){
+                        ret = 4500;
+                    }else if(moment(item).format('ddd') == 'Sun'){
+                        ret = 4800;
+                    }else{
+                        ret = 3200;
+                    }
+                    return ret;
+                })(),
+                ac_projected: 0,
+                achievements: 0,
+                sales: 0,
+                ac_sales: 0,
+                netsale: 0,
+                ac_netsale: 0,
+                gc: 0,
+                ac_gc: 0,
+                cup: 0,
+                ac_cup: 0,
+                ac: 0,
+                ac_ac: 0,
+                minus_c: 0,
+                ac_minus_c: 0,
+                remark: ''
+            });
+        })
+        let ac_sales = 0;
+        let ac_netsale = 0;
+        let ac_projected = 0;
+
+        let ac_ac = 0;
+        let ac_cup = 0;
+        let ac_gc = 0;
+        let ac_minus_c = 0;
+
+        data.m_sale.forEach(item => {
+            let date = moment((item.y + '-' + item.m + '-' + item.d), 'YYYY-M-D').format('YYYY-MM-DD');
+            for(let _item of this.monthly_detail_data){
+                if(_item.date == date){
+                    _item.sales = item.sale;
+                    _item.netsale = item.netsale;
+                    ac_projected += _item.projected;
+                    ac_sales += parseFloat(item.sale);
+                    ac_netsale += parseFloat(item.netsale);
+                    _item.ac_sales = ac_sales;
+                    _item.ac_netsale = ac_netsale;
+                    _item.ac_projected = ac_projected;
+                    _item.achievements = parseFloat(item.sale) / _item.projected * 100;
+                }
+            }
+        })
+        data.m_ac.forEach(item => {
+            let date = moment((item.y + '-' + item.m + '-' + item.d), 'YYYY-M-D').format('YYYY-MM-DD');
+            for(let _item of this.monthly_detail_data){
+                if(_item.date == date){
+                    _item.ac = item.ac;
+                    ac_ac += parseFloat(item.ac);
+                    _item.ac_ac = ac_ac;
+                }
+            }
+        })
+        data.m_cup.forEach(item => {
+            let date = moment((item.y + '-' + item.m + '-' + item.d), 'YYYY-M-D').format('YYYY-MM-DD');
+            for(let _item of this.monthly_detail_data){
+                if(_item.date == date){
+                    _item.cup = item.cups;
+                    ac_cup += item.cups;
+                    _item.ac_cup = ac_cup;
+                }
+            }
+        })
+        data.m_count.forEach(item => {
+            let date = moment((item.y + '-' + item.m + '-' + item.d), 'YYYY-M-D').format('YYYY-MM-DD');
+            for(let _item of this.monthly_detail_data){
+                if(_item.date == date){
+                    _item.gc = item.transaction_count;
+                    ac_gc += item.transaction_count;
+                    _item.ac_gc = ac_gc;
+                }
+            }
+        })
+        data.m_drink.forEach(item => {
+            let date = moment((item.y + '-' + item.m + '-' + item.d), 'YYYY-M-D').format('YYYY-MM-DD');
+            for(let _item of this.monthly_detail_data){
+                if(_item.date == date){
+                    _item.minus_c = item.drinks;
+                    ac_minus_c += parseFloat(item.drinks);
+                    _item.ac_minus_c = ac_minus_c;
+                }
+            }
+        })
+        console.log(this.monthly_detail_data);
     }
 }
