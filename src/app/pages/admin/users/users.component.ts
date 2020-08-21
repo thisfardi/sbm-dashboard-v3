@@ -109,6 +109,7 @@ export class UsersComponent implements OnInit {
             .subscribe(
                 data => {
                     this.db_loading = false;
+
                     this.database = [...data['data']].map(item => item.name);
                 },
                 error => {
