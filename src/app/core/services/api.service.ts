@@ -7,9 +7,18 @@ import { CookieService } from '../services/cookie.service';
 
 const api_url = 'http://198.11.172.117/sbm-dashboard';
 
+// const db = 'db';
+// const shop = 'shop';
+// const controller = 'home';
+
+const db = '__db';
+const shop = '__shop';
+const controller = 'tcpos'
+
 @Injectable({
     providedIn: 'root'
 })
+
 export class ApiService {
     constructor( private http: HttpClient, private cookieService: CookieService) { }
 
@@ -45,13 +54,13 @@ export class ApiService {
             }))
     }
     database() {
-        return this.http.post(`${api_url}/auth/db`, {})
+        return this.http.post(`${api_url}/auth/${ db }`, {})
             .pipe(map(res => {
                 return res;
             }))
     }
     shops(data) {
-        return this.http.post(`${api_url}/auth/shop`, data)
+        return this.http.post(`${api_url}/auth/${ shop }`, data)
             .pipe(map(res => {
                 return res;
             }))
@@ -75,13 +84,13 @@ export class ApiService {
             }))
     }
     all_operators(data){
-        return this.http.post(`${api_url}/home/all_operators`, data)
+        return this.http.post(`${api_url}/${ controller }/all_operators`, data)
             .pipe(map(res => {
                 return res;
             }))
     }
     operators(data){
-        return this.http.post(`${api_url}/home/operators`, data)
+        return this.http.post(`${api_url}/${ controller }/operators`, data)
             .pipe(map(res => {
                 return res;
             }))
@@ -89,85 +98,85 @@ export class ApiService {
 
     // User APIs
     sum_data(data){
-        return this.http.post(`${api_url}/home/sum_data`, data)
+        return this.http.post(`${api_url}/${ controller }/sum_data`, data)
             .pipe(map(res => {
                 return res;
             }))
     }
     sale_data(data){
-        return this.http.post(`${api_url}/home/sale_data`, data)
+        return this.http.post(`${api_url}/${ controller }/sale_data`, data)
             .pipe(map(res => {
                 return res;
             }))
     }
     payment_data(data){
-        return this.http.post(`${api_url}/home/payment_data`, data)
+        return this.http.post(`${api_url}/${ controller }/payment_data`, data)
             .pipe(map(res => {
                 return res;
             }))
     }
     causals(data){
-        return this.http.post(`${api_url}/home/causals_data`, data)
+        return this.http.post(`${api_url}/${ controller }/causals_data`, data)
             .pipe(map(res => {
                 return res;
             }))
     }
     sale_details(data){
-        return this.http.post(`${api_url}/home/sale_details`, data)
+        return this.http.post(`${api_url}/${ controller }/sale_details`, data)
             .pipe(map(res => {
                 return res;
             }))
     }
     trans_details(data){
-        return this.http.post(`${api_url}/home/trans_details`, data)
+        return this.http.post(`${api_url}/${ controller }/trans_details`, data)
             .pipe(map(res => {
                 return res;
             }))
     }
     payment_details(data){
-        return this.http.post(`${api_url}/home/payment_details`, data)
+        return this.http.post(`${api_url}/${ controller }/payment_details`, data)
             .pipe(map(res => {
                 return res;
             }))
     }
     article_details(data){
-        return this.http.post(`${api_url}/home/article_details`, data)
+        return this.http.post(`${api_url}/${ controller }/article_details`, data)
             .pipe(map(res => {
                 return res;
             }))
     }
     sale_compare(data){
-        return this.http.post(`${api_url}/home/sale_compare`, data)
+        return this.http.post(`${api_url}/${ controller }/sale_compare`, data)
             .pipe(map(res => {
                 return res;
             }))
     }
     other_compare(data){
-        return this.http.post(`${api_url}/home/other_compare`, data)
+        return this.http.post(`${api_url}/${ controller }/other_compare`, data)
             .pipe(map(res => {
                 return res;
             }))
     }
     payment_compare(data){
-        return this.http.post(`${api_url}/home/payment_compare`, data)
+        return this.http.post(`${api_url}/${ controller }/payment_compare`, data)
             .pipe(map(res => {
                 return res;
             }))
     }
     sale_date_compare(data){
-        return this.http.post(`${api_url}/home/sale_date_compare`, data)
+        return this.http.post(`${api_url}/${ controller }/sale_date_compare`, data)
             .pipe(map(res => {
                 return res;
             }))
     }
     other_date_compare(data){
-        return this.http.post(`${api_url}/home/other_date_compare`, data)
+        return this.http.post(`${api_url}/${ controller }/other_date_compare`, data)
             .pipe(map(res => {
                 return res;
             }))
     }
     payment_date_compare(data){
-        return this.http.post(`${api_url}/home/payment_date_compare`, data)
+        return this.http.post(`${api_url}/${ controller }/payment_date_compare`, data)
             .pipe(map(res => {
                 return res;
             }))
@@ -179,25 +188,25 @@ export class ApiService {
             }))
     }
     weekly_detail(data){
-        return this.http.post(`${api_url}/home/weekly_detail`, data)
+        return this.http.post(`${api_url}/${ controller }/weekly_detail`, data)
             .pipe(map(res => {
                 return res;
             }))
     }
     hourly_detail(data){
-        return this.http.post(`${api_url}/home/hourly_detail`, data)
+        return this.http.post(`${api_url}/${ controller }/hourly_detail`, data)
             .pipe(map(res => {
                 return res;
             }))
     }
     hourly_detail_article(data){
-        return this.http.post(`${api_url}/home/hourly_detail_article`, data)
+        return this.http.post(`${api_url}/${ controller }/hourly_detail_article`, data)
             .pipe(map(res => {
                 return res;
             }))
     }
     monthly_detail(data){
-        return this.http.post(`${api_url}/home/monthly_detail`, data)
+        return this.http.post(`${api_url}/${ controller }/monthly_detail`, data)
             .pipe(map(res => {
                 return res;
             }))
