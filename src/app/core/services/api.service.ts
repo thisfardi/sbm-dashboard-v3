@@ -11,8 +11,8 @@ const api_url = 'http://198.11.172.117/sbm-dashboard';
 // const shop = 'shop';
 // const controller = 'home';
 
-const db = '__db';
-const shop = '__shop';
+const db = 'db_secondary';
+const shop = 'shop_secondary';
 const controller = 'tcpos'
 
 @Injectable({
