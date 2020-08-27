@@ -327,6 +327,7 @@ const articleChart: Object = {
             toolTipColor: "#eeeeee",
             toolTipBgAlpha: "80",
             showBorder: "0",
+            decimals: "2"
         },
         data: [],
         styles: {

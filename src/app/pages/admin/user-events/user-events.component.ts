@@ -43,17 +43,6 @@ export class UserEventsComponent implements OnInit {
     constructor(private adminService: AdminService, private apiService: ApiService, private cookieService: CookieService, private parseService: ParseService, public exportService: ExportService, public historyService: HistoryService) { }
 
     ngOnInit() {
-        //console.log(this.adminService.users)
-        if(!this.adminService.users){
-            this.loading = true;
-            this.server_user_fetching_error = false;
-            this._fetchUserList();
-        }else{
-            this.users = [...this.adminService.users['map'](item => item.name)];
-            this.filter_user = this.users[0];
-            this.apply_filter();
-        }
-
         this.date_ranges = {
             labels: ['Today', 'Yesterday', 'This week', 'Last week', 'This month', 'Last month', 'This year', 'Last year', 'All time', 'Custom range'],
             ranges: [
@@ -101,6 +90,18 @@ export class UserEventsComponent implements OnInit {
         }
         this.filter_range = this.date_ranges['labels'][4];
         this.filter_date = this.date_ranges['ranges'][4];
+
+        //console.log(this.adminService.users)
+        if(!this.adminService.users){
+            this.loading = true;
+            this.server_user_fetching_error = false;
+            this._fetchUserList();
+        }else{
+            this.users = [...this.adminService.users['map'](item => item.name)];
+            this.filter_user = this.users[0];
+            this.apply_filter();
+        }
+
 
     }
     filter_range_change(){

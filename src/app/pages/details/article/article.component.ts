@@ -305,24 +305,28 @@ export class ArticleComponent implements OnInit {
             id: "0",
             parent: "",
             name: "Total",
-            value: total_value.amount
+            value: Math.floor(total_value.price * 100) / 100
         })
         for(let item of this.group_data){
-            this.article_chart['dataSource'].data.push({
-                id: item.id.toString(),
-                parent: "0",
-                name: item.name,
-                value: item.amount
-            })
+            if(item.price != 0){
+                this.article_chart['dataSource'].data.push({
+                    id: item.id.toString(),
+                    parent: "0",
+                    name: item.name,
+                    value: Math.floor(item.price * 100) / 100
+                })
+            }
         }
 
         for(let item of this.article_data){
-            this.article_chart['dataSource'].data.push({
-                id: item.id.toString() + '-sub',
-                parent: item.parent.toString(),
-                name: item.name,
-                value: item.amount
-            })
+            if(item.price != 0){
+                this.article_chart['dataSource'].data.push({
+                    id: item.id.toString() + '-sub',
+                    parent: item.parent.toString(),
+                    name: item.name,
+                    value: Math.floor(item.price * 100) / 100
+                })
+            }
         }
 
         // Detail charts
