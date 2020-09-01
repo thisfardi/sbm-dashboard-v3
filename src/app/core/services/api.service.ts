@@ -7,13 +7,13 @@ import { CookieService } from '../services/cookie.service';
 
 const api_url = 'http://198.11.172.117/sbm-dashboard';
 
-const db = 'db';
-const shop = 'shop';
-const controller = 'home';
+// const db = 'db';
+// const shop = 'shop';
+// const controller = 'home';
 
-// const db = 'db_secondary';
-// const shop = 'shop_secondary';
-// const controller = 'tcpos'
+const db = 'db_secondary';
+const shop = 'shop_secondary';
+const controller = 'tcpos'
 
 @Injectable({
     providedIn: 'root'
