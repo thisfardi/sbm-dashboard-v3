@@ -131,6 +131,7 @@ export class MonthlyComponent implements OnInit {
         return moment(date).format('DD, MMM');
     }
     process_data(data){
+        console.log(data)
         this.monthly_detail_data = [];
         let start = this.filter_date['from'];
         let end = this.filter_date['to'];
@@ -200,16 +201,16 @@ export class MonthlyComponent implements OnInit {
                 }
             }
         })
-        data.m_ac.forEach(item => {
-            let date = moment((item.y + '-' + item.m + '-' + item.d), 'YYYY-M-D').format('YYYY-MM-DD');
-            for(let _item of this.monthly_detail_data){
-                if(_item.date == date){
-                    _item.ac = item.ac;
-                    ac_ac += parseFloat(item.ac);
-                    _item.ac_ac = ac_ac;
-                }
-            }
-        })
+        // data.m_ac.forEach(item => {
+        //     let date = moment((item.y + '-' + item.m + '-' + item.d), 'YYYY-M-D').format('YYYY-MM-DD');
+        //     for(let _item of this.monthly_detail_data){
+        //         if(_item.date == date){
+        //             _item.ac = item.ac;
+        //             ac_ac += parseFloat(item.ac);
+        //             _item.ac_ac = ac_ac;
+        //         }
+        //     }
+        // })
         data.m_cup.forEach(item => {
             let date = moment((item.y + '-' + item.m + '-' + item.d), 'YYYY-M-D').format('YYYY-MM-DD');
             for(let _item of this.monthly_detail_data){
@@ -227,6 +228,8 @@ export class MonthlyComponent implements OnInit {
                     _item.gc = item.transaction_count;
                     ac_gc += item.transaction_count;
                     _item.ac_gc = ac_gc;
+                    _item.ac = _item.netsale / _item.gc;
+                    _item.ac_ac = _item.ac_netsale / _item.ac_gc;
                 }
             }
         })
