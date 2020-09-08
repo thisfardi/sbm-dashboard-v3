@@ -84,8 +84,8 @@ export class SaleComponent implements OnInit {
                     to: moment().format('YYYY-MM-DD')
                 },
                 { // Yesterday
-                    from: moment().subtract(2, 'days').format('YYYY-MM-DD'),
-                    to: moment().subtract(2, 'days').format('YYYY-MM-DD')
+                    from: moment().subtract(1, 'days').format('YYYY-MM-DD'),
+                    to: moment().subtract(1, 'days').format('YYYY-MM-DD')
                 },
                 { // This week
                     from: moment().startOf('week').format('YYYY-MM-DD'),
