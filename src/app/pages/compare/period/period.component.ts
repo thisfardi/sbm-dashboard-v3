@@ -101,8 +101,8 @@ export class PeriodComponent implements OnInit {
             labels: ['Today', 'Yesterday', 'This week', 'Last week', 'This month', 'Last month', 'This year', 'Last year', 'All time', 'Custom range'],
             ranges: [
                 { // Today
-                    from: moment().subtract(1, 'days').format('YYYY-MM-DD'),
-                    to: moment().subtract(1, 'days').format('YYYY-MM-DD')
+                    from: moment().format('YYYY-MM-DD'),
+                    to: moment().format('YYYY-MM-DD')
                 },
                 { // Yesterday
                     from: moment().subtract(2, 'days').format('YYYY-MM-DD'),
