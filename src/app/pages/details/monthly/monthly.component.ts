@@ -31,11 +31,12 @@ export class MonthlyComponent implements OnInit {
 
     monthly_detail_data = [];
 
+    is_happy_lemon: Boolean = false;
+
     constructor(private apiService: ApiService, private cookieService: CookieService, private parseService: ParseService, public exportService: ExportService, public historyService: HistoryService) { }
 
     ngOnInit() {
         this.filter_shop = this.shops[0];
-
         this.date_ranges = {
             labels: ['Today', 'Yesterday', 'This week', 'Last week', 'This month', 'Last month', 'This year', 'Last year', 'All time', 'Custom range'],
             ranges: [
@@ -85,6 +86,11 @@ export class MonthlyComponent implements OnInit {
         this.filter_date = this.date_ranges['ranges'][4];
         this.historyService.logHistory('page', 'Monthly detail visit. Checked monthly detail data for ' + this.filter_shop + ' from ' + this.filter_date['from'] + ' ~ ' + this.filter_date['to']);
         this._fetchMonthlyDetails()
+
+
+        if(this.database == 'HAPPY_LEMON_7.1'){
+          this.is_happy_lemon = true
+        }
     }
 
     filter_range_change(){
@@ -173,7 +179,13 @@ export class MonthlyComponent implements OnInit {
                 ac_ac: 0,
                 minus_c: 0,
                 ac_minus_c: 0,
-                remark: ''
+                remark: '',
+                m_desert: 0,
+                m_waffle: 0,
+                m_toastie: 0,
+                ac_m_desert: 0,
+                ac_m_waffle: 0,
+                ac_m_toastie: 0,
             });
         })
         let ac_sales = 0;
@@ -184,6 +196,9 @@ export class MonthlyComponent implements OnInit {
         let ac_cup = 0;
         let ac_gc = 0;
         let ac_minus_c = 0;
+        let ac_m_desert = 0;
+        let ac_m_waffle = 0;
+        let ac_m_toastie = 0;
 
         data.m_sale.forEach(item => {
             let date = moment((item.y + '-' + item.m + '-' + item.d), 'YYYY-M-D').format('YYYY-MM-DD');
@@ -211,12 +226,12 @@ export class MonthlyComponent implements OnInit {
         //         }
         //     }
         // })
-        data.m_cup.forEach(item => {
+        data.m_hl_cup.forEach(item => {
             let date = moment((item.y + '-' + item.m + '-' + item.d), 'YYYY-M-D').format('YYYY-MM-DD');
             for(let _item of this.monthly_detail_data){
                 if(_item.date == date){
-                    _item.cup = item.cups;
-                    ac_cup += item.cups;
+                    _item.cup = item.hl_cup;
+                    ac_cup += item.hl_cup;
                     _item.ac_cup = ac_cup;
                 }
             }
@@ -240,6 +255,36 @@ export class MonthlyComponent implements OnInit {
                     _item.minus_c = item.drinks;
                     ac_minus_c += parseFloat(item.drinks);
                     _item.ac_minus_c = ac_minus_c;
+                }
+            }
+        })
+        data.m_desert.forEach(item => {
+            let date = moment((item.y + '-' + item.m + '-' + item.d), 'YYYY-M-D').format('YYYY-MM-DD');
+            for(let _item of this.monthly_detail_data){
+                if(_item.date == date){
+                    _item.m_desert = item.desert;
+                    ac_m_desert += parseFloat(item.desert);
+                    _item.ac_m_desert = ac_m_desert;
+                }
+            }
+        })
+        data.m_waffle.forEach(item => {
+            let date = moment((item.y + '-' + item.m + '-' + item.d), 'YYYY-M-D').format('YYYY-MM-DD');
+            for(let _item of this.monthly_detail_data){
+                if(_item.date == date){
+                    _item.m_waffle = item.waffle;
+                    ac_m_waffle += parseFloat(item.waffle);
+                    _item.ac_m_waffle = ac_m_waffle;
+                }
+            }
+        })
+        data.m_toastie.forEach(item => {
+            let date = moment((item.y + '-' + item.m + '-' + item.d), 'YYYY-M-D').format('YYYY-MM-DD');
+            for(let _item of this.monthly_detail_data){
+                if(_item.date == date){
+                    _item.m_toastie = item.toastie;
+                    ac_m_toastie += parseFloat(item.toastie);
+                    _item.ac_m_toastie = ac_m_toastie;
                 }
             }
         })

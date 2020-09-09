@@ -37,54 +37,115 @@
                     <h5 class="card-title header-title mt-0 mb-0">Monthly report</h5>
                     <div class="table-responsive table-sm mt-4" style="max-height: 600px">
                         <app-miniloader [display]='monthly_loading'></app-miniloader>
-                        <table class="table table-striped table-nowrap mb-0 report-view">
-                            <thead>
-                                <tr>
-                                    <th scope="col" width="5%">Date</th>
-                                    <th scope="col" width="5%">Day</th>
-                                    <th scope="col" width="5%">Temp*</th>
-                                    <th scope="col" width="5%">Projected*</th>
-                                    <th scope="col" width="5%">Ac projected</th>
-                                    <th scope="col" width="5%">Achievements (%)</th>
-                                    <th scope="col" width="5%">Daily sale</th>
-                                    <th scope="col" width="5%">Ac sale</th>
-                                    <th scope="col" width="5%">Netsale</th>
-                                    <th scope="col" width="5%">Ac netsale</th>
-                                    <th scope="col" width="5%">GC</th>
-                                    <th scope="col" width="5%">Ac GC</th>
-                                    <th scope="col" width="5%">Cups</th>
-                                    <th scope="col" width="5%">AC cups</th>
-                                    <th scope="col" width="5%">AC</th>
-                                    <th scope="col" width="5%">Ac AC</th>
-                                    <th scope="col" width="5%">M-coffee</th>
-                                    <th scope="col" width="5%">Ac M-coffee</th>
-                                    <th scope="col" width="5%">Remark*</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr *ngFor="let item of monthly_detail_data; index as idx">
-                                    <td>{{ format_date(item.date) }}</td>
-                                    <td>{{ item.day }}</td>
-                                    <td contenteditable>{{ item.temp }}</td>
-                                    <td contenteditable>{{ item.projected | currency  }}</td>
-                                    <td>{{ item.ac_projected | currency  }}</td>
-                                    <td>{{ item.achievements | percent:'.1-1' }}</td>
-                                    <td>{{ item.sales | currency  }}</td>
-                                    <td>{{ item.ac_sales | currency }}</td>
-                                    <td>{{ item.netsale | currency }}</td>
-                                    <td>{{ item.ac_netsale | currency }}</td>
-                                    <td>{{ item.gc }}</td>
-                                    <td>{{ item.ac_gc }}</td>
-                                    <td>{{ item.cup }}</td>
-                                    <td>{{ item.ac_cup }}</td>
-                                    <td>{{ item.ac | currency }}</td>
-                                    <td>{{ item.ac_ac | currency }}</td>
-                                    <td>{{ item.minus_c | currency }}</td>
-                                    <td>{{ item.ac_minus_c | currency }}</td>
-                                    <td contenteditable>{{ item.remark }}</td>
-                                </tr>
-                            </tbody>
-                        </table>
+                        <div *ngIf="!is_happy_lemon">
+                          <table class="table table-striped table-nowrap mb-0 report-view">
+                              <thead>
+                                  <tr>
+                                      <th scope="col" width="5%">Date</th>
+                                      <th scope="col" width="5%">Day</th>
+                                      <th scope="col" width="5%">Temp*</th>
+                                      <th scope="col" width="5%">Projected*</th>
+                                      <th scope="col" width="5%">Ac projected</th>
+                                      <th scope="col" width="5%">Achievements (%)</th>
+                                      <th scope="col" width="5%">Daily sale</th>
+                                      <th scope="col" width="5%">Ac sale</th>
+                                      <th scope="col" width="5%">Netsale</th>
+                                      <th scope="col" width="5%">Ac netsale</th>
+                                      <th scope="col" width="5%">GC</th>
+                                      <th scope="col" width="5%">Ac GC</th>
+                                      <th scope="col" width="5%">Cups</th>
+                                      <th scope="col" width="5%">AC cups</th>
+                                      <th scope="col" width="5%">Avg Check</th>
+                                      <th scope="col" width="5%">Ac AC</th>
+                                      <th scope="col" width="5%">M-coffee</th>
+                                      <th scope="col" width="5%">Ac M-coffee</th>
+                                      <th scope="col" width="5%">Remark*</th>
+                                  </tr>
+                              </thead>
+                              <tbody>
+                                  <tr *ngFor="let item of monthly_detail_data; index as idx">
+                                      <td>{{ format_date(item.date) }}</td>
+                                      <td>{{ item.day }}</td>
+                                      <td contenteditable>{{ item.temp }}</td>
+                                      <td contenteditable>{{ item.projected | currency  }}</td>
+                                      <td>{{ item.ac_projected | currency  }}</td>
+                                      <td>{{ item.achievements | percent:'.1-1' }}</td>
+                                      <td>{{ item.sales | currency  }}</td>
+                                      <td>{{ item.ac_sales | currency }}</td>
+                                      <td>{{ item.netsale | currency }}</td>
+                                      <td>{{ item.ac_netsale | currency }}</td>
+                                      <td>{{ item.gc }}</td>
+                                      <td>{{ item.ac_gc }}</td>
+                                      <td>{{ item.cup }}</td>
+                                      <td>{{ item.ac_cup }}</td>
+                                      <td>{{ item.ac | currency }}</td>
+                                      <td>{{ item.ac_ac | currency }}</td>
+                                      <td>{{ item.minus_c | currency }}</td>
+                                      <td>{{ item.ac_minus_c | currency }}</td>
+                                      <td contenteditable>{{ item.remark }}</td>
+                                  </tr>
+                              </tbody>
+                          </table>
+                        </div>
+                        <div *ngIf="is_happy_lemon">
+                          <table class="table table-striped table-nowrap mb-0 report-view">
+                              <thead>
+                                  <tr>
+                                     <th colspan="9">{{filter_date['from']}} ~ {{filter_date['to']}}</th>
+                                     <th colspan="6">{{filter_shop}}</th>
+                                     <th colspan="6" class="bg-soft-warning">SNACK</th>
+                                  </tr>
+                                  <tr>
+                                      <th width="4.7%">Date</th>
+                                      <th width="4.7%">Day of week</th>
+                                      <th width="4.7%">Proj. Daily sales</th>
+                                      <th width="4.7%">Proj. Monthly sales</th>
+                                      <th width="4.7%">Target%</th>
+                                      <th width="4.7%">Gross sales</th>
+                                      <th width="4.7%">Acc. Gross sales</th>
+                                      <th width="4.7%">Net sales</th>
+                                      <th width="4.7%">Acc. Net sales</th>
+                                      <th width="4.7%">Daily Guest count(GC)</th>
+                                      <th width="4.7%">Acc. GC</th>
+                                      <th width="4.7%">Daily Cups</th>
+                                      <th width="4.7%">Acc. Daily Cups</th>
+                                      <th width="4.7%">Daily Avg. Check(AC)</th>
+                                      <th width="4.7%">Acc. Avg. Check</th>
+                                      <th width="4.7%">Egg Waffle sales</th>
+                                      <th width="4.7%">Acc. Egg waffle sales</th>
+                                      <th width="4.7%">Toastie Daily sales</th>
+                                      <th width="4.7%">Acc. Toastie sales</th>
+                                      <th width="4.7%">Desert Daily sales</th>
+                                      <th width="4.7%">Acc. Desert sales</th>
+                                  </tr>
+                              </thead>
+                              <tbody>
+                                  <tr *ngFor="let item of monthly_detail_data; index as idx">
+                                      <td>{{ format_date(item.date) }}</td>
+                                      <td>{{ item.day }}</td>
+                                      <td contenteditable>{{ item.projected | currency  }}</td>
+                                      <td>{{ item.ac_projected | currency  }}</td>
+                                      <td>{{ item.achievements | percent:'.1-1' }}</td>
+                                      <td>{{ item.sales | currency  }}</td>
+                                      <td>{{ item.ac_sales | currency }}</td>
+                                      <td>{{ item.netsale | currency }}</td>
+                                      <td>{{ item.ac_netsale | currency }}</td>
+                                      <td>{{ item.gc }}</td>
+                                      <td>{{ item.ac_gc }}</td>
+                                      <td>{{ item.cup }}</td>
+                                      <td>{{ item.ac_cup }}</td>
+                                      <td>{{ item.ac | currency }}</td>
+                                      <td>{{ item.ac_ac | currency }}</td>
+                                      <td>{{ item.m_waffle | currency }}</td>
+                                      <td>{{ item.ac_m_waffle | currency }}</td>
+                                      <td>{{ item.m_toastie| currency }}</td>
+                                      <td>{{ item.ac_m_toastie| currency }}</td>
+                                      <td>{{ item.m_desert | currency }}</td>
+                                      <td>{{ item.ac_m_desert | currency }}</td>
+                                  </tr>
+                              </tbody>
+                          </table>
+                        </div>
                     </div>
                 </div>
             </div>

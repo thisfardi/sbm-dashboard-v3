@@ -22,10 +22,21 @@
 .table-responsive{
     max-height: 600px;
     table{
-        td{
-            cursor: pointer;
-            max-height: 20px;
-            overflow: auto;
+        border-collapse: collapse;
+        tr{
+            th{
+                text-align: center;
+                vertical-align: middle;
+                white-space: unset;
+            }
+            td{
+                cursor: pointer;
+                text-align: center;
+                vertical-align: middle;
+                max-height: 20px;
+                overflow: auto;
+                white-space: unset;
+            }
         }
     }
 }
