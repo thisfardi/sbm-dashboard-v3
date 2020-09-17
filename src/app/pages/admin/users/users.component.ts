@@ -16,8 +16,9 @@ import { AdminService } from '../admin.service';
 export class UsersComponent implements OnInit {
 
     constructor(private apiService: ApiService, private parseService: ParseService, private modalService: NgbModal, private adminService: AdminService) { }
-
-    users: Object;
+    USER_ACCESS = ['dashboard', 'kitchen', 'purchasing_system'];
+    USER_ROLE = ['super_admin', 'admin', 'customer', 'cooperator', 'franchisee'];
+    users: any;
     currentUser: Object;
 
     noUsers = false;
@@ -30,6 +31,9 @@ export class UsersComponent implements OnInit {
 
     // Indicates the database has not shops
     invalid_database = false;
+
+    selected_access: string;
+    selected_role: string;
 
     server_user_fetching_error = false;
     selected_database: string;
@@ -62,6 +66,8 @@ export class UsersComponent implements OnInit {
         }else{
             this.users = this.adminService.users;
         }
+        this.selected_access = this.USER_ACCESS[0]
+        this.selected_role = this.USER_ROLE[2]
     }
 
     reset_values() {
@@ -96,6 +102,7 @@ export class UsersComponent implements OnInit {
                     this.user_update_succeed = false;
                     this.user_add_succeed = false;
                     this.user_delete_succeed = false;
+                    this.reset_values();
                 },
                 error => {
                     this.server_user_fetching_error = true;
@@ -139,12 +146,15 @@ export class UsersComponent implements OnInit {
                 }
             )
     }
-    _updateUser(id, name, password, shops){
+    _updateUser(id, name, password, database, shops, access, role){
         this.apiService.update_user(this.parseService.encode({
             id: id,
             name: name,
             password: password,
-            shop: JSON.stringify(shops)
+            database: database,
+            shop: JSON.stringify(shops),
+            role: role,
+            access: access
         }))
             .pipe(first())
             .subscribe(
@@ -159,13 +169,15 @@ export class UsersComponent implements OnInit {
                 }
             )
     }
-    _addUser(name, email, password, database, shops){
+    _addUser(name, email, password, database, shops, access, role){
         this.apiService.add_user(this.parseService.encode({
             name: name,
             email: email,
             password: password,
             database: database,
-            shop: JSON.stringify(shops)
+            shop: JSON.stringify(shops),
+            access: access,
+            role: role
         }))
             .pipe(first())
             .subscribe(
@@ -200,16 +212,21 @@ export class UsersComponent implements OnInit {
             )
     }
 
-
     // Selects user from user list table
     select_user(item){
         this.currentUser = item;
-        this.selected_database = item.database;
-        this.selected_shops = JSON.parse(item.shop_name);
-
         this._name = item.name;
         this._email = item.email;
         this._password = item.password;
+        this.selected_access = item.access;
+        this.selected_role = item.role;
+        if(item.access == 'dashboard'){
+          this.selected_database = item.database;
+          this.selected_shops = JSON.parse(item.shop_name);
+        }else{
+          this.selected_database = '';
+          this.selected_shops = [];
+        }
         // select_database() without reseting selected_shops
         this.shop_loading = true;
         this._fetchShops(this.selected_database);
@@ -240,12 +257,37 @@ export class UsersComponent implements OnInit {
     add_user(e){
         e.preventDefault();
         this.validation_error = false;
-        if(this._name && this._email && this._password && (this._password == this._repassword) && this.selected_database && (this.selected_shops['length'] != 0)){
+        if(this.selected_access == 'dashboard'){
+          if(this._name && this._email && this._password && (this._password == this._repassword) && this.selected_database && (this.selected_shops['length'] != 0) &&
+          (this.selected_role == 'customer')
+        ){
+              this._addUser(this._name, this._email, this._password, this.selected_database, this.selected_shops, this.selected_access, this.selected_role);
+          }else{
+              this.validation_error = true;
+              this.validation_error_msg = 'Validation error.';
 
-            this._addUser(this._name, this._email, this._password, this.selected_database, this.selected_shops);
-
+              if(!this._name || !this._email){
+                  this.validation_error_msg += ' You should input your name and email.';
+              }
+              else if((this._password != this._repassword) || !this._password){
+                  this.validation_error_msg += ' Password mismatching.';
+              }
+              else if(!this.selected_database){
+                  this.validation_error_msg += ' You should select database.';
+              }
+              else if(this.selected_role != 'customer'){
+                this.validation_error_msg += ' Dashboard user type should be \'customer\'';
+              }
+              else{
+                  this.validation_error_msg += ' You should select at least one shop.';
+              }
+          }
         }else{
-
+          if(this._name && this._email && this._password && (this._password == this._repassword) && (this.selected_access != '')
+          && (this.selected_role != 'super_admin'))
+          {
+            this._addUser(this._name, this._email, this._password, '', [], this.selected_access, this.selected_role);
+          }else{
             this.validation_error = true;
             this.validation_error_msg = 'Validation error.';
 
@@ -255,12 +297,10 @@ export class UsersComponent implements OnInit {
             else if((this._password != this._repassword) || !this._password){
                 this.validation_error_msg += ' Password mismatching.';
             }
-            else if(!this.selected_database){
-                this.validation_error_msg += ' You should select database.';
-            }
             else{
-                this.validation_error_msg += ' You should select at least one shop.';
+                //this.validation_error_msg += ' You should select at least one shop.';
             }
+          }
         }
     }
     // Remove user | opens a confirmation modal
@@ -275,15 +315,15 @@ export class UsersComponent implements OnInit {
     update_user(e){
         e.preventDefault();
         this.validation_error = false;
-        if(this._name && (this.selected_shops['length'] != 0)){
-
-            this._updateUser(this.currentUser['id'], this._name, this._password, this.selected_shops);
-
+        if(this._name){
+          if(this.selected_access != 'dashboard'){
+            this.selected_database = '';
+            this.selected_shops = [];
+          }
+            this._updateUser(this.currentUser['id'], this._name, this._password, this.selected_database, this.selected_shops, this.selected_access, this.selected_role);
         }else{
-
             this.validation_error = true;
             this.validation_error_msg = 'Validation error.';
-
             if(!this._name){
                 this.validation_error_msg += ' You should input your name.';
             }

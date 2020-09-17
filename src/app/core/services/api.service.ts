@@ -31,7 +31,6 @@ export class ApiService {
                     // store res details and jwt in cookie
                     this.cookieService.setCookie('currentUser', JSON.stringify(res['res']), 1);
                 }
-
                 return res;
             }));
     }

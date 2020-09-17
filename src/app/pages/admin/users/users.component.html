@@ -16,7 +16,7 @@
                             <h4 class="header-title mt-0 mb-1">There are no users in the database. Please add a new user.</h4>
                         </div>
                         <div *ngIf='!noUsers'>
-                            <h4 class="header-title mt-0 mb-3">List of users</h4>
+                            <h4 class="header-title mt-0 mb-3">List of users ({{users?.length}} users)</h4>
                             <div class="table-responsive slimscroll" appSlimScroll>
                                 <table class="table table-hover mb-0">
                                     <thead>
@@ -24,6 +24,8 @@
                                             <th>#</th>
                                             <th>Name</th>
                                             <th>Email</th>
+                                            <th>Access</th>
+                                            <th>Role</th>
                                             <th>Database</th>
                                             <th>Shops</th>
                                             <th>Member since</th>
@@ -35,8 +37,10 @@
                                             <td>{{ idx + 1 }}</td>
                                             <td>{{ user.name }}</td>
                                             <td>{{ user.email }}</td>
-                                            <td>{{ user.database }}</td>
-                                            <td>{{ get_shop_length(user.shop_name) }} shops</td>
+                                            <td>{{ user.access }}</td>
+                                            <td>{{ user.role }}</td>
+                                            <td>{{ user.database ? user.database : '-' }}</td>
+                                            <td>{{ user.shop_name ? get_shop_length(user.shop_name) + 'shops' : '-' }} </td>
                                             <td>{{ user.member_since }}</td>
                                             <td>{{ user.last_login }}</td>
                                         </tr>
@@ -68,6 +72,18 @@
                                 </div>
                             </div>
                             <div class="form-group row mb-3">
+                                <label for="default" class="col-3 col-form-label">User access</label>
+                                <div class="col-9">
+                                    <ng-select [items]="USER_ACCESS" [(ngModel)]='selected_access' [ngModelOptions]="{standalone: true}"></ng-select>
+                                </div>
+                            </div>
+                            <div class="form-group row mb-3">
+                                <label for="default" class="col-3 col-form-label">User role</label>
+                                <div class="col-9">
+                                    <ng-select [items]="USER_ROLE" [(ngModel)]='selected_role' [ngModelOptions]="{standalone: true}"></ng-select>
+                                </div>
+                            </div>
+                            <div class="form-group row mb-3">
                                 <label for="inputPassword3" class="col-3 col-form-label">Password</label>
                                 <div class="col-9">
                                     <input type="password" class="form-control" placeholder="Password" [(ngModel)]='_password' [ngModelOptions]="{standalone: true}">
@@ -79,7 +95,7 @@
                                     <input type="password" class="form-control" placeholder="Retype Password" [(ngModel)]='_repassword' [ngModelOptions]="{standalone: true}">
                                 </div>
                             </div>
-                            <div class="form-group row mb-3">
+                            <div *ngIf="selected_access == 'dashboard'" class="form-group row mb-3">
                                 <label for="default" class="col-3 col-form-label">Database</label>
                                 <div class="col-9">
                                     <app-miniloader [display]='db_loading'></app-miniloader>
@@ -88,7 +104,7 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="form-group row mb-3">
+                            <div *ngIf="selected_access == 'dashboard'" class="form-group row mb-3">
                                 <label for="default" class="col-3 col-form-label">Shops</label>
                                 <div class="col-9">
                                     <app-miniloader [display]='shop_loading'></app-miniloader>
@@ -136,15 +152,27 @@
                                 </div>
                             </div>
                             <div class="form-group row mb-3">
+                                <label for="default" class="col-3 col-form-label">User access</label>
+                                <div class="col-9">
+                                    <ng-select [items]="USER_ACCESS" [(ngModel)]='selected_access' [ngModelOptions]="{standalone: true}"></ng-select>
+                                </div>
+                            </div>
+                            <div class="form-group row mb-3">
+                                <label for="default" class="col-3 col-form-label">User role</label>
+                                <div class="col-9">
+                                    <ng-select [items]="USER_ROLE" [(ngModel)]='selected_role' [ngModelOptions]="{standalone: true}"></ng-select>
+                                </div>
+                            </div>
+                            <div *ngIf="selected_access == 'dashboard'" class="form-group row mb-3">
                                 <label for="default" class="col-3 col-form-label">Database</label>
                                 <div class="col-9">
                                     <app-miniloader [display]='db_loading'></app-miniloader>
                                     <div *ngIf='!db_loading'>
-                                        <input type="text" class="form-control" readonly value="{{ selected_database }}">
+                                        <ng-select [items]="database" (change)='select_database()' [(ngModel)]='selected_database' [ngModelOptions]="{standalone: true}"></ng-select>
                                     </div>
                                 </div>
                             </div>
-                            <div class="form-group row mb-3">
+                            <div *ngIf="selected_access == 'dashboard'" class="form-group row mb-3">
                                 <label for="default" class="col-3 col-form-label">Shops</label>
                                 <div class="col-9">
                                     <app-miniloader [display]='shop_loading'></app-miniloader>
