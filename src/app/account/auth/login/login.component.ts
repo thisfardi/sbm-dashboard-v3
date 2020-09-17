@@ -26,6 +26,8 @@ export class LoginComponent implements OnInit, AfterViewInit {
 
     interval: number;
 
+    notDashboardUser: Boolean = false;
+
     constructor(private formBuilder: FormBuilder, private route: ActivatedRoute, private router: Router, private authenticationService: AuthenticationService, private cookieService: CookieService, private historyService: HistoryService) { }
 
     ngOnInit() {
@@ -71,6 +73,7 @@ export class LoginComponent implements OnInit, AfterViewInit {
     onSubmit() {
         this.submitted = true;
         this.error = '';
+        this.notDashboardUser = false;
         // stop here if form is invalid
         if (this.loginForm.invalid) {
             return;
@@ -81,7 +84,6 @@ export class LoginComponent implements OnInit, AfterViewInit {
             .subscribe(
                 data => {
                     if(data['status'] == 'success'){
-
                         clearInterval(this.interval);
                         if(this.remember){
                             this.cookieService.setCookie('rememberCredentials', JSON.stringify({
@@ -91,13 +93,23 @@ export class LoginComponent implements OnInit, AfterViewInit {
                         }else{
                             this.cookieService.deleteCookie('rememberCredentials');
                         }
-                        this.success_msg = data['msg'];
-                        if(this.f.username.value == 'admin'){
+                        if(data['res']['role'] == 'super_admin'){
                             this.returnUrl = '/admin/users';
+                            this.success_msg = data['msg'];
                         }else{
-                            this.historyService.logHistory('login', 'Log in');
+                            if(data['res']['access'] == 'dashboard'){
+                                this.historyService.logHistory('login', 'Log in');
+                                this.success_msg = data['msg'];
+                            }else{
+                                this.error = "This user is not a dashboard user. Please try to login from other platforms.";
+                            }
                         }
-                        this.router.navigate([this.returnUrl]);
+                        if(data['res']['access'] == 'dashboard'){
+                            this.router.navigate([this.returnUrl]);
+                        }else{
+                            this.error = "This user is not a dashboard user. Please try to login from other platforms.";
+                        }
+
                     }else if(data['status'] == 'failed'){
                         this.error = data['msg'];
                         this.loading = false;
