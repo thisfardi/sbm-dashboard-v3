@@ -15,7 +15,7 @@ import { HistoryService } from '../../../core/services/history.service';
 })
 export class HourlyComponent implements OnInit {
 
-    dash_date: string = moment().subtract(1, 'days').format('YYYY-MM-DD');
+    dash_date: string = moment().format('YYYY-MM-DD');
 
     user_database: string = JSON.parse(this.cookieService.getCookie('currentUser')).database;
     user_shops: Object = JSON.parse(JSON.parse(this.cookieService.getCookie('currentUser')).shop_name);

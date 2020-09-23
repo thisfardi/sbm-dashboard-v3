@@ -42,7 +42,7 @@ export class DashboardComponent implements OnInit {
     ordersData: OrdersTable[];
 
     // Dashboard date
-    dash_date: string = moment().subtract(1, 'days').format('YYYY-MM-DD');
+    dash_date: string = moment().format('YYYY-MM-DD');
     // Current user's shops and database
     user_database: string = JSON.parse(this.cookieService.getCookie('currentUser')).database;
     user_shops: Object = JSON.parse(JSON.parse(this.cookieService.getCookie('currentUser')).shop_name);
