@@ -57,6 +57,8 @@ export class UsersComponent implements OnInit {
     user_add_succeed = false;
     user_delete_succeed = false;
 
+    user_name_caption = 'User name';
+
     modalRef: any;
     ngOnInit() {
         if(!this.adminService.users){
@@ -78,6 +80,7 @@ export class UsersComponent implements OnInit {
         this._repassword = '';
         this.selected_database = '';
         this.selected_shops = [];
+        this.user_name_caption = 'User name';
     }
 
     // Api call
@@ -267,7 +270,7 @@ export class UsersComponent implements OnInit {
               this.validation_error_msg = 'Validation error.';
 
               if(!this._name || !this._email){
-                  this.validation_error_msg += ' You should input your name and email.';
+                  this.validation_error_msg += ' You should input name and email.';
               }
               else if((this._password != this._repassword) || !this._password){
                   this.validation_error_msg += ' Password mismatching.';
@@ -292,7 +295,7 @@ export class UsersComponent implements OnInit {
             this.validation_error_msg = 'Validation error.';
 
             if(!this._name || !this._email){
-                this.validation_error_msg += ' You should input your name and email.';
+                this.validation_error_msg += ' You should input name and email.';
             }
             else if((this._password != this._repassword) || !this._password){
                 this.validation_error_msg += ' Password mismatching.';
@@ -325,7 +328,7 @@ export class UsersComponent implements OnInit {
             this.validation_error = true;
             this.validation_error_msg = 'Validation error.';
             if(!this._name){
-                this.validation_error_msg += ' You should input your name.';
+                this.validation_error_msg += ' You should input name.';
             }
             else if(this.selected_shops['length'] == 0){
                 this.validation_error_msg += ' You should select at least one shop.';

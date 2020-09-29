@@ -60,9 +60,9 @@
                         <h4 class="header-title mt-0 mb-3"><i class="uil-user-plus mr-3 icon-dual-primary"></i>Add a new user</h4>
                         <form class="form-horizontal">
                             <div class="form-group row mb-3">
-                                <label for="inputEmail3" class="col-3 col-form-label">User name</label>
+                                <label for="inputEmail3" class="col-3 col-form-label">{{selected_access == 'purchasing_system' ? 'Branch ID' : 'User name'}}</label>
                                 <div class="col-9">
-                                    <input type="email" class="form-control" placeholder="User name" [(ngModel)]='_name' [ngModelOptions]="{standalone: true}">
+                                    <input type="email" class="form-control" placeholder="{{selected_access == 'purchasing_system' ? 'Branch ID' : 'User name'}}" [(ngModel)]='_name' [ngModelOptions]="{standalone: true}">
                                 </div>
                             </div>
                             <div class="form-group row mb-3">
