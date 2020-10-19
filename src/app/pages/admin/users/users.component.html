@@ -1,232 +1,244 @@
-
 <div class="container-fluid">
-    <app-ui-preloader [display]="loading"></app-ui-preloader>
-    <app-page-title title="User management"></app-page-title>
-    <div class="row">
-        <div class="col-md-8">
-            <div class="card">
-                <div class="card-body">
-                    <div *ngIf='server_user_fetching_error'>
-                        <h4 class="header-title mt-0 mb-1">The server is not responding at the moment.
-                            <i class="uil-refresh ml-3 icon-dual-info" placement="bottom" ngbTooltip="Click here to refresh" (click)="ngOnInit()"></i>
-                        </h4>
-                    </div>
-                    <div *ngIf='!server_user_fetching_error'>
-                        <div *ngIf='noUsers'>
-                            <h4 class="header-title mt-0 mb-1">There are no users in the database. Please add a new user.</h4>
-                        </div>
-                        <div *ngIf='!noUsers'>
-                            <h4 class="header-title mt-0 mb-3">List of users ({{users?.length}} users)</h4>
-                            <div class="table-responsive slimscroll" appSlimScroll>
-                                <table class="table table-hover mb-0">
-                                    <thead>
-                                        <tr>
-                                            <th>#</th>
-                                            <th>Name</th>
-                                            <th>Email</th>
-                                            <th>Access</th>
-                                            <th>Role</th>
-                                            <th>Database</th>
-                                            <th>Shops</th>
-                                            <th>Member since</th>
-                                            <th>Last login</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        <tr *ngFor="let user of users; index as idx" (click)="select_user(user)">
-                                            <td>{{ idx + 1 }}</td>
-                                            <td>{{ user.name }}</td>
-                                            <td>{{ user.email }}</td>
-                                            <td>{{ user.access }}</td>
-                                            <td>{{ user.role }}</td>
-                                            <td>{{ user.database ? user.database : '-' }}</td>
-                                            <td>{{ user.shop_name ? get_shop_length(user.shop_name) + 'shops' : '-' }} </td>
-                                            <td>{{ user.member_since }}</td>
-                                            <td>{{ user.last_login }}</td>
-                                        </tr>
-                                    </tbody>
-                                </table>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+  <app-ui-preloader [display]="loading"></app-ui-preloader>
+  <app-page-title title="User management"></app-page-title>
+  <div class="row">
+    <div class="col-md-8">
+      <div class="card">
+        <div class="card-body">
+          <div *ngIf='server_user_fetching_error'>
+            <h4 class="header-title mt-0 mb-1">The server is not responding at the moment.
+              <i class="uil-refresh ml-3 icon-dual-info" placement="bottom" ngbTooltip="Click here to refresh" (click)="ngOnInit()"></i>
+            </h4>
+          </div>
+          <div *ngIf='!server_user_fetching_error'>
+            <div *ngIf='noUsers'>
+              <h4 class="header-title mt-0 mb-1">There are no users in the database. Please add a new user.</h4>
             </div>
-        </div>
-        <!-- User edit section -->
-        <div class="col-md-4">
-            <div class="card">
-                <div class="card-body">
-                    <div *ngIf='!currentUser'>
-                        <h4 class="header-title mt-0 mb-3"><i class="uil-user-plus mr-3 icon-dual-primary"></i>Add a new user</h4>
-                        <form class="form-horizontal">
-                            <div class="form-group row mb-3">
-                                <label for="inputEmail3" class="col-3 col-form-label">{{selected_access == 'purchasing_system' ? 'Branch ID' : 'User name'}}</label>
-                                <div class="col-9">
-                                    <input type="email" class="form-control" placeholder="{{selected_access == 'purchasing_system' ? 'Branch ID' : 'User name'}}" [(ngModel)]='_name' [ngModelOptions]="{standalone: true}">
-                                </div>
-                            </div>
-                            <div class="form-group row mb-3">
-                                <label for="inputEmail3" class="col-3 col-form-label">Email</label>
-                                <div class="col-9">
-                                    <input type="email" class="form-control" placeholder="Email" [(ngModel)]='_email' [ngModelOptions]="{standalone: true}">
-                                </div>
-                            </div>
-                            <div class="form-group row mb-3">
-                                <label for="default" class="col-3 col-form-label">User access</label>
-                                <div class="col-9">
-                                    <ng-select [items]="USER_ACCESS" [(ngModel)]='selected_access' [ngModelOptions]="{standalone: true}"></ng-select>
-                                </div>
-                            </div>
-                            <div class="form-group row mb-3">
-                                <label for="default" class="col-3 col-form-label">User role</label>
-                                <div class="col-9">
-                                    <ng-select [items]="USER_ROLE" [(ngModel)]='selected_role' [ngModelOptions]="{standalone: true}"></ng-select>
-                                </div>
-                            </div>
-                            <div class="form-group row mb-3">
-                                <label for="inputPassword3" class="col-3 col-form-label">Password</label>
-                                <div class="col-9">
-                                    <input type="password" class="form-control" placeholder="Password" [(ngModel)]='_password' [ngModelOptions]="{standalone: true}">
-                                </div>
-                            </div>
-                            <div class="form-group row mb-3">
-                                <label for="inputPassword5" class="col-3 col-form-label">Re Password</label>
-                                <div class="col-9">
-                                    <input type="password" class="form-control" placeholder="Retype Password" [(ngModel)]='_repassword' [ngModelOptions]="{standalone: true}">
-                                </div>
-                            </div>
-                            <div *ngIf="selected_access == 'dashboard'" class="form-group row mb-3">
-                                <label for="default" class="col-3 col-form-label">Database</label>
-                                <div class="col-9">
-                                    <app-miniloader [display]='db_loading'></app-miniloader>
-                                    <div *ngIf='!db_loading'>
-                                        <ng-select [items]="database" (change)='select_database()' [(ngModel)]='selected_database' [ngModelOptions]="{standalone: true}"></ng-select>
-                                    </div>
-                                </div>
-                            </div>
-                            <div *ngIf="selected_access == 'dashboard'" class="form-group row mb-3">
-                                <label for="default" class="col-3 col-form-label">Shops</label>
-                                <div class="col-9">
-                                    <app-miniloader [display]='shop_loading'></app-miniloader>
-                                    <div *ngIf='!shop_loading'>
-                                        <ngb-alert *ngIf='invalid_database' type="danger" [dismissible]="false">
-                                            This database does not include shops. Please select different database.
-                                        </ngb-alert>
-                                        <div *ngIf='!invalid_database'>
-                                            <ng-select [items]="shops" [multiple]="true" [(ngModel)]='selected_shops' [ngModelOptions]="{standalone: true}"></ng-select>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="form-group mb-0 justify-content-end row">
-                                <div class="col-9">
-                                    <button class="btn btn-primary btn-sm mr-1" (click)="add_user($event)">Add this user</button>
-                                </div>
-                            </div>
-                            <div class="form-group mb-0 justify-content-end row mt-2">
-                                <div class="col-9">
-                                    <ngb-alert *ngIf='user_add_succeed' type="success" [dismissible]="false">
-                                        User added successfully.
-                                    </ngb-alert>
-                                    <ngb-alert *ngIf='validation_error' type="danger" [dismissible]="false">
-                                        {{ validation_error_msg }}
-                                    </ngb-alert>
-                                </div>
-                            </div>
-                        </form>
-                    </div>
-                    <!-- User modification -->
-                    <div *ngIf='currentUser'>
-                        <h4 class="header-title mt-0 mb-3"><i class="uil-user-square mr-3 icon-dual-success"></i>Modify this user</h4>
-                        <form class="form-horizontal">
-                            <div class="form-group row mb-3">
-                                <label for="inputEmail3" class="col-3 col-form-label">User name</label>
-                                <div class="col-9">
-                                    <input type="text" class="form-control" placeholder="User name" [(ngModel)]='_name' [ngModelOptions]="{standalone: true}">
-                                </div>
-                            </div>
-                            <div class="form-group row mb-3">
-                                <label for="inputEmail3" class="col-3 col-form-label">Password</label>
-                                <div class="col-9">
-                                    <input type="text" class="form-control" placeholder="Password" [(ngModel)]='_password' [ngModelOptions]="{standalone: true}">
-                                </div>
-                            </div>
-                            <div class="form-group row mb-3">
-                                <label for="default" class="col-3 col-form-label">User access</label>
-                                <div class="col-9">
-                                    <ng-select [items]="USER_ACCESS" [(ngModel)]='selected_access' [ngModelOptions]="{standalone: true}"></ng-select>
-                                </div>
-                            </div>
-                            <div class="form-group row mb-3">
-                                <label for="default" class="col-3 col-form-label">User role</label>
-                                <div class="col-9">
-                                    <ng-select [items]="USER_ROLE" [(ngModel)]='selected_role' [ngModelOptions]="{standalone: true}"></ng-select>
-                                </div>
-                            </div>
-                            <div *ngIf="selected_access == 'dashboard'" class="form-group row mb-3">
-                                <label for="default" class="col-3 col-form-label">Database</label>
-                                <div class="col-9">
-                                    <app-miniloader [display]='db_loading'></app-miniloader>
-                                    <div *ngIf='!db_loading'>
-                                        <ng-select [items]="database" (change)='select_database()' [(ngModel)]='selected_database' [ngModelOptions]="{standalone: true}"></ng-select>
-                                    </div>
-                                </div>
-                            </div>
-                            <div *ngIf="selected_access == 'dashboard'" class="form-group row mb-3">
-                                <label for="default" class="col-3 col-form-label">Shops</label>
-                                <div class="col-9">
-                                    <app-miniloader [display]='shop_loading'></app-miniloader>
-                                    <div *ngIf='!shop_loading'>
-                                        <ngb-alert *ngIf='invalid_database' type="danger" [dismissible]="false">
-                                            This database does not include shops. Please select different database.
-                                        </ngb-alert>
-                                        <div *ngIf='!invalid_database'>
-                                            <ng-select [items]="shops" [multiple]="true" [(ngModel)]='selected_shops' [ngModelOptions]="{standalone: true}"></ng-select>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="form-group mb-0 justify-content-end row">
-                                <div class="col-9">
-                                    <button class="btn btn-success btn-sm mr-1 mb-1" (click)='update_user($event)'>Update</button>
-                                    <button class="btn btn-danger btn-sm mr-1 mb-1" (click)='remove_confirm(confirmRemoveModal)'>Remove this user</button>
-                                    <button class="btn btn-primary btn-sm mr-1 mb-1" (click)="remove_current_user($event)">Add a new user</button>
-                                </div>
-                            </div>
-                            <div class="form-group mb-0 justify-content-end row mt-2">
-                                <div class="col-9">
-                                    <ngb-alert *ngIf='user_update_succeed' type="success" [dismissible]="false">
-                                        User updated successfully.
-                                    </ngb-alert>
-                                    <ngb-alert *ngIf='user_delete_succeed' type="warning" [dismissible]="false">
-                                        User removed successfully.
-                                    </ngb-alert>
-                                    <ngb-alert *ngIf='validation_error' type="danger" [dismissible]="false">
-                                        {{ validation_error_msg }}
-                                    </ngb-alert>
-                                </div>
-                            </div>
-                        </form>
-                    </div>
-                </div>
+            <div *ngIf='!noUsers'>
+              <h4 class="header-title mt-0 mb-3">List of users ({{users?.length}} users)</h4>
+              <div class="table-responsive slimscroll" appSlimScroll>
+                <table class="table table-hover mb-0">
+                  <thead>
+                    <tr>
+                      <th>#</th>
+                      <th>Name</th>
+                      <th>Email</th>
+                      <th>Access</th>
+                      <th>Role</th>
+                      <th>Database</th>
+                      <th>Shops</th>
+                      <th>Member since</th>
+                      <th>Last login</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr *ngFor="let user of users; index as idx" (click)="select_user(user)">
+                      <td>{{ idx + 1 }}</td>
+                      <td>{{ user.name }}</td>
+                      <td>{{ user.email }}</td>
+                      <td>{{ user.access }}</td>
+                      <td>{{ user.role }}</td>
+                      <td>{{ user.database ? user.database : '-' }}</td>
+                      <td>{{ user.shop_name ? (get_shop_length(user.shop_name) != 0 ? get_shop_length(user.shop_name) + 'shops' : '-') : '-' }} </td>
+                      <td>{{ user.member_since }}</td>
+                      <td>{{ user.last_login }}</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
             </div>
+          </div>
         </div>
+      </div>
     </div>
+    <!-- User edit section -->
+    <div class="col-md-4">
+      <div class="card">
+        <div class="card-body">
+          <div *ngIf='!currentUser'>
+            <h4 class="header-title mt-0 mb-3"><i class="uil-user-plus mr-3 icon-dual-primary"></i>Add a new user</h4>
+            <form class="form-horizontal">
+              <div class="form-group row mb-3">
+                <label for="default" class="col-3 col-form-label">User access</label>
+                <div class="col-9">
+                  <ng-select [items]="USER_ACCESS" [(ngModel)]='selected_access' [ngModelOptions]="{standalone: true}" (change)="access_change($event)"></ng-select>
+                </div>
+              </div>
+              <div class="form-group row mb-3">
+                <label for="default" class="col-3 col-form-label">User role</label>
+                <div class="col-9">
+                  <ng-select [items]="USER_ROLE" [(ngModel)]='selected_role' [ngModelOptions]="{standalone: true}"></ng-select>
+                </div>
+              </div>
+              <div class="form-group row mb-3" *ngIf="selected_access == 'purchasing_system'">
+                <label for="default" class="col-3 col-form-label">Company</label>
+                <div class="col-9">
+                  <ng-select [items]="COMPANY" [(ngModel)]='selected_company' [ngModelOptions]="{standalone: true}"></ng-select>
+                </div>
+              </div>
+              <div class="form-group row mb-3">
+                <label for="inputEmail3" class="col-3 col-form-label">{{(selected_access == 'purchasing_system' && selected_role != 'admin') ? 'Branch ID' : 'User name'}}</label>
+                <div class="col-9">
+                  <input type="email" class="form-control" placeholder="{{(selected_access == 'purchasing_system' && selected_role != 'admin') ? 'Branch ID' : 'User name'}}" [(ngModel)]='_name' [ngModelOptions]="{standalone: true}">
+                </div>
+              </div>
+              <div class="form-group row mb-3">
+                <label for="inputEmail3" class="col-3 col-form-label">Email</label>
+                <div class="col-9">
+                  <input type="email" class="form-control" placeholder="Email" [(ngModel)]='_email' [ngModelOptions]="{standalone: true}">
+                </div>
+              </div>
+              <div class="form-group row mb-3">
+                <label for="inputPassword3" class="col-3 col-form-label">Password</label>
+                <div class="col-9">
+                  <input type="password" class="form-control" placeholder="Password" [(ngModel)]='_password' [ngModelOptions]="{standalone: true}">
+                </div>
+              </div>
+              <div class="form-group row mb-3">
+                <label for="inputPassword5" class="col-3 col-form-label">Re Password</label>
+                <div class="col-9">
+                  <input type="password" class="form-control" placeholder="Retype Password" [(ngModel)]='_repassword' [ngModelOptions]="{standalone: true}">
+                </div>
+              </div>
+
+              <div *ngIf="selected_access == 'dashboard'" class="form-group row mb-3">
+                <label for="default" class="col-3 col-form-label">Database</label>
+                <div class="col-9">
+                  <app-miniloader [display]='db_loading'></app-miniloader>
+                  <div *ngIf='!db_loading'>
+                    <ng-select [items]="database" (change)='select_database()' [(ngModel)]='selected_database' [ngModelOptions]="{standalone: true}"></ng-select>
+                  </div>
+                </div>
+              </div>
+              <div *ngIf="selected_access == 'dashboard'" class="form-group row mb-3">
+                <label for="default" class="col-3 col-form-label">Shops</label>
+                <div class="col-9">
+                  <app-miniloader [display]='shop_loading'></app-miniloader>
+                  <div *ngIf='!shop_loading'>
+                    <ngb-alert *ngIf='invalid_database' type="danger" [dismissible]="false">
+                      This database does not include shops. Please select different database.
+                    </ngb-alert>
+                    <div *ngIf='!invalid_database'>
+                      <ng-select [items]="shops" [multiple]="true" [(ngModel)]='selected_shops' [ngModelOptions]="{standalone: true}"></ng-select>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="form-group mb-0 justify-content-end row">
+                <div class="col-9">
+                  <button class="btn btn-primary btn-sm mr-1" (click)="add_user($event)">Add this user</button>
+                </div>
+              </div>
+              <div class="form-group mb-0 justify-content-end row mt-2">
+                <div class="col-9">
+                  <ngb-alert *ngIf='user_add_succeed' type="success" [dismissible]="false">
+                    User added successfully.
+                  </ngb-alert>
+                  <ngb-alert *ngIf='validation_error' type="danger" [dismissible]="false">
+                    {{ validation_error_msg }}
+                  </ngb-alert>
+                </div>
+              </div>
+            </form>
+          </div>
+          <!-- User modification -->
+          <div *ngIf='currentUser'>
+            <h4 class="header-title mt-0 mb-3"><i class="uil-user-square mr-3 icon-dual-success"></i>Modify this user</h4>
+            <form class="form-horizontal">
+              <div class="form-group row mb-3">
+                <label for="default" class="col-3 col-form-label">User access</label>
+                <div class="col-9">
+                  <ng-select [items]="USER_ACCESS" [(ngModel)]='selected_access' [ngModelOptions]="{standalone: true}" (change)="access_change($event)"></ng-select>
+                </div>
+              </div>
+              <div class="form-group row mb-3">
+                <label for="default" class="col-3 col-form-label">User role</label>
+                <div class="col-9">
+                  <ng-select [items]="USER_ROLE" [(ngModel)]='selected_role' [ngModelOptions]="{standalone: true}"></ng-select>
+                </div>
+              </div>
+              <div class="form-group row mb-3" *ngIf="selected_access == 'purchasing_system'">
+                <label for="default" class="col-3 col-form-label">Company</label>
+                <div class="col-9">
+                  <ng-select [items]="COMPANY" [(ngModel)]='selected_company' [ngModelOptions]="{standalone: true}"></ng-select>
+                </div>
+              </div>
+              <div class="form-group row mb-3">
+                <label for="inputEmail3" class="col-3 col-form-label">{{(selected_access == 'purchasing_system' && selected_role != 'admin') ? 'Branch ID' : 'User name'}}</label>
+                <div class="col-9">
+                  <input type="email" class="form-control" placeholder="{{(selected_access == 'purchasing_system' && selected_role != 'admin') ? 'Branch ID' : 'User name'}}" [(ngModel)]='_name' [ngModelOptions]="{standalone: true}">
+                </div>
+              </div>
+              <div class="form-group row mb-3">
+                <label for="inputEmail3" class="col-3 col-form-label">Password</label>
+                <div class="col-9">
+                  <input type="text" class="form-control" placeholder="Password" [(ngModel)]='_password' [ngModelOptions]="{standalone: true}">
+                </div>
+              </div>
+              <div *ngIf="selected_access == 'dashboard'" class="form-group row mb-3">
+                <label for="default" class="col-3 col-form-label">Database</label>
+                <div class="col-9">
+                  <app-miniloader [display]='db_loading'></app-miniloader>
+                  <div *ngIf='!db_loading'>
+                    <ng-select [items]="database" (change)='select_database()' [(ngModel)]='selected_database' [ngModelOptions]="{standalone: true}"></ng-select>
+                  </div>
+                </div>
+              </div>
+              <div *ngIf="selected_access == 'dashboard'" class="form-group row mb-3">
+                <label for="default" class="col-3 col-form-label">Shops</label>
+                <div class="col-9">
+                  <app-miniloader [display]='shop_loading'></app-miniloader>
+                  <div *ngIf='!shop_loading'>
+                    <ngb-alert *ngIf='invalid_database' type="danger" [dismissible]="false">
+                      This database does not include shops. Please select different database.
+                    </ngb-alert>
+                    <div *ngIf='!invalid_database'>
+                      <ng-select [items]="shops" [multiple]="true" [(ngModel)]='selected_shops' [ngModelOptions]="{standalone: true}"></ng-select>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="form-group mb-0 justify-content-end row">
+                <div class="col-9">
+                  <button class="btn btn-success btn-sm mr-1 mb-1" (click)='update_user($event)'>Update</button>
+                  <button class="btn btn-danger btn-sm mr-1 mb-1" (click)='remove_confirm(confirmRemoveModal)'>Remove this user</button>
+                  <button class="btn btn-primary btn-sm mr-1 mb-1" (click)="remove_current_user($event)">Add a new user</button>
+                </div>
+              </div>
+              <div class="form-group mb-0 justify-content-end row mt-2">
+                <div class="col-9">
+                  <ngb-alert *ngIf='user_update_succeed' type="success" [dismissible]="false">
+                    User updated successfully.
+                  </ngb-alert>
+                  <ngb-alert *ngIf='user_delete_succeed' type="warning" [dismissible]="false">
+                    User removed successfully.
+                  </ngb-alert>
+                  <ngb-alert *ngIf='validation_error' type="danger" [dismissible]="false">
+                    {{ validation_error_msg }}
+                  </ngb-alert>
+                </div>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
 </div>
 
 <!-- Remove user confirm Modal -->
 <ng-template #confirmRemoveModal let-modal>
-    <div class="modal-header">
-        <h5 class="modal-title">Remove {{ _name }}</h5>
-        <button type="button" class="close" (click)="modal.dismiss('Cross click')" aria-hidden="true">×</button>
+  <div class="modal-header">
+    <h5 class="modal-title">Remove {{ _name }}</h5>
+    <button type="button" class="close" (click)="modal.dismiss('Cross click')" aria-hidden="true">×</button>
+  </div>
+  <div class="modal-body text-center">
+    <i class="uil-file-times text-warning display-3"></i>
+    <h4 class="text-danger mt-4">Are you going to remove this user?</h4>
+    <p class="w-75 mx-auto text-muted">All report data saved in database will be removed too.</p>
+    <div class="mt-4">
+      <a href="javascript: void(0);" class="btn btn-outline-danger btn-rounded width-md mr-2" (click)="remove_user()"><i class="uil uil-user-times mr-1"></i> Confirm</a>
+      <a href="javascript: void(0);" class="btn btn-outline-primary btn-rounded width-md" (click)="modal.dismiss('Cross click')"><i class="uil uil-arrow-left mr-1"></i> Back</a>
     </div>
-    <div class="modal-body text-center">
-        <i class="uil-file-times text-warning display-3"></i>
-        <h4 class="text-danger mt-4">Are you going to remove this user?</h4>
-        <p class="w-75 mx-auto text-muted">All report data saved in database will be removed too.</p>
-        <div class="mt-4">
-            <a href="javascript: void(0);" class="btn btn-outline-danger btn-rounded width-md mr-2" (click)="remove_user()"><i class="uil uil-user-times mr-1"></i> Confirm</a>
-            <a href="javascript: void(0);" class="btn btn-outline-primary btn-rounded width-md" (click)="modal.dismiss('Cross click')"><i class="uil uil-arrow-left mr-1"></i> Back</a>
-        </div>
-    </div>
+  </div>
 </ng-template>
