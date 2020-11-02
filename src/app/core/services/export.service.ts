@@ -20,8 +20,9 @@ export class ExportService {
 
         for (let i = 0; i < rows.length; i++) {
             let row = [], cols = rows[i].querySelectorAll("td, th");
-            for (let j = 0; j < cols.length; j++)
-                row.push(cols[j].innerText.replace(',', ' '));
+            for (let j = 0; j < cols.length; j++){
+              row.push(cols[j].innerText.replace(',', ''));
+            }
             csv.push(row.join(","));
         }
 
