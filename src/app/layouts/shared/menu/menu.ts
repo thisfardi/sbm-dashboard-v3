@@ -72,19 +72,5 @@ export const MENU: MenuItem[] = [
         label: 'Presence control',
         icon: 'user-check',
         link: '/details/presence',
-    },
-    {
-        label: 'Kitchen',
-        isTitle: true
-    },
-    {
-        label: 'Item history',
-        icon: 'gift',
-        link: '/kitchen/item',
-    },
-    {
-        label: 'Raw material history',
-        icon: 'briefcase',
-        link: '/kitchen/raw',
     }
 ];

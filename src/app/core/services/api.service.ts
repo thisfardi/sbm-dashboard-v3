@@ -186,6 +186,12 @@ export class ApiService {
                 return res;
             }))
     }
+    kitchens(data){
+        return this.http.post(`${api_url}/kitchen/getKitchens`, data)
+            .pipe(map(res => {
+                return res;
+            }))
+    }
     weekly_detail(data){
         return this.http.post(`${api_url}/${ controller }/weekly_detail`, data)
             .pipe(map(res => {

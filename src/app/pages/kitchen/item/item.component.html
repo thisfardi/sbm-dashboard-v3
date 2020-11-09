@@ -11,8 +11,11 @@
                     <h5 class="card-title header-title border-bottom p-3 mb-0">Filters</h5>
                     <form class="form-inline m-3 filter-form">
                         <div class="form-group mr-5 mb-2">
-                            <label class="col-form-label mr-3">Select shop</label>
-                            <ng-select [items]="shops" [(ngModel)]='filter_shop' [ngModelOptions]="{standalone: true}"></ng-select>
+                            <label class="col-form-label mr-3">Select kitchen</label>
+                            <app-miniloader [display]='item_loading'></app-miniloader>
+                            <div *ngIf='!item_loading'>
+                              <ng-select [items]="kitchens" [(ngModel)]='filter_kitchen' [ngModelOptions]="{standalone: true}"></ng-select>
+                            </div>
                         </div>
                         <div class="form-group mr-2 mb-2">
                             <label class="col-form-label mr-3">Select date range</label>
@@ -69,34 +72,110 @@
         <div class="col-md-8">
             <div class="card" style="min-height: 450px;">
                 <div class="card-body p-0">
-                    <h5 class="card-title header-title border-bottom p-3 mb-0">Cook/Dispose history</h5>
+                    <h5 class="card-title header-title border-bottom p-3 mb-0">Cook/Dispose history by amount</h5>
                     <app-miniloader [display]='item_loading'></app-miniloader>
                     <div *ngIf="!item_loading">
-                        <apx-chart [series]="item_chart.series" [chart]="item_chart.chart"
-                            [tooltip]="item_chart.tooltip" [yaxis]="item_chart.yaxis"
-                            [legend]="item_chart.legend" [grid]="item_chart.grid"
-                            [dataLabels]="item_chart.dataLabels" [stroke]="item_chart.stroke"
-                            [xaxis]="item_chart.xaxis" [colors]="item_chart.colors"
-                            [responsive]="item_chart.responsive">
+                        <apx-chart [series]="amount_chart.series" [chart]="amount_chart.chart"
+                            [tooltip]="amount_chart.tooltip" [yaxis]="amount_chart.yaxis"
+                            [legend]="amount_chart.legend" [grid]="amount_chart.grid"
+                            [dataLabels]="amount_chart.dataLabels" [stroke]="amount_chart.stroke"
+                            [xaxis]="amount_chart.xaxis" [colors]="amount_chart.colors"
+                            [responsive]="amount_chart.responsive">
                         </apx-chart>
                     </div>
                 </div>
             </div>
         </div>
         <div class="col-md-4">
-            <div class="card" style="min-height: 450px;">
-                <div class="card-body p-0">
-                    <h5 class="card-title header-title border-bottom p-3 mb-0">Disposal ratio</h5>
-                    <app-miniloader [display]='item_loading'></app-miniloader>
-                    <div *ngIf="!item_loading">
-                        <apx-chart [series]="ratio_chart.series" [chart]="ratio_chart.chart"
-                            [labels]="ratio_chart.labels" [dataLabels]="ratio_chart.dataLabels"
-                            [legend]="ratio_chart.legend" [colors]="ratio_chart.colors"
-                            [responsive]="ratio_chart.responsive">
-                        </apx-chart>
-                    </div>
+          <div class="card" style="min-height: 450px;">
+              <div class="card-body p-0">
+                  <h5 class="card-title header-title border-bottom p-3 mb-0">Disposal ratio</h5>
+                  <app-miniloader [display]='item_loading'></app-miniloader>
+                  <div *ngIf="!item_loading">
+                      <apx-chart [series]="ratio_chart.series" [chart]="ratio_chart.chart"
+                          [labels]="ratio_chart.labels" [dataLabels]="ratio_chart.dataLabels"
+                          [legend]="ratio_chart.legend" [colors]="ratio_chart.colors"
+                          [responsive]="ratio_chart.responsive">
+                      </apx-chart>
+                  </div>
+              </div>
+          </div>
+
+        </div>
+    </div>
+    <div class="row">
+      <div class="col-md-8">
+        <div class="card" style="min-height: 450px;">
+            <div class="card-body p-0">
+                <h5 class="card-title header-title border-bottom p-3 mb-0">Cook/Dispose history by items</h5>
+                <app-miniloader [display]='item_loading'></app-miniloader>
+                <div *ngIf="!item_loading">
+                    <apx-chart [series]="item_chart.series" [chart]="item_chart.chart"
+                        [tooltip]="item_chart.tooltip" [yaxis]="item_chart.yaxis"
+                        [legend]="item_chart.legend" [grid]="item_chart.grid"
+                        [dataLabels]="item_chart.dataLabels" [stroke]="item_chart.stroke"
+                        [xaxis]="item_chart.xaxis" [colors]="item_chart.colors"
+                        [responsive]="item_chart.responsive">
+                    </apx-chart>
                 </div>
             </div>
         </div>
+      </div>
+      <div class="col-md-4">
+        <div class="card">
+            <div class="card-body p-0">
+                <h5 class="card-title header-title border-bottom p-3 mb-0">Stats overview</h5>
+                <!-- Overview data -->
+                <app-overview value='{{total_cooking_amount}} (g)' icon='shopping-bag' title="Total cooking amount" classNames="pt-3 pb-2"></app-overview>
+                <app-overview value='{{total_cooked_amount}} (g)' icon='shopping-cart' title="Total cooked amount" classNames="pt-3 pb-2"></app-overview>
+                <app-overview value='{{total_disposed_amount}} (g)' icon='user' title="Total disposed amount" classNames="pt-3 pb-2"></app-overview>
+                <app-overview value='{{disposal_ratio | percent}}' icon='bar-chart-2' title="Disposal ratio" classNames="pt-3 pb-2"></app-overview>
+                <app-overview value='{{disposal_ratio_including_cooking_amount | percent}}' icon='bar-chart-2' title="Disposal ratio including cooking amount" classNames="pt-3 pb-2"></app-overview>
+            </div>
+        </div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-md-12">
+        <div class="card">
+          <div class="card-body">
+            <a href="javascript: void(0);" class="btn btn-primary btn-sm float-right" (click)="exportService.exportToCSV($event, 'Kitchen details for ' + filter_kitchen + ' from ' + filter_date['from'] + ' to ' + filter_date['to'])">
+                <i class="uil uil-export ml-1"></i> Export
+            </a>
+            <h5 class="card-title header-title mt-0 mb-0">Kitchen history</h5>
+            <div class="table-responsive table-sm mt-4" style="max-height: 600px">
+              <app-miniloader [display]='item_loading'></app-miniloader>
+              <div *ngIf="history">
+                <table class="table table-striped table-nowrap mb-0 report-view">
+                  <thead>
+                    <tr>
+                      <th>#</th>
+                      <th>Item ID</th>
+                      <th>Item code</th>
+                      <th>Item name</th>
+                      <th>Action</th>
+                      <th>Reason/Note</th>
+                      <th>Amount</th>
+                      <th>Timestamp</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr *ngFor="let item of history; index as idx">
+                      <td>{{idx+1}}</td>
+                      <td>{{item.item_id}}</td>
+                      <td>{{item.item_code}}</td>
+                      <td>{{item.item_name}}</td>
+                      <td>{{item.type}}</td>
+                      <td>{{item.reason}}</td>
+                      <td>{{item.amount}} (g)</td>
+                      <td>{{item.timestamp}}</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
 </div>

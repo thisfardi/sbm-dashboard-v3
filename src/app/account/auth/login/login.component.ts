@@ -93,23 +93,23 @@ export class LoginComponent implements OnInit, AfterViewInit {
                         }else{
                             this.cookieService.deleteCookie('rememberCredentials');
                         }
+
                         if(data['res']['role'] == 'super_admin'){
                             this.returnUrl = '/admin/users';
                             this.success_msg = data['msg'];
                         }else{
-                            if(data['res']['access'] == 'dashboard'){
-                                this.historyService.logHistory('login', 'Log in');
-                                this.success_msg = data['msg'];
-                            }else{
-                                this.error = "This user is not a dashboard user. Please try to login from other platforms.";
-                            }
+                          if((data['res']['access'] == 'dashboard') || ((data['res']['access'] == 'kitchen') && (data['res']['role'] == 'admin'))){
+                              this.success_msg = data['msg'];
+                              if(data['res']['access'] == 'dashboard'){
+                                this.returnUrl = '/';
+                              }else{
+                                this.returnUrl = '/kitchen/item';
+                              }
+                          }else{
+                              this.error = "This user is not a allowed to access dashboard. Please try to login from other platforms.";
+                          }
                         }
-                        if(data['res']['access'] == 'dashboard'){
-                            this.router.navigate([this.returnUrl]);
-                        }else{
-                            this.error = "This user is not a dashboard user. Please try to login from other platforms.";
-                        }
-
+                        this.router.navigate([this.returnUrl]);
                     }else if(data['status'] == 'failed'){
                         this.error = data['msg'];
                         this.loading = false;

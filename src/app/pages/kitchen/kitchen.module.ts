@@ -13,7 +13,6 @@ import { FormsModule } from '@angular/forms';
 import { NgbAlertModule } from '@ng-bootstrap/ng-bootstrap';
 import { NgApexchartsModule } from 'ng-apexcharts';
 
-
 import { ItemComponent } from './item/item.component';
 import { RawComponent } from './raw/raw.component';
 
@@ -25,6 +24,7 @@ import { RawComponent } from './raw/raw.component';
         FlatpickrModule,
         NgSelectModule,
         FormsModule,
+        WidgetModule,
         NgbAlertModule,
         NgApexchartsModule
     ],

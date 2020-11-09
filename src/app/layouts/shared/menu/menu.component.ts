@@ -7,6 +7,7 @@ import { CookieService } from '../../../core/services/cookie.service';
 import { activateMenuItems, resetMenuItems } from './utils';
 import { MENU } from './menu';
 import { ADMINMENU } from './adminMenu';
+import { KITCHENMENU } from './kitchenMenu';
 import { MenuItem } from './menu.model';
 
 @Component({
@@ -94,11 +95,19 @@ export class MenuComponent implements OnInit, AfterViewInit, OnChanges {
    */
     initialize(): void {
         let name = JSON.parse(this.cookieService.getCookie('currentUser')).name;
+        let access = JSON.parse(this.cookieService.getCookie('currentUser')).access;
+        let role = JSON.parse(this.cookieService.getCookie('currentUser')).role;
 
-        if(name == 'admin'){
+        if(role === 'super_admin'){
             this.menuItems = ADMINMENU;
         }else{
+          if(access === 'dashboard'){
             this.menuItems = MENU;
+          }
+
+          if((access === 'kitchen') && (role === 'admin')){
+            this.menuItems = KITCHENMENU;
+          }
         }
     }
 

@@ -70,31 +70,42 @@
                   <ng-select [items]="USER_ROLE" [(ngModel)]='selected_role' [ngModelOptions]="{standalone: true}"></ng-select>
                 </div>
               </div>
-              <div class="form-group row mb-3" *ngIf="selected_access == 'purchasing_system'">
+              <div class="form-group row mb-3" *ngIf="(selected_access == 'kitchen') || (selected_access == 'purchasing_system')">
                 <label for="default" class="col-3 col-form-label">Company</label>
                 <div class="col-9">
                   <ng-select [items]="COMPANY" [(ngModel)]='selected_company' [ngModelOptions]="{standalone: true}"></ng-select>
                 </div>
               </div>
               <div class="form-group row mb-3">
-                <label for="inputEmail3" class="col-3 col-form-label">{{(selected_access == 'purchasing_system' && selected_role != 'admin') ? 'Branch ID' : 'User name'}}</label>
+                <label for="inputEmail3" class="col-3 col-form-label">
+                  {{
+                    (selected_access == 'purchasing_system' && selected_role != 'admin') ? 'Branch ID' :
+                    (selected_access == 'kitchen' && selected_role != 'admin') ? 'Shop ID' : 'User name'
+                  }}
+                </label>
                 <div class="col-9">
-                  <input type="email" class="form-control" placeholder="{{(selected_access == 'purchasing_system' && selected_role != 'admin') ? 'Branch ID' : 'User name'}}" [(ngModel)]='_name' [ngModelOptions]="{standalone: true}">
+                  <input type="text" class="form-control" placeholder="{{(selected_access == 'purchasing_system' && selected_role != 'admin') ? 'Branch ID' : (selected_access == 'kitchen' && selected_role != 'admin') ? 'Shop ID' : 'User name'}}" [(ngModel)]='_name' [ngModelOptions]="{standalone: true}">
                 </div>
               </div>
-              <div class="form-group row mb-3">
+              <div class="form-group row mb-3" *ngIf="!((selected_access == 'kitchen') && (selected_role != 'admin'))">
                 <label for="inputEmail3" class="col-3 col-form-label">Email</label>
                 <div class="col-9">
                   <input type="email" class="form-control" placeholder="Email" [(ngModel)]='_email' [ngModelOptions]="{standalone: true}">
                 </div>
               </div>
-              <div class="form-group row mb-3">
+              <div class="form-group row mb-3" *ngIf="((selected_access == 'kitchen') && (selected_role != 'admin'))">
+                <label for="inputEmail3" class="col-3 col-form-label">Key</label>
+                <div class="col-9">
+                  <input type="text" class="form-control" placeholder="KEY" [(ngModel)]='_email' [ngModelOptions]="{standalone: true}">
+                </div>
+              </div>
+              <div class="form-group row mb-3" *ngIf="!((selected_access == 'kitchen') && (selected_role != 'admin'))">
                 <label for="inputPassword3" class="col-3 col-form-label">Password</label>
                 <div class="col-9">
                   <input type="password" class="form-control" placeholder="Password" [(ngModel)]='_password' [ngModelOptions]="{standalone: true}">
                 </div>
               </div>
-              <div class="form-group row mb-3">
+              <div class="form-group row mb-3" *ngIf="!((selected_access == 'kitchen') && (selected_role != 'admin'))">
                 <label for="inputPassword5" class="col-3 col-form-label">Re Password</label>
                 <div class="col-9">
                   <input type="password" class="form-control" placeholder="Retype Password" [(ngModel)]='_repassword' [ngModelOptions]="{standalone: true}">
@@ -157,19 +168,35 @@
                   <ng-select [items]="USER_ROLE" [(ngModel)]='selected_role' [ngModelOptions]="{standalone: true}"></ng-select>
                 </div>
               </div>
-              <div class="form-group row mb-3" *ngIf="selected_access == 'purchasing_system'">
+              <div class="form-group row mb-3" *ngIf="selected_access == 'purchasing_system' || selected_access == 'kitchen'">
                 <label for="default" class="col-3 col-form-label">Company</label>
                 <div class="col-9">
                   <ng-select [items]="COMPANY" [(ngModel)]='selected_company' [ngModelOptions]="{standalone: true}"></ng-select>
                 </div>
               </div>
               <div class="form-group row mb-3">
-                <label for="inputEmail3" class="col-3 col-form-label">{{(selected_access == 'purchasing_system' && selected_role != 'admin') ? 'Branch ID' : 'User name'}}</label>
+                <label for="inputEmail3" class="col-3 col-form-label">
+                  {{
+                    (selected_access == 'purchasing_system' && selected_role != 'admin') ? 'Branch ID' :
+                    (selected_access == 'kitchen' && selected_role != 'admin') ? 'Shop ID' : 'User name'
+                  }}
+                </label>
                 <div class="col-9">
-                  <input type="email" class="form-control" placeholder="{{(selected_access == 'purchasing_system' && selected_role != 'admin') ? 'Branch ID' : 'User name'}}" [(ngModel)]='_name' [ngModelOptions]="{standalone: true}">
+                  <input type="text" class="form-control" placeholder="
+                  {{(selected_access == 'purchasing_system' && selected_role != 'admin') ? 'Branch ID' :
+                  (selected_access == 'kitchen' && selected_role != 'admin') ? 'Shop ID' : 'User name'}}
+                  " [(ngModel)]='_name' [ngModelOptions]="{standalone: true}">
                 </div>
               </div>
               <div class="form-group row mb-3">
+                <label for="inputEmail3" class="col-3 col-form-label">{{
+                  ((selected_access == 'kitchen') && (selected_role != 'admin')) ? 'Key' : 'Email'
+                }}</label>
+                <div class="col-9">
+                  <input type="email" class="form-control" placeholder="{{((selected_access == 'kitchen') && (selected_role != 'admin')) ? 'Key' : 'Email'}}" [(ngModel)]='_email' [ngModelOptions]="{standalone: true}">
+                </div>
+              </div>
+              <div class="form-group row mb-3" *ngIf="!((selected_access == 'kitchen') && (selected_role != 'admin'))">
                 <label for="inputEmail3" class="col-3 col-form-label">Password</label>
                 <div class="col-9">
                   <input type="text" class="form-control" placeholder="Password" [(ngModel)]='_password' [ngModelOptions]="{standalone: true}">
