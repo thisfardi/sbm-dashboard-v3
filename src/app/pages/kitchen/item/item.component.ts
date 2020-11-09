@@ -70,6 +70,7 @@ export class ItemComponent implements OnInit {
               });
               this.filter_kitchen = this.kitchens[0]
               this.item_loading = false;
+              this._fetchItemHistory()
           },
           error => {
               this.db_error = true;
@@ -100,7 +101,6 @@ export class ItemComponent implements OnInit {
                     this.render_item_amount_history(data['amount_history']);
                     this.render_item_history(data['item_history']);
                     this.history = [...data['history']]
-                    console.log(data)
                     this.item_loading = false;
                 },
                 error => {
