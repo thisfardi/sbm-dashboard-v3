@@ -5,7 +5,6 @@ import { ElementsComponent } from './elements/elements.component';
 import { ValidationComponent } from './validation/validation.component';
 import { UploadsComponent } from './uploads/uploads.component';
 import { EditorComponent } from './editor/editor.component';
-import { WizardComponent } from './wizard/wizard.component';
 import { AdvancedComponent } from './advanced/advanced.component';
 
 const routes: Routes = [
@@ -24,10 +23,6 @@ const routes: Routes = [
     {
         path: 'forms-editor',
         component: EditorComponent
-    },
-    {
-        path: 'forms-wizard',
-        component: WizardComponent
     },
     {
         path: 'forms-advanced',

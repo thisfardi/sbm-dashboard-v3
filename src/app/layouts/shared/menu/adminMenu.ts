@@ -11,7 +11,7 @@ export const ADMINMENU: MenuItem[] = [
         link: '/admin/users',
     },
     {
-        label: 'User events',
+        label: 'User history',
         icon: 'airplay',
         link: '/admin/user-events'
     },

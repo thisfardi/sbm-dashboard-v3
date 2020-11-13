@@ -3,57 +3,7 @@
   <app-ui-preloader [display]="loading"></app-ui-preloader>
   <app-page-title title="User management"></app-page-title>
   <div class="row">
-    <div class="col-md-8">
-      <div class="card">
-        <div class="card-body">
-          <div *ngIf='server_user_fetching_error'>
-            <h4 class="header-title mt-0 mb-1">The server is not responding at the moment.
-              <i class="uil-refresh ml-3 icon-dual-info" placement="bottom" ngbTooltip="Click here to refresh" (click)="ngOnInit()"></i>
-            </h4>
-          </div>
-          <div *ngIf='!server_user_fetching_error'>
-            <div *ngIf='noUsers'>
-              <h4 class="header-title mt-0 mb-1">There are no users in the database. Please add a new user.</h4>
-            </div>
-            <div *ngIf='!noUsers'>
-              <h4 class="header-title mt-0 mb-3">List of users ({{users?.length}} users)</h4>
-              <div class="table-responsive slimscroll" appSlimScroll>
-                <table class="table table-hover mb-0">
-                  <thead>
-                    <tr>
-                      <th>#</th>
-                      <th>Name</th>
-                      <th>Email</th>
-                      <th>Access</th>
-                      <th>Role</th>
-                      <th>Database</th>
-                      <th>Shops</th>
-                      <th>Member since</th>
-                      <th>Last login</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    <tr *ngFor="let user of users; index as idx" (click)="select_user(user)">
-                      <td>{{ idx + 1 }}</td>
-                      <td>{{ user.name }}</td>
-                      <td>{{ user.email }}</td>
-                      <td>{{ user.access }}</td>
-                      <td>{{ user.role }}</td>
-                      <td>{{ user.database ? user.database : '-' }}</td>
-                      <td>{{ user.shop_name ? (get_shop_length(user.shop_name) != 0 ? get_shop_length(user.shop_name) + 'shops' : '-') : '-' }} </td>
-                      <td>{{ user.member_since }}</td>
-                      <td>{{ user.last_login }}</td>
-                    </tr>
-                  </tbody>
-                </table>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-    <!-- User edit section -->
-    <div class="col-md-4">
+    <div class="col-md-12">
       <div class="card">
         <div class="card-body">
           <div *ngIf='!currentUser'>
@@ -251,6 +201,57 @@
         </div>
       </div>
     </div>
+    <div class="col-md-12">
+      <div class="card">
+        <div class="card-body">
+          <div *ngIf='server_user_fetching_error'>
+            <h4 class="header-title mt-0 mb-1">The server is not responding at the moment.
+              <i class="uil-refresh ml-3 icon-dual-info" placement="bottom" ngbTooltip="Click here to refresh" (click)="ngOnInit()"></i>
+            </h4>
+          </div>
+          <div *ngIf='!server_user_fetching_error'>
+            <div *ngIf='noUsers'>
+              <h4 class="header-title mt-0 mb-1">There are no users in the database. Please add a new user.</h4>
+            </div>
+            <div *ngIf='!noUsers'>
+              <h4 class="header-title mt-0 mb-3">List of users ({{users?.length}} users)</h4>
+              <div class="table-responsive slimscroll" appSlimScroll>
+                <table class="table table-hover mb-0">
+                  <thead>
+                    <tr>
+                      <th>#</th>
+                      <th>Name</th>
+                      <th>Email</th>
+                      <th>Access</th>
+                      <th>Role</th>
+                      <th>Database</th>
+                      <th>Shops</th>
+                      <th>Member since</th>
+                      <th>Last login</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr *ngFor="let user of users; index as idx" (click)="select_user(user)">
+                      <td>{{ idx + 1 }}</td>
+                      <td>{{ user.name }}</td>
+                      <td>{{ user.email }}</td>
+                      <td>{{ user.access }}</td>
+                      <td>{{ user.role }}</td>
+                      <td>{{ user.database ? user.database : '-' }}</td>
+                      <td>{{ user.shop_name ? (get_shop_length(user.shop_name) != 0 ? get_shop_length(user.shop_name) + 'shops' : '-') : '-' }} </td>
+                      <td>{{ user.member_since }}</td>
+                      <td>{{ user.last_login }}</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- User edit section -->
+    
   </div>
 </div>
 

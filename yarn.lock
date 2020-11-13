@@ -1600,7 +1600,7 @@ amdefine@>=0.0.4:
   resolved "https://registry.yarnpkg.com/amdefine/-/amdefine-1.0.1.tgz#4a5282ac164729e93619bcfd3ad151f817ce91f5"
   integrity sha1-SlKCrBZHKek2Gbz9OtFR+BfOkfU=
 
-angular-archwizard@^5.0.0:
+angular-archwizard@5.0.0:
   version "5.0.0"
   resolved "https://registry.yarnpkg.com/angular-archwizard/-/angular-archwizard-5.0.0.tgz#6a59e238a58b896fba6007dbde06848256ff2e4a"
   integrity sha512-bj+cshnEHKghGXgjiSdyG+Qs3+gp+5/GMzXm3F2QzIESC7kd8KxaXASwTdo4mbXx8UthT43m3gfWrKUD+GPXOQ==
