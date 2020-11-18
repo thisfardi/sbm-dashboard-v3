@@ -49,6 +49,7 @@ export class UsersComponent implements OnInit {
   _email: string;
   _password: string;
   _repassword: string;
+  _branch_id: string;
 
   // Validation error
   validation_error = false;
@@ -81,6 +82,7 @@ export class UsersComponent implements OnInit {
     this._email = '';
     this._password = '';
     this._repassword = '';
+    this._branch_id = '';
     this.selected_database = '';
     this.selected_shops = [];
     this.user_name_caption = 'User name';
@@ -152,7 +154,7 @@ export class UsersComponent implements OnInit {
         }
       )
   }
-  _updateUser(id, name, email, password, database, shops, access, role, company) {
+  _updateUser(id, name, email, password, database, shops, access, role, company, branch_id) {
     this.apiService.update_user(this.parseService.encode({
       id: id,
       name: name,
@@ -162,7 +164,8 @@ export class UsersComponent implements OnInit {
       shop: JSON.stringify(shops),
       role: role,
       access: access,
-      company: company
+      company: company,
+      branch_id: branch_id
     }))
       .pipe(first())
       .subscribe(
@@ -178,7 +181,7 @@ export class UsersComponent implements OnInit {
         }
       )
   }
-  _addUser(name, email, password, database, shops, access, role, company) {
+  _addUser(name, email, password, database, shops, access, role, company, branch_id) {
     this.apiService.add_user(this.parseService.encode({
       name: name,
       email: email,
@@ -187,7 +190,8 @@ export class UsersComponent implements OnInit {
       shop: JSON.stringify(shops),
       access: access,
       role: role,
-      company: company
+      company: company,
+      branch_id: branch_id
     }))
       .pipe(first())
       .subscribe(
@@ -228,6 +232,7 @@ export class UsersComponent implements OnInit {
     this._name = item.name;
     this._email = item.email;
     this._password = item.password;
+    this._branch_id = item.branch_id;
     this.selected_access = item.access;
     this.selected_company = item.company;
     this.access_change(item.access);
@@ -285,7 +290,7 @@ export class UsersComponent implements OnInit {
       if (this._name && this._email && this._password && (this._password == this._repassword) && this.selected_database && (this.selected_shops['length'] != 0) &&
         (this.selected_role == 'customer')
       ) {
-        this._addUser(this._name, this._email, this._password, this.selected_database, this.selected_shops, this.selected_access, this.selected_role, '');
+        this._addUser(this._name, this._email, this._password, this.selected_database, this.selected_shops, this.selected_access, this.selected_role, '', '');
       } else {
         this.validation_error = true;
         this.validation_error_msg = 'Validation error.';
@@ -308,7 +313,7 @@ export class UsersComponent implements OnInit {
       }
     } else if((this.selected_access == 'kitchen') && (this.selected_role == 'customer')){
       if (this._name && this._email ) {
-        this._addUser(this._name, this._email, '', '', [], this.selected_access, this.selected_role, this.selected_company);
+        this._addUser(this._name, this._email, '', '', [], this.selected_access, this.selected_role, this.selected_company, '');
       } else {
         this.validation_error = true;
         this.validation_error_msg = 'Validation error.';
@@ -321,15 +326,16 @@ export class UsersComponent implements OnInit {
         }
       }
     }else {
-      if (this._name && this._email && this._password && (this._password == this._repassword) && (this.selected_access != '')
+      // Inventory or purchasing system
+      if (this._name && this._email && this._branch_id && this._password && (this._password == this._repassword) && (this.selected_access != '')
         && (this.selected_role != 'super_admin')) {
-        this._addUser(this._name, this._email, this._password, '', [], this.selected_access, this.selected_role, this.selected_company);
+        this._addUser(this._name, this._email, this._password, '', [], this.selected_access, this.selected_role, this.selected_company, this._branch_id);
       } else {
         this.validation_error = true;
         this.validation_error_msg = 'Validation error.';
 
-        if (!this._name || !this._email) {
-          this.validation_error_msg += ' You should input name and email.';
+        if (!this._name || !this._email || !this._branch_id) {
+          this.validation_error_msg += ' You should input name, branch ID and email.';
         }
         else if ((this._password != this._repassword) || !this._password) {
           this.validation_error_msg += ' Password mismatching.';
@@ -366,7 +372,9 @@ export class UsersComponent implements OnInit {
         this.selected_shops,
         this.selected_access,
         this.selected_role,
-        this.selected_company);
+        this.selected_company,
+        this._branch_id
+      );
     } else {
       this.validation_error = true;
       this.validation_error_msg = 'Validation error.';

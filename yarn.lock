@@ -5615,6 +5615,13 @@ ng-click-outside@^5.1.1:
   resolved "https://registry.yarnpkg.com/ng-click-outside/-/ng-click-outside-5.1.1.tgz#68cf5a295ba43e7a3f3673c2c1294d3b5238fbff"
   integrity sha512-ZGBjbbah8i3iYtSefFgvcVV9eQ1va+T+r2r2FrnUFP8izu2BmVviCIE7IhS3UfyjuavDDh+nbRl3uziN1lfBZA==
 
+ng-wizard@^1.3.0:
+  version "1.3.0"
+  resolved "https://registry.yarnpkg.com/ng-wizard/-/ng-wizard-1.3.0.tgz#c691862b635058ba97d2669db1ea15d6199ef99e"
+  integrity sha512-jf+uNON3bShnwlqEcLy2njYsOACJadpUyJpdW1q0lF/rwtfIKaj7/SgZmP/4gW1i0cEAVYiDGpUJrcYnIQUDRw==
+  dependencies:
+    tslib "^1.10.0"
+
 ngx-bootstrap@^5.1.2:
   version "5.1.2"
   resolved "https://registry.yarnpkg.com/ngx-bootstrap/-/ngx-bootstrap-5.1.2.tgz#0d5777ce3ba548f3d922cb23f6c640ea09191b4c"
