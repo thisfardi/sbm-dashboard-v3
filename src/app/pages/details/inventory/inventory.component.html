@@ -1,1 +1,91 @@
-<p>inventory works!</p>
+<div class="container-fluid">
+  <div class="row mt-4">
+    <div *ngIf='db_error' class="col-md-12">
+        <ngb-alert type="danger" [dismissible]="false">
+            Database connection error. Please try again later.
+        </ngb-alert>
+    </div>
+    <div class="col-md-12">
+      <div class="card">
+        <div class="card-body p-0">
+          <div class="card-title header-title border-bottom p-3 mb-0 d-flex align-items-center">
+            <div>Inventory overview - {{selectedYear}}</div>
+            <div class="ml-auto" style="width: 120px; font-size: 15px; font-weight: 400;">
+              <ng-select [items]="YEARS" [(ngModel)]='selectedYear' [ngModelOptions]="{standalone: true}"></ng-select>
+            </div>
+          </div>
+          <app-miniloader [display]='loading'></app-miniloader>
+          <div *ngIf="!loading">
+            <apx-chart [series]="inventory_overview_chart.series" [chart]="inventory_overview_chart.chart"
+              [tooltip]="inventory_overview_chart.tooltip" [yaxis]="inventory_overview_chart.yaxis"
+              [legend]="inventory_overview_chart.legend" [grid]="inventory_overview_chart.grid"
+              [dataLabels]="inventory_overview_chart.dataLabels" [stroke]="inventory_overview_chart.stroke"
+              [xaxis]="inventory_overview_chart.xaxis" [colors]="inventory_overview_chart.colors"
+              [responsive]="inventory_overview_chart.responsive">
+            </apx-chart>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-12">
+      <div class="card">
+        <div class="card-body p-0">
+          <h5 class="card-title header-title border-bottom p-3 mb-0">Monthly stocks</h5>
+          <app-miniloader [display]='loading'></app-miniloader>
+          <div *ngIf="!loading">
+            <apx-chart [series]="inventory_month_chart.series" [chart]="inventory_month_chart.chart"
+              [tooltip]="inventory_month_chart.tooltip" [yaxis]="inventory_month_chart.yaxis"
+              [legend]="inventory_month_chart.legend" [grid]="inventory_month_chart.grid"
+              [dataLabels]="inventory_month_chart.dataLabels" [stroke]="inventory_month_chart.stroke"
+              [xaxis]="inventory_month_chart.xaxis" [colors]="inventory_month_chart.colors"
+              [responsive]="inventory_month_chart.responsive">
+            </apx-chart>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-12">
+      <div class="card">
+        <div class="card-body">
+          <h5 class="card-title header-title border-bottom p-3 mb-0">Detailed report</h5>
+          <app-miniloader [display]='loading'></app-miniloader>
+          <div *ngIf="!loading">
+            <div class="table-responsive table-sm mt-4" style="max-height: 600px">
+              <table class="table table-striped table-nowrap mb-0 report-view">
+                <thead>
+                  <tr>
+                    <th>Description</th>
+                    <th>Vendor description</th>
+                    <th>Category</th>
+                    <th>Counter info</th>
+                    <th>Packing info</th>
+                    <th>Qty</th>
+                    <th>price</th>
+                    <th>Value</th>
+                    <th>Count date</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr *ngFor="let item of detailHistory; idx as index">
+                    <td>{{item.description}}</td>
+                    <td>{{item.vendor_description}}</td>
+                    <td>{{item.category}}</td>
+                    <td>{{item.counter_name}}</td>
+                    <td>{{item.packing_info}}</td>
+                    <td>
+                      <span>{{get_primary_uom(item.packing_info)}}: </span>{{item.primary_qty}}
+                      <span class="ml-2">{{get_secondary_uom(item.packing_info)}}: </span>{{item.secondary_qty}}
+                    </td>
+                    <td>{{item.price | currency}}</td>
+                    <td>{{item.value | currency}}</td>
+                    <td>{{item.timestamp}}</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

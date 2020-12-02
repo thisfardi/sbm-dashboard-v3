@@ -216,4 +216,10 @@ export class ApiService {
                 return res;
             }))
     }
+    getInventoryHistory(data){
+      return this.http.post(`${api_url}/is/get_inventory_history`, data)
+          .pipe(map(res => {
+              return res;
+          }))
+    }
 }

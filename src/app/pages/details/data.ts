@@ -379,6 +379,125 @@ const articleDetailChart: Object = {
         data: []
     }
 }
+const inventoryOverviewChart: ChartType = {
+    chart: {
+        height: 300,
+        type: 'line',
+        stacked: false,
+        toolbar: {
+            show: false
+        }
+    },
+    dataLabels: {
+        enabled: false
+    },
+    stroke: {
+        width: [3],
+        curve: 'smooth'
+    },
+    series: [],
+    colors: ['#5369f8'],
+    xaxis: {
+        categories: [],
+    },
+    yaxis: [{
+        labels: {
+            style: {
+                color: '#FFB0AF',
+            },
+            formatter: function (value) {
+                if(parseInt(value) > 1000){
+                    return '$' + (Math.floor(value / 1000 * 100) / 100).toString() + 'k'
+                }else{
+                    return '$' + (Math.floor(value * 100) / 100).toString()
+                }
+
+            }
+        },
+        title: {
+            text: 'Inventory value [USD]',
+            offsetX: 5
+        },
+    }],
+    tooltip: {
+        theme: 'dark',
+        x: { show: true },
+        followCursor: true,
+        y: {
+            formatter(y) {
+                return '$' + (Math.floor(y * 100) / 100).toString()
+            }
+        }
+    },
+    responsive: [{
+        breakpoint: 600,
+        options: {
+            legend: {
+                show: false
+            }
+        }
+    }]
+};
+const inventoryMonthChart: ChartType = {
+    chart: {
+        height: 300,
+        type: 'line',
+        stacked: false,
+        toolbar: {
+            show: false
+        }
+    },
+    dataLabels: {
+        enabled: false
+    },
+    stroke: {
+        width: [3, 1, 1, 1, 1],
+        curve: 'smooth'
+    },
+    series: [],
+    colors: ['#5369f8', '#43d39e', '#f77e53', '#ffbe0b', '#91FDFF', '#FFB0AF', '#31393C', '#D591F2', '#0A6D72', '#E0D0EA', '#6F5A96', '#40160F'],
+    xaxis: {
+        categories: [],
+    },
+    yaxis: [{
+        labels: {
+            style: {
+                color: '#FFB0AF',
+            },
+            formatter: function (value) {
+                if(parseInt(value) > 1000){
+                    return (Math.floor(value / 1000 * 100) / 100).toString() + 'k'
+                }else{
+                    return (Math.floor(value * 100) / 100).toString()
+                }
+
+            }
+        },
+        title: {
+            text: 'Count details [USD]',
+            offsetX: 5
+        },
+    }],
+    tooltip: {
+        theme: 'dark',
+        x: { show: true },
+        followCursor: true,
+        y: {
+            formatter(y) {
+                return '$' + (Math.floor(y * 100) / 100).toString()
+            }
+        }
+    },
+    responsive: [{
+        breakpoint: 600,
+        options: {
+            legend: {
+                show: false
+            }
+        }
+    }]
+};
 export {
-    salesChart, causalChart, transChart, avgChart, paymentChart, paymentDetailChart, articleChart, groupDetailChart, articleDetailChart
+    salesChart, causalChart, transChart, avgChart, paymentChart, paymentDetailChart, articleChart, groupDetailChart, articleDetailChart,
+    inventoryOverviewChart, inventoryMonthChart
 };
