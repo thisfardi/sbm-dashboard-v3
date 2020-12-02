@@ -30,6 +30,7 @@ import * as Charts from 'fusioncharts/fusioncharts.charts';
 import * as Fusion from 'fusioncharts/themes/fusioncharts.theme.fusion'
 
 import * as Power from "fusioncharts/fusioncharts.powercharts";
+import { InventoryComponent } from './inventory/inventory.component';
 
 
 
@@ -37,7 +38,7 @@ import * as Power from "fusioncharts/fusioncharts.powercharts";
 FusionChartsModule.fcRoot(FusionCharts, Charts, Fusion, Power);
 
 @NgModule({
-    declarations: [SaleComponent, TransactionComponent, PaymentComponent, ArticleComponent, WeeklyComponent, HourlyComponent, MonthlyComponent, OperatorComponent, PresenceComponent],
+    declarations: [SaleComponent, TransactionComponent, PaymentComponent, ArticleComponent, WeeklyComponent, HourlyComponent, MonthlyComponent, OperatorComponent, PresenceComponent, InventoryComponent],
     imports: [
         CommonModule,
         DetailsRoutingModule,

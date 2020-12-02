@@ -59,6 +59,16 @@ export const MENU: MenuItem[] = [
         icon: 'calendar',
         link: '/compare/period',
     },
+
+    {
+        label: 'Inventory system',
+        isTitle: true
+    },
+    {
+        label: 'Inventory history',
+        icon: 'package',
+        link: '/details/inventory',
+    },
     {
         label: 'Operators',
         isTitle: true
@@ -72,5 +82,6 @@ export const MENU: MenuItem[] = [
         label: 'Presence control',
         icon: 'user-check',
         link: '/details/presence',
-    }
+    },
+
 ];

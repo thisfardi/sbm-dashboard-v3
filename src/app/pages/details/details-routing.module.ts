@@ -10,6 +10,7 @@ import { HourlyComponent } from './hourly/hourly.component';
 import { MonthlyComponent } from './monthly/monthly.component';
 import { OperatorComponent } from './operator/operator.component';
 import { PresenceComponent } from './presence/presence.component';
+import { InventoryComponent } from './inventory/inventory.component';
 
 const routes: Routes = [
     {
@@ -47,6 +48,10 @@ const routes: Routes = [
     {
         path: 'presence',
         component: PresenceComponent
+    },
+    {
+        path: 'inventory',
+        component: InventoryComponent
     }
 ];
 
