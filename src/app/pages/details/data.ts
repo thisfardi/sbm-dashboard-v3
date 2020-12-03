@@ -416,7 +416,7 @@ const inventoryOverviewChart: ChartType = {
         },
         title: {
             text: 'Inventory value [USD]',
-            offsetX: 5
+            offsetX: 20
         },
     }],
     tooltip: {
@@ -497,7 +497,38 @@ const inventoryMonthChart: ChartType = {
         }
     }]
 };
+const inventoryCurrentChart: ChartType = {
+  series: [],
+  chart: {
+    height: 320,
+    type: "radar",
+    toolbar: {
+        show: false
+    }
+  },
+  tooltip: {
+      theme: 'dark',
+      followCursor: true,
+      y: {
+          formatter(y) {
+              return '$' + (Math.floor(y * 100) / 100).toString()
+          }
+      }
+  },
+  legend: {
+    show: true,
+  },
+  title: {
+    text: "Current inventory stock"
+  },
+  xaxis: {
+    categories: [],
+    labels: {
+      show: false
+    }
+  }
+};
 export {
     salesChart, causalChart, transChart, avgChart, paymentChart, paymentDetailChart, articleChart, groupDetailChart, articleDetailChart,
-    inventoryOverviewChart, inventoryMonthChart
+    inventoryOverviewChart, inventoryMonthChart, inventoryCurrentChart
 };

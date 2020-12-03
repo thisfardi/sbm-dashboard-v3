@@ -5,14 +5,30 @@
             Database connection error. Please try again later.
         </ngb-alert>
     </div>
-    <div class="col-md-12">
+    <div class="col-md-4">
       <div class="card">
         <div class="card-body p-0">
           <div class="card-title header-title border-bottom p-3 mb-0 d-flex align-items-center">
-            <div>Inventory overview - {{selectedYear}}</div>
-            <div class="ml-auto" style="width: 120px; font-size: 15px; font-weight: 400;">
-              <ng-select [items]="YEARS" [(ngModel)]='selectedYear' [ngModelOptions]="{standalone: true}"></ng-select>
-            </div>
+            <span class="mr-2">The current value - <span class="text-danger">{{currentTotalValue | currency}}</span></span>
+          </div>
+          <app-miniloader [display]='loading'></app-miniloader>
+          <div *ngIf="!loading">
+            <apx-chart
+              [series]="inventory_current_chart.series"
+              [chart]="inventory_current_chart.chart"
+              [xaxis]="inventory_current_chart.xaxis"
+              [tooltip]="inventory_current_chart.tooltip"
+            >
+            </apx-chart>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-8">
+      <div class="card">
+        <div class="card-body p-0">
+          <div class="card-title header-title border-bottom p-3 mb-0 d-flex align-items-center">
+            <ng-select [items]="YEARS" [(ngModel)]='selectedYear' [ngModelOptions]="{standalone: true}" style="width: 180px;" (change)="process_data()"></ng-select>
           </div>
           <app-miniloader [display]='loading'></app-miniloader>
           <div *ngIf="!loading">
@@ -27,10 +43,47 @@
         </div>
       </div>
     </div>
-    <div class="col-md-12">
+    <div class="col-md-4">
       <div class="card">
         <div class="card-body p-0">
-          <h5 class="card-title header-title border-bottom p-3 mb-0">Monthly stocks</h5>
+          <div class="card-title header-title border-bottom p-3 mb-0 d-flex align-items-center">
+            <span class="mr-2">Monthly stocks - {{selectedMonth}}</span>
+          </div>
+          <app-miniloader [display]='loading'></app-miniloader>
+          <div *ngIf="!loading">
+            <div class="table-responsive table-sm p-2" style="max-height: 350px">
+              <table class="table table-striped table-nowrap mb-0 report-view">
+                <thead>
+                  <tr>
+                    <th>Description</th>
+                    <th>Category</th>
+                    <th>Qty</th>
+                    <th>Value</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr *ngFor="let item of monthHistory; idx as index">
+                    <td>{{item.description}}</td>
+                    <td>{{item.category}}</td>
+                    <td>
+                      <span>{{get_primary_uom(item.packing_info)}}: </span>{{item.primary_qty}}
+                      <span class="ml-2">{{get_secondary_uom(item.packing_info)}}: </span>{{item.secondary_qty}}
+                    </td>
+                    <td>{{item.value | currency}}</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-8">
+      <div class="card">
+        <div class="card-body p-0">
+          <div class="card-title header-title border-bottom p-3 mb-0 d-flex align-items-center">
+            <ng-select [items]="MONTHS" [(ngModel)]='selectedMonth' [ngModelOptions]="{standalone: true}" style="width: 180px;" (change)="process_data()"></ng-select>
+          </div>
           <app-miniloader [display]='loading'></app-miniloader>
           <div *ngIf="!loading">
             <apx-chart [series]="inventory_month_chart.series" [chart]="inventory_month_chart.chart"
