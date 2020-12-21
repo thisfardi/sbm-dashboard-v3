@@ -47,7 +47,7 @@ export class ApiService {
             }));
     }
     users() {
-        return this.http.post(`${api_url}/auth/users`, {})
+        return this.http.post(`${api_url}/auth/all_users`, {})
             .pipe(map(res => {
                 return res;
             }))

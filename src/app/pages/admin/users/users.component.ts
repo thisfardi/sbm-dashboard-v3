@@ -1,7 +1,7 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { first } from 'rxjs/operators';
 
-import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { NgbModal, NgbModalConfig } from '@ng-bootstrap/ng-bootstrap';
 
 import { ApiService } from '../../../core/services/api.service';
 import { ParseService } from '../../../core/services/parse.service';
@@ -11,11 +11,20 @@ import { AdminService } from '../admin.service';
 @Component({
   selector: 'app-users',
   templateUrl: './users.component.html',
-  styleUrls: ['./users.component.scss']
+  styleUrls: ['./users.component.scss'],
+  providers: [NgbModalConfig, NgbModal]
 })
 export class UsersComponent implements OnInit {
 
-  constructor(private apiService: ApiService, private parseService: ParseService, private modalService: NgbModal, private adminService: AdminService) { }
+  constructor(
+    private apiService: ApiService,
+    private parseService: ParseService,
+    private modalService: NgbModal,
+    private adminService: AdminService,
+    config: NgbModalConfig
+  ) {
+    config.backdrop = 'static';
+  }
   USER_ACCESS = ['dashboard', 'kitchen', 'purchasing_system'];
   USER_ROLE = ['super_admin', 'customer'];
   COMPANY = ['MeetFresh', 'HappyLemon', 'Wushiland', 'Sunmerry', 'Cha2o'];
@@ -40,6 +49,7 @@ export class UsersComponent implements OnInit {
   server_user_fetching_error = false;
   selected_database: string;
   selected_shops: [];
+  selected_shop = '' // For purchasing test
 
   database: Object;
   shops: Object;
@@ -84,6 +94,7 @@ export class UsersComponent implements OnInit {
     this._repassword = '';
     this._branch_id = '';
     this.selected_database = '';
+    this.selected_shop = '';
     this.selected_shops = [];
     this.user_name_caption = 'User name';
   }
@@ -101,7 +112,6 @@ export class UsersComponent implements OnInit {
 
           this.adminService.users = [...data['data']];
           this.users = [...data['data']];
-
           if (!this.users) {
             this.noUsers = true;
           }
@@ -161,7 +171,7 @@ export class UsersComponent implements OnInit {
       email: email,
       password: password,
       database: database,
-      shop: JSON.stringify(shops),
+      shop: Array.isArray(shops) ? JSON.stringify(shops) : shops,
       role: role,
       access: access,
       company: company,
@@ -182,12 +192,13 @@ export class UsersComponent implements OnInit {
       )
   }
   _addUser(name, email, password, database, shops, access, role, company, branch_id) {
+    this.validation_error = false
     this.apiService.add_user(this.parseService.encode({
       name: name,
       email: email,
       password: password,
       database: database,
-      shop: JSON.stringify(shops),
+      shop: Array.isArray(shops) ? JSON.stringify(shops) : shops,
       access: access,
       role: role,
       company: company,
@@ -199,8 +210,11 @@ export class UsersComponent implements OnInit {
           if (data['status'] == 'success') {
             this._fetchUserList();
             this.user_add_succeed = true;
-
             this.reset_values();
+          }else{
+            this.user_add_succeed = false;
+            this.validation_error = true;
+            this.validation_error_msg = data['msg'];
           }
         },
         error => {
@@ -245,7 +259,13 @@ export class UsersComponent implements OnInit {
       // select_database() without reseting selected_shops
       this.shop_loading = true;
       this._fetchShops(this.selected_database);
-    } else {
+    }else if(item.access == 'purchasing_system'){
+      this.selected_database = item.database;
+      this.selected_shop = item.shop_name;
+      this.shop_loading = true;
+      this._fetchShops(this.selected_database);
+    }
+    else {
       this.selected_database = '';
       this.selected_shops = [];
     }
@@ -254,21 +274,20 @@ export class UsersComponent implements OnInit {
   // Selects database from add user or edit user form
   select_database() {
     this.shop_loading = true;
+    this.selected_shop = '';
     this.selected_shops = [];
     this._fetchShops(this.selected_database);
   }
 
   // Get the number of shops in template
   get_shop_length(data) {
-    return JSON.parse(data).length;
+
   }
 
   // Remove current user variable so that admin can add a new user | triggered when 'Add new user' button clicked
   remove_current_user(e) {
     e.preventDefault();
     this.currentUser = null;
-    this.selected_database = '';
-    this.selected_shops = [];
     this.reset_values();
   }
   access_change(e) {
@@ -325,11 +344,25 @@ export class UsersComponent implements OnInit {
           //this.validation_error_msg += ' You should select at least one shop.';
         }
       }
+    }else if((this.selected_access == 'kitchen') && (this.selected_role == 'admin')){
+      if (this._name && this._email && this._password && (this._password == this._repassword) ) {
+        this._addUser(this._name, this._email, this._password, '', [], this.selected_access, this.selected_role, this.selected_company, '');
+      } else {
+        this.validation_error = true;
+        this.validation_error_msg = 'Validation error.';
+
+        if (!this._name || !this._email) {
+          this.validation_error_msg += ' You should input shop ID and KEY.';
+        }
+        else {
+          //this.validation_error_msg += ' You should select at least one shop.';
+        }
+      }
     }else {
       // Inventory or purchasing system
       if (this._name && this._email && this._branch_id && this._password && (this._password == this._repassword) && (this.selected_access != '')
-        && (this.selected_role != 'super_admin')) {
-        this._addUser(this._name, this._email, this._password, '', [], this.selected_access, this.selected_role, this.selected_company, this._branch_id);
+        && (this.selected_role != 'super_admin') && this.selected_shop) {
+        this._addUser(this._name, this._email, this._password, this.selected_database, this.selected_shop, this.selected_access, this.selected_role, this.selected_company, this._branch_id);
       } else {
         this.validation_error = true;
         this.validation_error_msg = 'Validation error.';
@@ -354,12 +387,19 @@ export class UsersComponent implements OnInit {
     this.modalRef.close();
     this._remove_user(this.currentUser['id']);
   }
+
+  create_new_user_modal(creatNewUserModal: any){
+    //this.modalRef = this.modalService.open(creatNewUserModal, { centered: true, animation: true, size: 'lg'});
+  }
+  user_create_confirm(creatNewUserModal: any){
+    this.modalRef.close();
+  }
   // Update user
   update_user(e) {
     e.preventDefault();
     this.validation_error = false;
     if (this._name) {
-      if (this.selected_access != 'dashboard') {
+      if (this.selected_access == 'kitchen') {
         this.selected_database = '';
         this.selected_shops = [];
       }
@@ -369,7 +409,7 @@ export class UsersComponent implements OnInit {
         this._email,
         this._password,
         this.selected_database,
-        this.selected_shops,
+        this.selected_shops.length == 0 ? this.selected_shop : this.selected_shops,
         this.selected_access,
         this.selected_role,
         this.selected_company,
