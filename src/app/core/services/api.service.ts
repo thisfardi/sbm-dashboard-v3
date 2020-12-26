@@ -222,4 +222,16 @@ export class ApiService {
               return res;
           }))
     }
+    getStocksData(data){
+      return this.http.post(`${api_url}/is/get_inventory_stock`, data)
+          .pipe(map(res => {
+              return res;
+          }))
+    }
+    getItemHistoryData(data){
+      return this.http.post(`${api_url}/is/get_item_history_data`, data)
+          .pipe(map(res => {
+              return res;
+          }))
+    }
 }

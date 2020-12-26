@@ -10,6 +10,7 @@ const routes: Routes = [
     { path: 'details', loadChildren: () => import('./details/details.module').then(m => m.DetailsModule) },
     { path: 'compare', loadChildren: () => import('./compare/compare.module').then(m => m.CompareModule) },
     { path: 'kitchen', loadChildren: () => import('./kitchen/kitchen.module').then(m => m.KitchenModule) },
+    { path: 'inventory', loadChildren: () => import('./inventory/inventory.module').then(m => m.InventoryModule) },
 ];
 
 @NgModule({

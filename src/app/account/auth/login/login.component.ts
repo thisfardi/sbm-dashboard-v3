@@ -98,12 +98,14 @@ export class LoginComponent implements OnInit, AfterViewInit {
                             this.returnUrl = '/admin/users';
                             this.success_msg = data['msg'];
                         }else{
-                          if((data['res']['access'] == 'dashboard') || ((data['res']['access'] == 'kitchen') && (data['res']['role'] == 'admin'))){
+                          if((data['res']['access'] == 'dashboard') || ((data['res']['access'] == 'kitchen') && (data['res']['role'] == 'admin')) || (data['res']['access'] == 'purchasing_system')){
                               this.success_msg = data['msg'];
                               if(data['res']['access'] == 'dashboard'){
                                 this.returnUrl = '/';
-                              }else{
+                              }else if(data['res']['access'] == 'kitchen'){
                                 this.returnUrl = '/kitchen/item';
+                              }else{
+                                this.returnUrl = '/inventory/stocks'
                               }
                           }else{
                               this.error = "This user is not a allowed to access dashboard. Please try to login from other platforms.";

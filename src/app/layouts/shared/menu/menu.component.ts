@@ -8,6 +8,7 @@ import { activateMenuItems, resetMenuItems } from './utils';
 import { MENU } from './menu';
 import { ADMINMENU } from './adminMenu';
 import { KITCHENMENU } from './kitchenMenu';
+import { INVENTORYMENU } from './inventoryMenu';
 import { MenuItem } from './menu.model';
 
 @Component({
@@ -107,6 +108,10 @@ export class MenuComponent implements OnInit, AfterViewInit, OnChanges {
 
           if((access === 'kitchen') && (role === 'admin')){
             this.menuItems = KITCHENMENU;
+          }
+
+          if(access === 'purchasing_system'){
+            this.menuItems = INVENTORYMENU;
           }
         }
     }

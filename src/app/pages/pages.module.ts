@@ -16,6 +16,7 @@ import { WidgetModule } from '../shared/widgets/widget.module';
 import { DetailsModule } from './details/details.module';
 import { CompareModule } from './compare/compare.module';
 import { KitchenModule } from './kitchen/kitchen.module';
+import { InventoryModule } from './inventory/inventory.module';
 
 import { NgSelectModule } from '@ng-select/ng-select';
 import { NgbAlertModule } from '@ng-bootstrap/ng-bootstrap';

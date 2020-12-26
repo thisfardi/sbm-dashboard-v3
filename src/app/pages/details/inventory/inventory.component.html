@@ -66,8 +66,8 @@
                     <td>{{item.description}}</td>
                     <td>{{item.category}}</td>
                     <td>
-                      <span>{{get_primary_uom(item.packing_info)}}: </span>{{item.primary_qty}}
-                      <span class="ml-2">{{get_secondary_uom(item.packing_info)}}: </span>{{item.secondary_qty}}
+                      <span>{{get_primary_uom(item.packing_info)}}: </span>{{item.primary_qty ? item.primary_qty : 0}}
+                      <span class="ml-2">{{get_secondary_uom(item.packing_info)}}: </span>{{item.secondary_qty ? item.secondary_qty : 0}}
                     </td>
                     <td>{{item.value | currency}}</td>
                   </tr>
@@ -126,8 +126,8 @@
                     <td>{{item.counter_name}}</td>
                     <td>{{item.packing_info}}</td>
                     <td>
-                      <span>{{get_primary_uom(item.packing_info)}}: </span>{{item.primary_qty}}
-                      <span class="ml-2">{{get_secondary_uom(item.packing_info)}}: </span>{{item.secondary_qty}}
+                      <span>{{get_primary_uom(item.packing_info)}}: </span>{{item.primary_qty ? item.primary_qty : 0}}
+                      <span class="ml-2">{{get_secondary_uom(item.packing_info)}}: </span>{{item.secondary_qty ? item.secondary_qty : 0}}
                     </td>
                     <td>{{item.price | currency}}</td>
                     <td>{{item.value | currency}}</td>

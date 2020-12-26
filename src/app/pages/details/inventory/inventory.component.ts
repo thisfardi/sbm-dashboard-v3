@@ -103,7 +103,7 @@ export class InventoryComponent implements OnInit {
       }
       detailHistory.push(item)
     })
-    
+
     this.yearHistory = []
     for(let i = 1; i <= 12; i++){
       this.yearHistory.push({
@@ -194,11 +194,20 @@ export class InventoryComponent implements OnInit {
   }
 
   public get_primary_uom = (packing_info: string) => {
-    let s = packing_info.split('/')[1]
-    return s.charAt(0).toUpperCase() + s.slice(1)
+    if(packing_info.includes('/')){
+      let s = packing_info.split(' ')[1].split('/')[1]
+      return s.charAt(0).toUpperCase() + s.slice(1)
+    }else{
+      return 'Primary Unit'
+    }
   }
   public get_secondary_uom = (packing_info: string) => {
-    let s = packing_info.split('/')[0].replace(/[0-9]/g, '')
-    return s.charAt(0).toUpperCase() + s.slice(1)
+    if(packing_info.includes('/')){
+      let s = packing_info.split(' ')[1].split('/')[0].replace(/[0-9]/g, '')
+      return s.charAt(0).toUpperCase() + s.slice(1)
+    }else{
+      return 'Secondary Unit'
+    }
+
   }
 }
