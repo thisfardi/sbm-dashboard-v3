@@ -296,12 +296,12 @@ export class StocksComponent implements OnInit {
   export_history_data(el){
     this.exportService.exportToCSV(
       el,
-      'Inventory stock change history for ' + this.authService.currentUser()['shop_name'] + ', On ' + moment(this.dash_date).format('DD, MMM YYYY'));
+      'Inventory stock change history for ' + this.authService.currentUser()['shop_name'] + ', On ' + moment().format('DD, MMM YYYY'));
   }
   export_stock_data(el){
     this.exportService.exportToCSV(
       el,
-      'Inventory stock data for ' + this.authService.currentUser()['shop_name'] + ', On ' + moment(this.dash_date).format('DD, MMM YYYY'));
+      'Inventory stock data for ' + this.authService.currentUser()['shop_name'] + ', On ' + moment().format('DD, MMM YYYY'));
   }
   filterStocksData(){
     if(this.selected_category == 'All categories'){
