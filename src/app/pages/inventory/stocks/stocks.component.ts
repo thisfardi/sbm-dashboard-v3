@@ -314,7 +314,7 @@ export class StocksComponent implements OnInit {
   get_total_value(){
     let value = 0
     this.stocksData.forEach(item => {
-      value += parseFloat(item.price * (parseFloat(item.stock_qty_primary) + parseFloat(item.stock_qty_secondary) / this.get_sp_qty(item.packing_info)))
+      value += (parseFloat(item.price) * (parseFloat(item.stock_qty_primary) + parseFloat(item.stock_qty_secondary) / this.get_sp_qty(item.packing_info)))
     })
     return value
   }
