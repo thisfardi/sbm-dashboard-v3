@@ -45,7 +45,7 @@ export class DashboardComponent implements OnInit {
     dash_date: string = moment().format('YYYY-MM-DD');
     // Current user's shops and database
     user_database: string = JSON.parse(this.cookieService.getCookie('currentUser')).database;
-    user_shops = []
+    user_shops = JSON.parse(JSON.parse(this.cookieService.getCookie('currentUser')).shop_name);
     current_shop: string;
 
     // Data from API
@@ -63,7 +63,7 @@ export class DashboardComponent implements OnInit {
 
     ngOnInit() {
         // Set the default shop as the first shop of the shop list
-        this.current_shop = ''
+        this.current_shop = this.user_shops[0]
         this.refresh_values();
 
         this._fetchData();
