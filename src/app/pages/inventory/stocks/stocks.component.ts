@@ -178,6 +178,7 @@ export class StocksComponent implements OnInit {
       x_axis.push(moment(item.timestamp).format('MMM DD, ddd'))
       series_data.push(parseFloat(item.primary_qty_change) + parseFloat(item.secondary_qty_change) / this.get_sp_qty(this.selected_item['packing_info']))
     })
+    console.log(series_data)
     this.itemHistoryChart = {
       chart: {
         height: 150,
@@ -191,7 +192,7 @@ export class StocksComponent implements OnInit {
           colors: {
             ranges: [
               {
-                from: -10,
+                from: -100,
                 to: -5,
                 color: "#F15B46"
               },
@@ -202,7 +203,6 @@ export class StocksComponent implements OnInit {
               }
             ]
           },
-          columnWidth: "80%"
         },
       },
       dataLabels: {
@@ -232,6 +232,9 @@ export class StocksComponent implements OnInit {
         title: {
           text: 'QTY'
         }
+      },
+      labels: {
+        rotate: -90
       }
     }
     this.historyLoading = false
