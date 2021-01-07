@@ -42,6 +42,12 @@ export class ItemComponent implements OnInit {
     filter_date: Object;
     filter_kitchen: string;
 
+    item_id_list = []
+    item_list = []
+    selected_item_id = ''
+    selected_item = ''
+    item_amount_history_data = []
+
     amount_chart: ChartType;
     item_chart: ChartType;
     ratio_chart: ChartType;
@@ -98,10 +104,24 @@ export class ItemComponent implements OnInit {
             .pipe(first())
             .subscribe(
                 data => {
-                    this.render_item_amount_history(data['amount_history']);
-                    this.render_item_history(data['item_history']);
-                    this.history = [...data['history']]
-                    this.item_loading = false;
+                  //this.render_item_amount_history(data['amount_history']);
+                  this.item_amount_history_data = [...data['amount_detail_history']]
+                  this.render_item_history(data['item_history']);
+                  this.history = [...data['history']]
+                  this.item_loading = false;
+                  this.item_id_list = []
+                  this.item_list = []
+                  this.selected_item = undefined
+                  this.selected_item_id = undefined
+                  data['amount_detail_history'].forEach(item => {
+                    if(!this.item_id_list.includes(item['item_id'])){
+                      this.item_id_list.push(item['item_id'])
+                      this.item_list.push(item['item_name'])
+                    }
+                  })
+                  this.selected_item_id = this.item_id_list[0]
+                  this.selected_item = this.item_list[0]
+                  this.select_item()
                 },
                 error => {
                     this.db_error = true;
@@ -109,18 +129,12 @@ export class ItemComponent implements OnInit {
                 }
             )
     }
+    select_item(){
+      let amount_history = []
+      amount_history = [...this.item_amount_history_data.filter(item => item.item_name == this.selected_item)]
+      this.render_item_amount_history(amount_history)
+    }
     render_item_amount_history(data){
-
-        let format = '';
-        if(this.f_criteria == 'hour'){
-          format = 'HH'
-        }else if(this.f_criteria == 'day'){
-          format = 'DD'
-        }else if(this.f_criteria == 'month'){
-          format = 'MM'
-        }else{
-          format = 'YYYY'
-        }
         let x_axis = [...this.getXAxis()];
 
         let t_cooking_started = 0;

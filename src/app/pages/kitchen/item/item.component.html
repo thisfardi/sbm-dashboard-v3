@@ -72,7 +72,9 @@
         <div class="col-md-8">
             <div class="card" style="min-height: 450px;">
                 <div class="card-body p-0">
-                    <h5 class="card-title header-title border-bottom p-3 mb-0">Cook/Dispose history by amount</h5>
+                    <h5 class="card-title header-title border-bottom p-3 mb-0">
+                        <ng-select [items]="item_list" [(ngModel)]='selected_item' [ngModelOptions]="{standalone: true}" (change)="select_item()"></ng-select>
+                    </h5>
                     <app-miniloader [display]='item_loading'></app-miniloader>
                     <div *ngIf="!item_loading">
                         <apx-chart [series]="amount_chart.series" [chart]="amount_chart.chart"
