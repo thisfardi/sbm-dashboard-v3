@@ -1,211 +1,275 @@
 <app-ui-preloader [display]="sum_loading"></app-ui-preloader>
 <div class="container-fluid">
     <!-- Controls  -->
-    <div class="row page-title align-items-center">
-        <div class="col-sm-8 col-xl-8">
-            <form class="form-inline float-sm-left mt-3 mt-sm-0 d-flex justify-content-between filter-form">
-                <div class="form-group mr-2 mb-2">
-                    <ng-select [items]="user_shops" [(ngModel)]='current_shop' [ngModelOptions]="{standalone: true}"></ng-select>
-                </div>
-                <div class="form-group mr-2 mb-2">
-                    <input type="text" class="form-control" id="dashdate" style="min-width: 208px;" placeholder="2020-01-01" mwlFlatpickr [convertModelValue]="true" [(ngModel)]="dash_date" [ngModelOptions]="{standalone: true}"/>
-                </div>
-                <div class="btn-group mb-2" ngbDropdown>
-                    <button type="button" class="btn btn-primary" (click)="apply_filter()">
-                        <i class='uil uil-check mr-1'></i>Apply
-                    </button>
-                </div>
-            </form>
+  <!-- <div class="row page-title align-items-center">
+    <div class="col-sm-8 col-xl-8">
+      <form class="form-inline float-sm-left mt-3 mt-sm-0 d-flex justify-content-between filter-form">
+        <div class="form-group mr-2 mb-2">
+          <ng-select [items]="user_shops" [(ngModel)]='current_shop' [ngModelOptions]="{standalone: true}"></ng-select>
         </div>
-        <div class="col-sm-4 col-xl-4">
+        <div class="form-group mr-2 mb-2">
+          <input type="text" class="form-control" id="dashdate" style="min-width: 208px;" placeholder="2020-01-01" mwlFlatpickr [convertModelValue]="true" [(ngModel)]="dash_date" [ngModelOptions]="{standalone: true}"/>
         </div>
+        <div class="btn-group mb-2" ngbDropdown>
+          <button type="button" class="btn btn-primary" (click)="apply_filter()">
+            <i class='uil uil-check mr-1'></i>Apply
+          </button>
+        </div>
+      </form>
     </div>
+    <div class="col-sm-4 col-xl-4">
+    </div>
+  </div> -->
+  <div class="row mt-4">
+    <div *ngIf='db_error' class="col-md-12">
+      <ngb-alert type="danger" [dismissible]="false">
+        Database connection error. Please try again later.
+      </ngb-alert>
+    </div>
+    <div class="col-md-12">
+      <div class="card">
+        <div class="card-body p-0">
+          <h5 class="card-title header-title border-bottom p-3 mb-0">Filters</h5>
+          <form class="form-inline m-3 filter-form">
+            <div class="form-group mr-5 mb-2">
+              <label class="col-form-label mr-3">Select shop</label>
+              <ng-select [items]="user_shops" [(ngModel)]='current_shop' [ngModelOptions]="{standalone: true}"></ng-select>
+            </div>
+            <div class="form-group mr-2 mb-2">
+              <label class="col-form-label mr-3">Select date range</label>
+              <ng-select [items]="date_ranges['labels']" [(ngModel)]='filter_range' [ngModelOptions]="{standalone: true}" (change)="filter_range_change()"></ng-select>
+            </div>
+            <div class="form-group mr-2 mb-2">
+              <input id="filter_date_range" type="text" class="form-control" 
+                disabled placeholder="2020-01-01 to 2020-01-31" mwlFlatpickr mode="range" [convertModelValue]="true" 
+                [(ngModel)]="filter_date" [ngModelOptions]="{standalone: true}"
+                (change)="filter_date_change($event)"
+              />
+            </div>
+            <button type="button" class="btn btn-primary mr-2 mb-2" (click)="apply_filter()">
+              <i class='uil uil-check mr-1'></i>Apply
+            </button>
+          </form>
+          
+        </div>
+      </div>
+    </div>
+  </div>
     <!-- Widget  -->
-    <div *ngIf="!sum_loading" class="row">
-        <div *ngIf='db_error' class="col-md-12">
-            <ngb-alert type="danger" [dismissible]="false">
-                Database connection error. Please try again later.
-            </ngb-alert>
-        </div>
-        <div class="col-lg-6 col-xl-4">
-            <app-statchart mainTitle="netsale"
-                serie_values='{{ sum_data["netsale"] }}'
-                value='{{ sum_data["netsale"][9] | currency }}'
-                subValue="{{get_percent(sum_data['netsale'][9], sum_data['netsale'][8])}}%"
-                chartColors="{{get_hex_color(sum_data['netsale'][9], sum_data['netsale'][8])}}"
-                date_values="{{_10_days}}"
-                class="cursor-pointer">
-            </app-statchart>
-        </div>
-        <div class="col-lg-6 col-xl-4">
-            <app-statchart mainTitle="transactions"
-                serie_values='{{ sum_data["transaction"] }}'
-                value='{{ sum_data["transaction"][9] }}'
-                subValue='{{get_percent(sum_data["transaction"][9], sum_data["transaction"][8])}}%'
-                chartColors="{{get_hex_color(sum_data['transaction'][9], sum_data['transaction'][8])}}"
-                date_values="{{_10_days}}"
-                class="cursor-pointer">
-            </app-statchart>
-        </div>
-        <div class="col-lg-6 col-xl-4">
-            <app-statchart mainTitle="discount"
-                serie_values='{{ sum_data["discount"] }}'
-                value='{{ sum_data["discount"][9] | currency }}'
-                subValue="{{get_percent(sum_data['discount'][9], sum_data['discount'][8])}}%"
-                chartColors="{{get_hex_color(sum_data['discount'][9], sum_data['discount'][8])}}"
-                date_values="{{_10_days}}"
-                class="cursor-pointer">
-            </app-statchart>
-        </div>
-        <div class="col-lg-6 col-xl-4">
-            <app-statchart mainTitle="promotion"
-                serie_values='{{ sum_data["promotion"] }}'
-                value='{{ sum_data["promotion"][9] | currency }}'
-                subValue="{{get_percent(sum_data['promotion'][9], sum_data['promotion'][8])}}%"
-                chartColors="{{get_hex_color(sum_data['promotion'][9], sum_data['promotion'][8])}}"
-                date_values="{{_10_days}}"
-                class="cursor-pointer">
-            </app-statchart>
-        </div>
-        <div class="col-lg-6 col-xl-4">
-            <app-statchart mainTitle="tip"
-                serie_values='{{ sum_data["tip"] }}'
-                value='{{ sum_data["tip"][9] | currency }}'
-                subValue="{{get_percent(sum_data['tip'][9], sum_data['tip'][8])}}%"
-                chartColors="{{get_hex_color(sum_data['tip'][9], sum_data['tip'][8])}}"
-                date_values="{{_10_days}}"
-                class="cursor-pointer">
-            </app-statchart>
-        </div>
-        <div class="col-lg-6 col-xl-4">
-            <app-statchart mainTitle="tax"
-                serie_values='{{ sum_data["tax"] }}'
-                value='{{ sum_data["tax"][9] | currency }}'
-                subValue="{{get_percent(sum_data['tax'][9], sum_data['tax'][8])}}%"
-                chartColors="{{get_hex_color(sum_data['tax'][9], sum_data['tax'][8])}}"
-                date_values="{{_10_days}}"
-                class="cursor-pointer">
-            </app-statchart>
-        </div>
+  <div *ngIf="!sum_loading" class="row">
+    <div *ngIf='db_error' class="col-md-12">
+      <ngb-alert type="danger" [dismissible]="false">
+        Database connection error. Please try again later.
+      </ngb-alert>
     </div>
+    <div class="col-lg-6 col-xl-4">
+      <app-statchart mainTitle="netsale"
+        serie_values='{{ sum_data["netsale"] }}'
+        value='{{ one_day ? sum_data["netsale"][_10_days.length - 1] : sum_values(sum_data["netsale"]) | currency }}'
+        subValue="{{ one_day ? readable_date(filter_date['from']) : readable_date(filter_date['from']) + ' ~ ' + readable_date(filter_date['to']) }}"
+        chartColors="{{get_hex_color(sum_data['netsale'][_10_days.length - 1], sum_data['netsale'][_10_days.length - 2])}}"
+        date_values="{{_10_days}}"
+        class="cursor-pointer">
+      </app-statchart>
+    </div>
+    <div class="col-lg-6 col-xl-4">
+      <app-statchart mainTitle="transactions"
+        serie_values='{{ sum_data["transaction"] }}'
+        value='{{ one_day ? sum_data["transaction"][_10_days.length - 1] : sum_values(sum_data["transaction"]) }}'
+        subValue="{{ one_day ? readable_date(filter_date['from']) : readable_date(filter_date['from']) + ' ~ ' + readable_date(filter_date['to']) }}"
+        chartColors="{{get_hex_color(sum_data['transaction'][_10_days.length - 1], sum_data['transaction'][_10_days.length - 2])}}"
+        date_values="{{_10_days}}"
+        class="cursor-pointer">
+      </app-statchart>
+    </div>
+    <div class="col-lg-6 col-xl-4">
+      <app-statchart mainTitle="discount"
+        serie_values='{{ sum_data["discount"] }}'
+        value='{{ one_day ? sum_data["discount"][_10_days.length - 1] : sum_values(sum_data["discount"]) | currency }}'
+        subValue="{{ one_day ? readable_date(filter_date['from']) : readable_date(filter_date['from']) + ' ~ ' + readable_date(filter_date['to']) }}"
+        chartColors="{{get_hex_color(sum_data['discount'][_10_days.length - 1], sum_data['discount'][_10_days.length - 2])}}"
+        date_values="{{_10_days}}"
+        class="cursor-pointer">
+      </app-statchart>
+    </div>
+    <div class="col-lg-6 col-xl-4">
+      <app-statchart mainTitle="promotion"
+        serie_values='{{ sum_data["promotion"] }}'
+        value='{{ one_day ? sum_data["promotion"][_10_days.length - 1] : sum_values(sum_data["promotion"]) | currency }}'
+        subValue="{{ one_day ? readable_date(filter_date['from']) : readable_date(filter_date['from']) + ' ~ ' + readable_date(filter_date['to']) }}"
+        chartColors="{{get_hex_color(sum_data['promotion'][_10_days.length - 1], sum_data['promotion'][_10_days.length - 2])}}"
+        date_values="{{_10_days}}"
+        class="cursor-pointer">
+      </app-statchart>
+    </div>
+    <div class="col-lg-6 col-xl-4">
+      <app-statchart mainTitle="tip"
+        serie_values='{{ sum_data["tip"] }}'
+        value='{{ one_day ? sum_data["tip"][_10_days.length - 1] : sum_values(sum_data["tip"]) | currency }}'
+        subValue="{{ one_day ? readable_date(filter_date['from']) : readable_date(filter_date['from']) + ' ~ ' + readable_date(filter_date['to']) }}"
+        chartColors="{{get_hex_color(sum_data['tip'][_10_days.length - 1], sum_data['tip'][_10_days.length - 2])}}"
+        date_values="{{_10_days}}"
+        class="cursor-pointer">
+      </app-statchart>
+    </div>
+    <div class="col-lg-6 col-xl-4">
+      <app-statchart mainTitle="tax"
+        serie_values='{{ sum_data["tax"] }}'
+        value='{{ one_day ? sum_data["tax"][_10_days.length - 1] : sum_values(sum_data["tax"]) | currency }}'
+        subValue="{{ one_day ? readable_date(filter_date['from']) : readable_date(filter_date['from']) + ' ~ ' + readable_date(filter_date['to']) }}"
+        chartColors="{{get_hex_color(sum_data['tax'][_10_days.length - 1], sum_data['tax'][_10_days.length - 2])}}"
+        date_values="{{_10_days}}"
+        class="cursor-pointer">
+      </app-statchart>
+    </div>
+  </div>
     <!-- end widget -->
-    <div class="row">
-        <div class="col-xl-3">
-            <div class="card">
-                <div class="card-body p-0">
-                    <h5 class="card-title header-title border-bottom p-3 mb-0">Stats overview</h5>
-                    <!-- Overview data -->
-                    <app-overview value='{{sum_data["grossale"][9] | currency}}' icon='shopping-bag' title="Gross sale" classNames="pt-3 pb-2"></app-overview>
-                    <app-overview value='{{sum_data["article_count"][9]}}' icon='shopping-cart' title="Total items sold" classNames="pt-3 pb-2"></app-overview>
-                    <app-overview value='{{ sum_data["average_bill"][9] | currency }}' icon='user' title="Average bill per user" classNames="pt-3 pb-2"></app-overview>
-                    <app-overview value='{{ avg | currency }}' icon='bar-chart-2' title="Average item price" classNames="pt-3 pb-2"></app-overview>
-                </div>
-            </div>
+  <div class="row">
+    <div class="col-xl-3">
+      <div class="card">
+        <div class="card-body p-0">
+          <div class="card-title header-title border-bottom p-3 mb-0 d-flex justify-content-between">
+            <div>Stats overview</div>
+            <div>{{ one_day ? readable_date(filter_date['from']) : readable_date(filter_date['from']) + ' ~ ' + readable_date(filter_date['to']) }}</div>
+          </div>
+          <!-- Overview data -->
+          <app-overview value='{{ one_day ? sum_data["grossale"][_10_days.length - 1] : sum_values(sum_data["grossale"]) | currency }}' icon='shopping-bag' title="Total Gross sale" classNames="pt-3 pb-2"></app-overview>
+          <app-overview value='{{one_day ? sum_data["article_count"][_10_days.length - 1] : sum_values(sum_data["article_count"])}}' icon='shopping-cart' title="Total items sold" classNames="pt-3 pb-2"></app-overview>
+          <app-overview value='{{ one_day ? sum_data["average_bill"][_10_days.length - 1] : sum_values(sum_data["average_bill"]) | currency }}' icon='user' title="Average bill per user" classNames="pt-3 pb-2"></app-overview>
+          <app-overview value='{{ avg | currency }}' icon='bar-chart-2' title="Average item price" classNames="pt-3 pb-2"></app-overview>
         </div>
-        <div class="col-xl-5">
-            <div class="card">
-                <div class="card-body pb-0">
-                    <ul class="nav card-nav float-right" style="margin-bottom: 20px;">
-                        <li class="nav-item">
-                            <a class="nav-link" [ngClass]="{ 'text-danger': sale_division === 7, 'text-muted': sale_division !==7 }" href="javascript: void(0);" (click)="change_division(7)">Week</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" [ngClass]="{ 'text-danger': sale_division === 15, 'text-muted': sale_division !==15 }" href="javascript: void(0);" (click)="change_division(15)">15 days</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" [ngClass]="{ 'text-danger': sale_division === 10, 'text-muted': sale_division !==10 }" href="javascript: void(0);" (click)="change_division(10)">Month(10 days)</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" [ngClass]="{ 'text-danger': sale_division === 30, 'text-muted': sale_division !==30 }" href="javascript: void(0);" (click)="change_division(30)">Month(Weeks)</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" [ngClass]="{ 'text-danger': sale_division === 365, 'text-muted': sale_division !==365 }" href="javascript: void(0);" (click)="change_division(365)">Year</a>
-                        </li>
-                    </ul>
-                    <h5 class="card-title header-title mb-0">Netsale trends</h5>
-                    <!-- Reenue Area Chart -->
-                    <app-miniloader [display]='sale_loading'></app-miniloader>
-                    <div *ngIf='!sale_loading' class="mt-3">
-                        <apx-chart [series]="revenueAreaChart.series" [chart]="revenueAreaChart.chart" [tooltip]="revenueAreaChart.tooltip" [colors]="revenueAreaChart.colors" [dataLabels]="revenueAreaChart.dataLabels" [stroke]="revenueAreaChart.stroke" [grid]="revenueAreaChart.grid" [fill]="revenueAreaChart.fill" [yaxis]="revenueAreaChart.yaxis" [xaxis]="revenueAreaChart.xaxis">
-                        </apx-chart>
-                    </div>
-                    <!-- end revenue chart -->
-                </div>
-            </div>
+      </div>
+    </div>
+    <div class="col-xl-5">
+      <div class="card">
+        <div class="card-body pb-0">
+          <ul class="nav card-nav float-right" style="margin-bottom: 20px;">
+            <li class="nav-item">
+              <a class="nav-link p-2" [ngClass]="{ 'text-danger': sale_division === 7, 'text-muted': sale_division !==7 }" href="javascript: void(0);" (click)="change_division(7)">Week</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link p-2" [ngClass]="{ 'text-danger': sale_division === 15, 'text-muted': sale_division !==15 }" href="javascript: void(0);" (click)="change_division(15)">15 days</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link p-2" [ngClass]="{ 'text-danger': sale_division === 10, 'text-muted': sale_division !==10 }" href="javascript: void(0);" (click)="change_division(10)">Month(10 days)</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link p-2" [ngClass]="{ 'text-danger': sale_division === 30, 'text-muted': sale_division !==30 }" href="javascript: void(0);" (click)="change_division(30)">Month(Weeks)</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link p-2" [ngClass]="{ 'text-danger': sale_division === 365, 'text-muted': sale_division !==365 }" href="javascript: void(0);" (click)="change_division(365)">Year</a>
+            </li>
+          </ul>
+          <h5 class="card-title header-title mb-0">Netsale - {{readable_month(filter_date['to'])}}</h5>
+          <!-- Reenue Area Chart -->
+          <app-miniloader [display]='sale_loading'></app-miniloader>
+          <div *ngIf='!sale_loading' class="mt-3">
+            <apx-chart [series]="revenueAreaChart.series" [chart]="revenueAreaChart.chart" [tooltip]="revenueAreaChart.tooltip" [colors]="revenueAreaChart.colors" [dataLabels]="revenueAreaChart.dataLabels" [stroke]="revenueAreaChart.stroke" [grid]="revenueAreaChart.grid" [fill]="revenueAreaChart.fill" [yaxis]="revenueAreaChart.yaxis" [xaxis]="revenueAreaChart.xaxis">
+            </apx-chart>
+          </div>
+          <!-- end revenue chart -->
         </div>
-        <div class="col-xl-4">
-            <div class="card">
-                <div class="card-body pb-0">
-                    <h5 class="card-title header-title">Hourly detail</h5>
-                    <!-- Target bar chart -->
-                    <app-miniloader [display]='payment_loading'></app-miniloader>
-                    <div *ngIf='!payment_loading' class="mt-3">
-                        <apx-chart [series]="targetsBarChart.series" [chart]="targetsBarChart.chart" [colors]="targetsBarChart.colors" [plotOptions]="targetsBarChart.plotOptions" [tooltip]="targetsBarChart.tooltip" [yaxis]="targetsBarChart.yaxis" [legend]="targetsBarChart.legend" [xaxis]="targetsBarChart.xaxis" [dataLabels]="targetsBarChart.dataLabels" [labels]="targetsBarChart.labels">
-                        </apx-chart>
-                    </div>
-                    <!-- end target chart -->
-                </div>
+      </div>
+    </div>
+    <div class="col-xl-4">
+      <div class="card">
+        <div class="card-body pb-0">
+          <div class="card-title header-title d-flex align-items-center">
+            <div class="mr-4">Hourly detail</div>
+            <div class="form-group hour-select">
+              <ng-select 
+                [items]="dates" 
+                [(ngModel)]='selected_date' 
+                [ngModelOptions]="{standalone: true}" 
+                (change)="date_change()"
+              ></ng-select>
             </div>
+          </div>
+          <!-- Target bar chart -->
+          <app-miniloader [display]='hourly_loading'></app-miniloader>
+          <div *ngIf='!hourly_loading' class="mt-3">
+            <apx-chart 
+              [series]="targetsBarChart.series" 
+              [chart]="targetsBarChart.chart"
+              [colors]="targetsBarChart.colors" 
+              [plotOptions]="targetsBarChart.plotOptions" 
+              [tooltip]="targetsBarChart.tooltip" 
+              [yaxis]="targetsBarChart.yaxis" 
+              [legend]="targetsBarChart.legend" 
+              [xaxis]="targetsBarChart.xaxis" 
+              [dataLabels]="targetsBarChart.dataLabels" 
+              [labels]="targetsBarChart.labels">
+            </apx-chart>
+          </div>
+          <!-- end target chart -->
         </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-xl-5">
+      <div class="card">
+        <div class="card-body">
+          <div class="card-title header-title mt-0 pb-2 d-flex justify-content-between">
+            <div>Payment details</div>
+            <div>{{ one_day ? readable_date(filter_date['from']) : readable_date(filter_date['from']) + ' ~ ' + readable_date(filter_date['to']) }}</div>
+          </div>
+          <!-- Sales donut chart -->
+          <app-miniloader [display]='payment_loading'></app-miniloader>
+          <div *ngIf='!payment_loading'>
+            <ngb-alert *ngIf="salesDonutChart.series.length==0" type="warning" [dismissible]="false">
+              There are no payment history today.
+            </ngb-alert>
+            <apx-chart *ngIf="salesDonutChart.series.length!=0" [series]="salesDonutChart.series" [chart]="salesDonutChart.chart" [plotOptions]="salesDonutChart.plotOptions" [responsive]="salesDonutChart.responsive" [legend]="salesDonutChart.legend" [labels]="salesDonutChart.labels" [tooltip]="salesDonutChart.tooltip" [colors]="salesDonutChart.colors">
+            </apx-chart>
+          </div>
+          <!-- end sales chart -->
+        </div>
+      </div>
     </div>
 
-    <div class="row">
-        <div class="col-xl-5">
-            <div class="card">
-                <div class="card-body">
-                    <h5 class="card-title header-title mt-0 pb-2">Payment details</h5>
-                    <!-- Sales donut chart -->
-                    <app-miniloader [display]='payment_loading'></app-miniloader>
-                    <div *ngIf='!payment_loading'>
-                        <ngb-alert *ngIf="salesDonutChart.series.length==0" type="warning" [dismissible]="false">
-                            There are no payment history today.
-                        </ngb-alert>
-                        <apx-chart *ngIf="salesDonutChart.series.length!=0" [series]="salesDonutChart.series" [chart]="salesDonutChart.chart" [plotOptions]="salesDonutChart.plotOptions" [responsive]="salesDonutChart.responsive" [legend]="salesDonutChart.legend" [labels]="salesDonutChart.labels" [tooltip]="salesDonutChart.tooltip" [colors]="salesDonutChart.colors">
-                        </apx-chart>
-                    </div>
-                    <!-- end sales chart -->
-                </div>
+    <div class="col-xl-7">
+      <div class="card">
+        <div class="card-body">
+          <a href="javascript: void(0);" class="btn btn-primary btn-sm float-right" (click)="exportService.exportToCSV($event, 'Top items sold in ' + current_shop + ' on ' + dash_date)">
+            <i class="uil uil-export ml-1"></i> Export
+          </a>
+          <div class="card-title header-title mt-0 mb-0 d-flex">
+            <div class="mr-2">Sold items - </div>
+            <div>{{ one_day ? readable_date(filter_date['from']) : readable_date(filter_date['from']) + ' ~ ' + readable_date(filter_date['to']) }}</div>
+          </div>
+          <div class="table-responsive mt-4 slimscroll" appSlimScroll style="max-height: 290px">
+            <app-miniloader [display]='payment_loading'></app-miniloader>
+            <div *ngIf='!payment_loading'>
+              <ngb-alert *ngIf="today_items.length==0" type="warning" [dismissible]="false">
+                  There are no articles sold today.
+              </ngb-alert>
+              <table  *ngIf="today_items.length!=0" class="table table-hover table-nowrap mb-0">
+                <thead>
+                  <tr>
+                    <th scope="col">#</th>
+                    <th scope="col">Item name</th>
+                    <th scope="col">Sales</th>
+                    <th scope="col">Qty</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr *ngFor="let item of today_items; index as idx">
+                    <td>{{ idx + 1 }}</td>
+                    <td>{{ item.article_name }}</td>
+                    <td>{{ item.price | currency }}</td>
+                    <td>{{ item.qty }}</td>
+                  </tr>
+                </tbody>
+              </table>
             </div>
+          </div>
+          <!-- end table -->
         </div>
-
-        <div class="col-xl-7">
-            <div class="card">
-                <div class="card-body">
-                    <a href="javascript: void(0);" class="btn btn-primary btn-sm float-right" (click)="exportService.exportToCSV($event, 'Top items sold in ' + current_shop + ' on ' + dash_date)">
-                        <i class="uil uil-export ml-1"></i> Export
-                    </a>
-                    <h5 class="card-title header-title mt-0 mb-0">Today's items</h5>
-                    <div class="table-responsive mt-4 slimscroll" appSlimScroll style="max-height: 290px">
-                        <app-miniloader [display]='payment_loading'></app-miniloader>
-                        <div *ngIf='!payment_loading'>
-                            <ngb-alert *ngIf="today_items.length==0" type="warning" [dismissible]="false">
-                                There are no articles sold today.
-                            </ngb-alert>
-                            <table  *ngIf="today_items.length!=0" class="table table-hover table-nowrap mb-0">
-                                <thead>
-                                    <tr>
-                                        <th scope="col">#</th>
-                                        <th scope="col">Item name</th>
-                                        <th scope="col">Sales</th>
-                                        <th scope="col">Qty</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <tr *ngFor="let item of today_items; index as idx">
-                                        <td>{{ idx + 1 }}</td>
-                                        <td>{{ item.article_name }}</td>
-                                        <td>{{ item.price | currency }}</td>
-                                        <td>{{ item.qty }}</td>
-                                    </tr>
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
-                    <!-- end table -->
-                </div>
-                <!-- end card-body -->
-            </div>
-            <!-- end card -->
-        </div>
+        <!-- end card-body -->
+      </div>
+      <!-- end card -->
     </div>
+  </div>
 </div>

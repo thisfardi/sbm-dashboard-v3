@@ -51,7 +51,8 @@ export class StatchartComponent implements OnInit {
                 }
             })]
         }];
-        if(this.series[0].data[8].y <= this.series[0].data[9].y){
+        let length = this.date_values.split(',').length 
+        if(this.series[0].data[length - 2].y <= this.series[0].data[length - 1].y){
             this.increased = true;
         }else{
             this.increased = false;
