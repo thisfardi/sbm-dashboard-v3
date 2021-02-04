@@ -114,7 +114,7 @@
                 </div>
               </div>
 
-              <div *ngIf="selected_access == 'dashboard' || selected_access=='purchasing_system'" class="form-group row mb-3">
+              <div class="form-group row mb-3">
                 <label for="default" class="col-3 col-form-label">Database</label>
                 <div class="col-9">
                   <app-miniloader [display]='db_loading'></app-miniloader>
@@ -124,7 +124,7 @@
                 </div>
               </div>
 
-              <div *ngIf="selected_access=='purchasing_system'" class="form-group row mb-3">
+              <div *ngIf="selected_access!='dashboard'" class="form-group row mb-3">
                 <label for="default" class="col-3 col-form-label">Shop</label>
                 <div class="col-9">
                   <app-miniloader [display]='db_loading'></app-miniloader>
@@ -214,7 +214,7 @@
                   <input type="text" class="form-control" placeholder="Password" [(ngModel)]='_password' [ngModelOptions]="{standalone: true}">
                 </div>
               </div>
-              <div *ngIf="selected_access == 'dashboard' || selected_access=='purchasing_system'" class="form-group row mb-3">
+              <div class="form-group row mb-3">
                 <label for="default" class="col-3 col-form-label">Database</label>
                 <div class="col-9">
                   <app-miniloader [display]='db_loading'></app-miniloader>
@@ -223,7 +223,7 @@
                   </div>
                 </div>
               </div>
-              <div *ngIf="selected_access=='purchasing_system'" class="form-group row mb-3">
+              <div *ngIf="selected_access!='dashboard'" class="form-group row mb-3">
                 <label for="default" class="col-3 col-form-label">Shop</label>
                 <div class="col-9">
                   <app-miniloader [display]='db_loading'></app-miniloader>

@@ -18,6 +18,14 @@
                         </div>
                         <button type="button" name="button" class="btn btn-primary btn-sm mt-2 ml-3 mb-3" (click)="apply_filter()"><i class="uil uil-check"></i> Apply filters</button>
                     </form>
+                    <div class="row p-3">
+                        <div *ngFor="let item of shops" class="col-sm-2">
+                            <div class="custom-control custom-checkbox mb-2">
+                                <input type="checkbox" class="custom-control-input" id="checkbox_shop__{{item}}" [checked]="is_checked_shop(item)" (click)="check_shop($event, item)">
+                                <label class="custom-control-label" for="checkbox_shop__{{item}}">{{item}}</label>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>

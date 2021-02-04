@@ -39,9 +39,16 @@ export class ShopComponent implements OnInit {
     payment_chart: Object;
     article_chart: Object;
 
+    checked_shops = []
+
     constructor(private apiService: ApiService, private cookieService: CookieService, private parseService: ParseService, public historyService: HistoryService) { }
 
     ngOnInit() {
+        
+        if(this.shops['length'] > 2){
+            this.checked_shops.push(this.shops[0])
+            this.checked_shops.push(this.shops[1])
+        }
         this.date_ranges = {
             labels: ['Today', 'Yesterday', 'This week', 'Last week', 'This month', 'Last month', 'This year', 'Last year', 'All time', 'Custom range'],
             ranges: [
@@ -104,6 +111,19 @@ export class ShopComponent implements OnInit {
 
         this._fetchSaleComparison();
     }
+    is_checked_shop(shop){
+        return this.checked_shops.includes(shop)
+    }
+    check_shop($e, shop){
+        if($e.target.checked){
+            if(!this.checked_shops.includes(shop)){
+                this.checked_shops.push(shop)
+            }
+        }else{
+            this.checked_shops = [...this.checked_shops.filter(item => item != shop)]
+        }
+        
+    }
 
     _fetchSaleComparison(){
         this.db_error = false;
@@ -112,7 +132,7 @@ export class ShopComponent implements OnInit {
         this.filter_date['to'] = this.filter_date['to'] ? moment(this.filter_date['to']).format('YYYY-MM-DD') : this.filter_date['from'];
         this.apiService.sale_compare(this.parseService.encode({
             db: this.database,
-            shops: this.shops,
+            shops: this.checked_shops,
             from: this.filter_date['from'],
             to: this.filter_date['to']
         }))
@@ -140,7 +160,7 @@ export class ShopComponent implements OnInit {
         this.filter_date['to'] = this.filter_date['to'] ? moment(this.filter_date['to']).format('YYYY-MM-DD') : this.filter_date['from'];
         this.apiService.other_compare(this.parseService.encode({
             db: this.database,
-            shops: this.shops,
+            shops: this.checked_shops,
             from: this.filter_date['from'],
             to: this.filter_date['to']
         }))
@@ -168,7 +188,7 @@ export class ShopComponent implements OnInit {
         this.filter_date['to'] = this.filter_date['to'] ? moment(this.filter_date['to']).format('YYYY-MM-DD') : this.filter_date['from'];
         this.apiService.payment_compare(this.parseService.encode({
             db: this.database,
-            shops: this.shops,
+            shops: this.checked_shops,
             from: this.filter_date['from'],
             to: this.filter_date['to']
         }))
@@ -219,7 +239,7 @@ export class ShopComponent implements OnInit {
     }
 
     render_sale_data(data){
-
+        
         let sale_chart_x = [];
         let sale_chart_y = [];
         let sale_detail_x = [...this.getXAxis()];
@@ -227,7 +247,7 @@ export class ShopComponent implements OnInit {
 
         let avg_chart_xy = [];
 
-        this.shops['map'](item => {
+        this.checked_shops['map'](item => {
             sale_chart_x.push({
                 label: item
             })
@@ -317,7 +337,7 @@ export class ShopComponent implements OnInit {
         let tip_chart_xy = [];
         let tax_chart_xy = [];
 
-        this.shops['map'](item => {
+        this.checked_shops['map'](item => {
             promotion_chart_xy.push({
                 label: item,
                 value: 0
@@ -370,7 +390,7 @@ export class ShopComponent implements OnInit {
         let shop_article_group = [];
         let shop_article_items = [];
 
-        this.shops['map'](item => {
+        this.checked_shops['map'](item => {
             shop_payment_value.push({
                 name: item,
                 value: 0
@@ -417,7 +437,7 @@ export class ShopComponent implements OnInit {
                 id: item.name,
                 parent: "0",
                 name: item.name,
-                value: Math.abs(parseFloat(item.value))
+                value: Math.abs(parseFloat(item.value)) == 0 ? 0.00000001 : Math.abs(parseFloat(item.value))
             })
         }
         for(let item of shop_article_value){
@@ -425,7 +445,7 @@ export class ShopComponent implements OnInit {
                 id: item.name,
                 parent: "0",
                 name: item.name,
-                value: item.value
+                value: Math.abs(parseFloat(item.value)) == 0 ? 0.00000001 : Math.abs(parseFloat(item.value))
             })
         }
         let idx = 0;

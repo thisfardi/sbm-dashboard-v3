@@ -259,15 +259,11 @@ export class UsersComponent implements OnInit {
       // select_database() without reseting selected_shops
       this.shop_loading = true;
       this._fetchShops(this.selected_database);
-    }else if(item.access == 'purchasing_system'){
+    }else{
       this.selected_database = item.database;
       this.selected_shop = item.shop_name;
       this.shop_loading = true;
       this._fetchShops(this.selected_database);
-    }
-    else {
-      this.selected_database = '';
-      this.selected_shops = [];
     }
   }
 
@@ -332,7 +328,7 @@ export class UsersComponent implements OnInit {
       }
     } else if((this.selected_access == 'kitchen') && (this.selected_role == 'customer')){
       if (this._name && this._email ) {
-        this._addUser(this._name, this._email, '', '', [], this.selected_access, this.selected_role, this.selected_company, '');
+        this._addUser(this._name, this._email, '', this.selected_database, this.selected_shop, this.selected_access, this.selected_role, this.selected_company, '');
       } else {
         this.validation_error = true;
         this.validation_error_msg = 'Validation error.';
@@ -346,7 +342,7 @@ export class UsersComponent implements OnInit {
       }
     }else if((this.selected_access == 'kitchen') && (this.selected_role == 'admin')){
       if (this._name && this._email && this._password && (this._password == this._repassword) ) {
-        this._addUser(this._name, this._email, this._password, '', [], this.selected_access, this.selected_role, this.selected_company, '');
+        this._addUser(this._name, this._email, this._password, this.selected_database, this.selected_shop, this.selected_access, this.selected_role, this.selected_company, '');
       } else {
         this.validation_error = true;
         this.validation_error_msg = 'Validation error.';
@@ -400,8 +396,8 @@ export class UsersComponent implements OnInit {
     this.validation_error = false;
     if (this._name) {
       if (this.selected_access == 'kitchen') {
-        this.selected_database = '';
-        this.selected_shops = [];
+        // this.selected_database = '';
+        // this.selected_shops = [];
       }
       this._updateUser(
         this.currentUser['id'],

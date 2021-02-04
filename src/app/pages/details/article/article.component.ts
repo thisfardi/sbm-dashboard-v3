@@ -267,7 +267,7 @@ export class ArticleComponent implements OnInit {
         };
 
         for(let item of data){
-            total_value.amount += item.amount;
+            total_value.amount += parseFloat(item.amount);
             total_value.price += parseFloat(item.price);
             if(group_ids.indexOf(item.group_id) == -1){
                 group_ids.push(item.group_id);
@@ -285,7 +285,7 @@ export class ArticleComponent implements OnInit {
                     parent: item.group_id,
                     name: item.article_description,
                     price: parseFloat(item.price),
-                    amount: item.amount
+                    amount: parseFloat(item.amount)
                 })
             }
         }
@@ -295,7 +295,7 @@ export class ArticleComponent implements OnInit {
             for(let item of data){
                 if(id == item.group_id){
                     this.group_data[idx].price += parseFloat(item.price);
-                    this.group_data[idx].amount += item.amount;
+                    this.group_data[idx].amount += parseFloat(item.amount);
                 }
             }
             idx++;

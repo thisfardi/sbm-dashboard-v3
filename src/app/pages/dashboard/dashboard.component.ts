@@ -182,9 +182,9 @@ export class DashboardComponent implements OnInit {
     this.filter_date['from'] = moment(this.filter_date['from']).format('YYYY-MM-DD');
     this.filter_date['to'] = this.filter_date['to'] ? moment(this.filter_date['to']).format('YYYY-MM-DD') : this.filter_date['from'];
 
-    if(this.filter_date['from'] == this.filter_date['to']){
-      this.filter_date['from'] = moment(this.filter_date['to']).subtract(10, 'days').format('YYYY-MM-DD')
-    }
+    // if(this.filter_date['from'] == this.filter_date['to']){
+    //   this.filter_date['from'] = moment(this.filter_date['to']).subtract(10, 'days').format('YYYY-MM-DD')
+    // }
 
     this.apiService.sum_data(this.parseService.encode({
       from: this.filter_date['from'],

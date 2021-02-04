@@ -91,14 +91,16 @@
         <div class="col-md-4">
           <div class="card" style="min-height: 450px;">
               <div class="card-body p-0">
-                  <h5 class="card-title header-title border-bottom p-3 mb-0">Disposal ratio</h5>
+                  <h5 class="card-title header-title border-bottom p-3 mb-0">
+                    Disposal ratio {{selected_item ? ' - ' + selected_item + ' : ' + (disposal_ratio_including_cooking_amount * 100) + '%' : ''}}
+                  </h5>
                   <app-miniloader [display]='item_loading'></app-miniloader>
                   <div *ngIf="!item_loading">
-                      <apx-chart [series]="ratio_chart.series" [chart]="ratio_chart.chart"
-                          [labels]="ratio_chart.labels" [dataLabels]="ratio_chart.dataLabels"
-                          [legend]="ratio_chart.legend" [colors]="ratio_chart.colors"
-                          [responsive]="ratio_chart.responsive">
-                      </apx-chart>
+                    <apx-chart [series]="ratio_chart.series" [chart]="ratio_chart.chart"
+                      [labels]="ratio_chart.labels" [dataLabels]="ratio_chart.dataLabels"
+                      [legend]="ratio_chart.legend" [colors]="ratio_chart.colors"
+                      [responsive]="ratio_chart.responsive">
+                    </apx-chart>
                   </div>
               </div>
           </div>
@@ -158,6 +160,9 @@
                       <th>Action</th>
                       <th>Reason/Note</th>
                       <th>Amount</th>
+                      <th>Batch</th>
+                      <th>Bag</th>
+                      <th>Total amount</th>
                       <th>Timestamp</th>
                     </tr>
                   </thead>
@@ -170,6 +175,9 @@
                       <td>{{item.type}}</td>
                       <td>{{item.reason}}</td>
                       <td>{{item.amount}} (g)</td>
+                      <td>{{item.batch}}</td>
+                      <td>{{item.bag}}</td>
+                      <td>{{item.batch * item.bag * item.amount}} (g)</td>
                       <td>{{item.timestamp}}</td>
                     </tr>
                   </tbody>

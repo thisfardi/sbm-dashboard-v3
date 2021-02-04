@@ -242,7 +242,7 @@ export class StocksComponent implements OnInit {
 
   get_sp_qty(packing_info){
     if(packing_info.includes('/') && packing_info.includes(' ')){
-      return packing_info.split(' ')[1].split('/')[0].replace(/\D/g,'')
+      return packing_info.split('/')[0].replace(/\D/g,'')
     }else{
       return 10
     }
