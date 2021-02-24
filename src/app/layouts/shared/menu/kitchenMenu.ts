@@ -10,9 +10,25 @@ export const KITCHENMENU: MenuItem[] = [
     icon: 'gift',
     link: '/kitchen/item',
   },
+
   {
-    label: 'Raw material history',
-    icon: 'briefcase',
-    link: '/kitchen/raw',
+    label: 'Usage report',
+    icon: 'activity',
+    link: '/kitchen/usage-report',
+  },
+  {
+    label: 'POS report',
+    icon: 'bar-chart-2',
+    link: '/kitchen/pos-report',
+  },
+  {
+    label: 'Daily analysis',
+    icon: 'book-open',
+    link: '/kitchen/daily-analysis',
+  },
+  {
+    label: 'Inventory analysis',
+    icon: 'box',
+    link: '/kitchen/inventory-analysis',
   }
 ];
