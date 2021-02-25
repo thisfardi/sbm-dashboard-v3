@@ -82,5 +82,54 @@ export class UsageReportComponent implements OnInit {
     this.filter_range = this.date_ranges['labels'][0];
     this.filter_date = this.date_ranges['ranges'][0];
   }
-
+  filter_range_change(){
+    this.filter_date = this.date_ranges['ranges'][this.date_ranges['labels'].indexOf(this.filter_range)];
+    if(this.filter_range == 'Custom range'){
+      document.querySelector('#filter_date_range').removeAttribute('disabled');
+    }else{
+      document.querySelector('#filter_date_range').setAttribute('disabled', 'true');
+    }
+    switch(this.filter_range){
+      case 'Today':
+        this.disable_criteria = [0, 1, 1, 1, 1, 1, 1];
+        this.f_criteria = 'hour';
+        break;
+      case 'Yesterday':
+        this.disable_criteria = [0, 1, 1, 1, 1, 1, 1];
+        this.f_criteria = 'hour';
+        break;
+      case 'This week':
+        this.disable_criteria = [1, 0, 1, 1, 1, 1, 1];
+        this.f_criteria = 'day';
+        break;
+      case 'Last week':
+        this.disable_criteria = [1, 0, 1, 1, 1, 1, 1];
+        this.f_criteria = 'day';
+        break;
+      case 'This month':
+        this.disable_criteria = [1, 0, 1, 1, 1, 1, 1];
+        this.f_criteria = 'day';
+        break;
+      case 'Last month':
+        this.disable_criteria = [1, 0, 1, 1, 1, 1, 1];
+        this.f_criteria = 'day';
+        break;
+      case 'This year':
+        this.disable_criteria = [1, 1, 1, 1, 1, 0, 1];
+        this.f_criteria = 'month';
+        break;
+      case 'Last year':
+        this.disable_criteria = [1, 1, 1, 1, 1, 0, 1];
+        this.f_criteria = 'month';
+        break;
+      case 'All time':
+        this.disable_criteria = [1, 1, 1, 1, 1, 1, 0];
+        this.f_criteria = 'year';
+        break;
+      case 'Custom range':
+        this.disable_criteria = [0, 0, 0, 0, 0, 0, 0];
+        this.f_criteria = 'day';
+        break;
+    }
+  }
 }

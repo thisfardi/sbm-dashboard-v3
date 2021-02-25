@@ -1,3 +1,32 @@
 <div class="container-fluid">
-
+  <div class="row mt-4">
+    <div *ngIf='db_error' class="col-md-12">
+      <ngb-alert type="danger" [dismissible]="false">
+          Database connection error. Please try again later.
+      </ngb-alert>
+    </div>
+    <div class="col-md-12">
+      <div class="card">
+        <div class="card-body p-0">
+          <h5 class="card-title header-title border-bottom p-3 mb-0">Filters</h5>
+          <form class="form-inline m-3 filter-form">
+            <div class="form-group mr-5 mb-2">
+              <label class="col-form-label mr-3">Select kitchen</label>
+              <app-miniloader [display]='item_loading'></app-miniloader>
+              <div *ngIf='!item_loading'>
+                <ng-select [items]="kitchens" [(ngModel)]='filter_kitchen' [ngModelOptions]="{standalone: true}"></ng-select>
+              </div>
+            </div>
+            <div class="form-group mr-2 mb-2">
+              <label class="col-form-label mr-3">Select date range</label>
+              <ng-select [items]="date_ranges['labels']" [(ngModel)]='filter_range' [ngModelOptions]="{standalone: true}" (change)="filter_range_change()"></ng-select>
+            </div>
+            <div class="form-group mr-2 mb-2">
+              <input id="filter_date_range" type="text" class="form-control" disabled placeholder="2020-01-01 to 2020 01-31" mwlFlatpickr mode="range" [convertModelValue]="true" [(ngModel)]="filter_date" [ngModelOptions]="{standalone: true}"/>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
 </div>
