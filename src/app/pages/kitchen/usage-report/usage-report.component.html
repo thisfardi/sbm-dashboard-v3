@@ -8,23 +8,211 @@
     <div class="col-md-12">
       <div class="card">
         <div class="card-body p-0">
-          <h5 class="card-title header-title border-bottom p-3 mb-0">Filters</h5>
+          <h5 class="card-title header-title border-bottom p-3 mb-0 d-flex align-items-center">
+            <p class="m-0">Filters</p>
+            <button class="ml-auto btn btn-primary btn-sm">Apply filter</button>
+          </h5>
           <form class="form-inline m-3 filter-form">
-            <div class="form-group mr-5 mb-2">
-              <label class="col-form-label mr-3">Select kitchen</label>
+            <div class="form-group mr-2 mb-2">
+              <label class="col-form-label mr-4">Select shop</label>
               <app-miniloader [display]='item_loading'></app-miniloader>
               <div *ngIf='!item_loading'>
                 <ng-select [items]="kitchens" [(ngModel)]='filter_kitchen' [ngModelOptions]="{standalone: true}"></ng-select>
               </div>
             </div>
-            <div class="form-group mr-2 mb-2">
+            <div class="form-group mb-2">
+              <label class="col-form-label mr-3">Item </label>
+              <app-miniloader [display]='item_loading'></app-miniloader>
+              <div *ngIf='!item_loading'>
+                <ng-select [items]="kitchens" [(ngModel)]='filter_kitchen' [ngModelOptions]="{standalone: true}"></ng-select>
+              </div>
+            </div>
+            <div class="form-group ml-auto mr-2 mb-2">
               <label class="col-form-label mr-3">Select date range</label>
               <ng-select [items]="date_ranges['labels']" [(ngModel)]='filter_range' [ngModelOptions]="{standalone: true}" (change)="filter_range_change()"></ng-select>
             </div>
-            <div class="form-group mr-2 mb-2">
+            <div class="form-group mb-2">
               <input id="filter_date_range" type="text" class="form-control" disabled placeholder="2020-01-01 to 2020 01-31" mwlFlatpickr mode="range" [convertModelValue]="true" [(ngModel)]="filter_date" [ngModelOptions]="{standalone: true}"/>
             </div>
           </form>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-12">
+      <div class="row">
+        <div class="col-xl-7">
+          <div class="card">
+            <div class="card-body">
+              <a href="" class="btn btn-primary btn-sm float-right">
+                <i class="uil uil-export ml-1"></i> Export
+              </a>
+              <h5 class="card-title mt-0 mb-0 header-title">Kitchen daily finished products (實際生產紀錄)</h5>
+    
+              <div class="table-responsive mt-4">
+                <table class="table table-hover table-nowrap mb-0">
+                  <thead>
+                    <tr>
+                      <th scope="col">Item code</th>
+                      <th scope="col">Item name</th>
+                      <th scope="col">Product amount</th>
+                      <th scope="col">Finished time</th>
+                      <th scope="col">Best serving by</th>
+                      <th scope="col">Cost ($)</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr *ngFor="let item of finished_products">
+                      <td>{{item.code}}</td>
+                      <td>{{item.name}}</td>
+                      <td>{{item.amount}}</td>
+                      <td>{{item.finished_time}}</td>
+                      <td>{{item.best_serving_by}}<span class="badge badge-soft-danger py-1 ml-1">Expired</span></td>
+                      <td>{{item.price}}</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div> <!-- end table-responsive-->
+            </div> <!-- end card-body-->
+          </div> <!-- end card-->
+        </div>
+        <div class="col-xl-5">
+          <div class="card">
+            <div class="card-body">
+              <h5 class="card-title mt-0 mb-0 header-title">Amount and cost of the daily finished items</h5>
+              <apx-chart [series]="daily_finished_products_amount.series" [chart]="daily_finished_products_amount.chart"
+                [tooltip]="daily_finished_products_amount.tooltip" [yaxis]="daily_finished_products_amount.yaxis"
+                [legend]="daily_finished_products_amount.legend" [grid]="daily_finished_products_amount.grid"
+                [dataLabels]="daily_finished_products_amount.dataLabels" [stroke]="daily_finished_products_amount.stroke"
+                [xaxis]="daily_finished_products_amount.xaxis" [colors]="daily_finished_products_amount.colors"
+                [responsive]="daily_finished_products_amount.responsive">
+              </apx-chart>
+              <apx-chart [series]="daily_finished_products_price.series" [chart]="daily_finished_products_price.chart"
+                [tooltip]="daily_finished_products_price.tooltip" [yaxis]="daily_finished_products_price.yaxis"
+                [legend]="daily_finished_products_price.legend" [grid]="daily_finished_products_price.grid"
+                [dataLabels]="daily_finished_products_price.dataLabels" [stroke]="daily_finished_products_price.stroke"
+                [xaxis]="daily_finished_products_price.xaxis" [colors]="daily_finished_products_price.colors"
+                [responsive]="daily_finished_products_price.responsive">
+              </apx-chart>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-12">
+      <div class="row">
+        <div class="col-xl-7">
+          <div class="card">
+            <div class="card-body">
+              <a href="" class="btn btn-primary btn-sm float-right">
+                <i class="uil uil-export ml-1"></i> Export
+              </a>
+              <h5 class="card-title mt-0 mb-0 header-title">Kitchen daily ingredients used (依據上表實際生產換算的原物料使用量統計)</h5>
+    
+              <div class="table-responsive mt-4">
+                <table class="table table-hover table-nowrap mb-0">
+                  <thead>
+                    <tr>
+                      <th scope="col">Item code</th>
+                      <th scope="col">Item name</th>
+                      <th scope="col">Material amount(g)</th>
+                      <th scope="col">Min. Package (Bag/Can/Bt)</th>
+                      <th scope="col">Cost ($)</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr *ngFor="let item of daily_ingredients">
+                      <td>{{item.code}}</td>
+                      <td>{{item.name}}</td>
+                      <td>{{item.amount}}</td>
+                      <td>{{item.safety_level}}</td>
+                      <td>{{item.price}}</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div> <!-- end table-responsive-->
+            </div> <!-- end card-body-->
+          </div> <!-- end card-->
+        </div>
+        <div class="col-xl-5">
+          <div class="card">
+            <div class="card-body">
+              <h5 class="card-title mt-0 mb-0 header-title">Amount and cost of the daily ingredients used</h5>
+              <apx-chart [series]="daily_ingredients_amount.series" [chart]="daily_ingredients_amount.chart"
+                [tooltip]="daily_ingredients_amount.tooltip" [yaxis]="daily_ingredients_amount.yaxis"
+                [legend]="daily_ingredients_amount.legend" [grid]="daily_ingredients_amount.grid"
+                [dataLabels]="daily_ingredients_amount.dataLabels" [stroke]="daily_ingredients_amount.stroke"
+                [xaxis]="daily_ingredients_amount.xaxis" [colors]="daily_ingredients_amount.colors"
+                [responsive]="daily_ingredients_amount.responsive">
+              </apx-chart>
+              <apx-chart [series]="daily_ingredients_price.series" [chart]="daily_ingredients_price.chart"
+                [tooltip]="daily_ingredients_price.tooltip" [yaxis]="daily_ingredients_price.yaxis"
+                [legend]="daily_ingredients_price.legend" [grid]="daily_ingredients_price.grid"
+                [dataLabels]="daily_ingredients_price.dataLabels" [stroke]="daily_ingredients_price.stroke"
+                [xaxis]="daily_ingredients_price.xaxis" [colors]="daily_ingredients_price.colors"
+                [responsive]="daily_ingredients_price.responsive">
+              </apx-chart>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-12">
+      <div class="row">
+        <div class="col-xl-7">
+          <div class="card">
+            <div class="card-body">
+              <a href="" class="btn btn-primary btn-sm float-right">
+                <i class="uil uil-export ml-1"></i> Export
+              </a>
+              <h5 class="card-title mt-0 mb-0 header-title">Kitchen daily waste (實際報廢統計換算)</h5>
+    
+              <div class="table-responsive mt-4">
+                <table class="table table-hover table-nowrap mb-0">
+                  <thead>
+                    <tr>
+                      <th scope="col">Item code</th>
+                      <th scope="col">Item name</th>
+                      <th scope="col">Material amount(g)</th>
+                      <th scope="col">Cost ($)</th>
+                      <th scope="col">Reason</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr *ngFor="let item of daily_waste">
+                      <td>{{item.code}}</td>
+                      <td>{{item.name}}</td>
+                      <td>{{item.amount}}</td>
+                      <td>{{item.price}}</td>
+                      <td>
+                        <span class="badge badge-soft-{{get_class(item.reason)}}">{{ item.reason }}</span>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div> <!-- end table-responsive-->
+            </div> <!-- end card-body-->
+          </div> <!-- end card-->
+        </div>
+        <div class="col-xl-5">
+          <div class="card">
+            <div class="card-body">
+              <h5 class="card-title mt-0 mb-0 header-title">Amount and cost of the daily waste</h5>
+              <apx-chart [series]="daily_waste_amount.series" [chart]="daily_waste_amount.chart"
+                [tooltip]="daily_waste_amount.tooltip" [yaxis]="daily_waste_amount.yaxis"
+                [legend]="daily_waste_amount.legend" [grid]="daily_waste_amount.grid"
+                [dataLabels]="daily_waste_amount.dataLabels" [stroke]="daily_waste_amount.stroke"
+                [xaxis]="daily_waste_amount.xaxis" [colors]="daily_waste_amount.colors"
+                [responsive]="daily_waste_amount.responsive">
+              </apx-chart>
+              <apx-chart [series]="daily_waste_price.series" [chart]="daily_waste_price.chart"
+                [tooltip]="daily_waste_price.tooltip" [yaxis]="daily_waste_price.yaxis"
+                [legend]="daily_waste_price.legend" [grid]="daily_waste_price.grid"
+                [dataLabels]="daily_waste_price.dataLabels" [stroke]="daily_waste_price.stroke"
+                [xaxis]="daily_waste_price.xaxis" [colors]="daily_waste_price.colors"
+                [responsive]="daily_waste_price.responsive">
+              </apx-chart>
+            </div>
+          </div>
         </div>
       </div>
     </div>

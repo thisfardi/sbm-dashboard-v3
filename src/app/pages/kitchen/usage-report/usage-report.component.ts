@@ -8,7 +8,15 @@ import { CookieService } from '../../../core/services/cookie.service';
 import { ExportService } from '../../../core/services/export.service';
 import { HistoryService } from '../../../core/services/history.service';
 
-
+import { ChartType } from '../charts.model';
+import { 
+  daily_finished_products_amount_chart,
+  daily_finished_products_price_chart,
+  daily_ingredients_amount_chart,
+  daily_ingredients_price_chart,
+  daily_waste_amount_chart,
+  daily_waste_price_chart
+} from '../data';
 @Component({
   selector: 'app-usage-report',
   templateUrl: './usage-report.component.html',
@@ -32,8 +40,161 @@ export class UsageReportComponent implements OnInit {
   filter_kitchen: string;
 
   db_error: Boolean = false;
+  daily_finished_products_amount: ChartType
+  daily_finished_products_price: ChartType
+  daily_ingredients_amount: ChartType
+  daily_ingredients_price: ChartType
+  daily_waste_amount: ChartType
+  daily_waste_price: ChartType
+  finished_products = [
+    {
+      code: '98754',
+      name: 'Milk Tea',
+      amount: '6600',
+      finished_time: '3/3 11:40',
+      best_serving_by: '2/20 14:40',
+      best_serving_hours: 2,
+      price: '14'
+    },
+    {
+      code: '98753',
+      name: 'Jasmine Green Tea',
+      amount: '5000',
+      finished_time: '3/3 11:40',
+      best_serving_by: '2/20 14:40',
+      best_serving_hours: 2,
+      price: '2'
+    },
+    {
+      code: '98752',
+      name: 'Black Tea',
+      amount: '4500',
+      finished_time: '3/3 11:40',
+      best_serving_by: '2/20 14:40',
+      best_serving_hours: 2,
+      price: '1.5'
+    },
+    {
+      code: '98751',
+      name: 'Boba',
+      amount: '1100',
+      finished_time: '3/3 11:40',
+      best_serving_by: '2/20 14:40',
+      best_serving_hours: 2,
+      price: '0.5'
+    },
+    {
+      code: '98750',
+      name: 'Puff Cream',
+      amount: '305',
+      finished_time: '3/3 11:40',
+      best_serving_by: '2/20 14:40',
+      best_serving_hours: 2,
+      price: '3'
+    },
+    {
+      code: '98749',
+      name: 'Pearl Sago',
+      amount: '1100',
+      finished_time: '3/3 11:40',
+      best_serving_by: '2/20 14:40',
+      best_serving_hours: 2,
+      price: '0.5'
+    },
+    {
+      code: '98748',
+      name: 'Pudding',
+      amount: '6600',
+      finished_time: '3/3 11:40',
+      best_serving_by: '2/20 14:40',
+      best_serving_hours: 2,
+      price: '1'
+    }
+  ]
+
+  daily_ingredients = [
+    {
+      code: '98754',
+      name: 'Black Tea Leaves',
+      amount: '660',
+      safety_level: 2,
+      price: '11'
+    },
+    {
+      code: '98753',
+      name: 'Green Tea Leaves',
+      amount: '600',
+      safety_level: 1.2,
+      price: '14'
+    },
+    {
+      code: '98752',
+      name: 'Pearl Sago',
+      amount: '200',
+      safety_level: 0.5,
+      price: '12'
+    },
+    {
+      code: '98751',
+      name: 'Pudding Powder',
+      amount: '300',
+      safety_level: 2,
+      price: '5'
+    },
+    {
+      code: '98749',
+      name: 'Condesned Milk',
+      amount: '900',
+      safety_level: 2.3,
+      price: '1'
+    },
+  ]
+
+  daily_waste = [
+    {
+      code: '98754',
+      name: 'Black Tea Leaves',
+      amount: '660',
+      reason: "Waste",
+      price: '11'
+    },
+    {
+      code: '98753',
+      name: 'Green Tea Leaves',
+      amount: '600',
+      reason: "Expired",
+      price: '14'
+    },
+    {
+      code: '98752',
+      name: 'Pearl Sago',
+      amount: '200',
+      reason: "Expired",
+      price: '12'
+    },
+    {
+      code: '98751',
+      name: 'Pudding Powder',
+      amount: '300',
+      reason: "Expired",
+      price: '5'
+    },
+    {
+      code: '98749',
+      name: 'Condesned Milk',
+      amount: '900',
+      reason: "Bad",
+      price: '1'
+    },
+  ]
 
   ngOnInit() {
+    this.daily_finished_products_amount = daily_finished_products_amount_chart
+    this.daily_finished_products_price = daily_finished_products_price_chart
+    this.daily_ingredients_amount = daily_ingredients_amount_chart
+    this.daily_ingredients_price = daily_ingredients_price_chart
+    this.daily_waste_amount = daily_waste_amount_chart
+    this.daily_waste_price = daily_waste_price_chart
     this.date_ranges = {
       labels: ['Today', 'Yesterday', 'This week', 'Last week', 'This month', 'Last month', 'This year', 'Last year', 'All time', 'Custom range'],
       ranges: [
@@ -81,6 +242,73 @@ export class UsageReportComponent implements OnInit {
     }
     this.filter_range = this.date_ranges['labels'][0];
     this.filter_date = this.date_ranges['ranges'][0];
+
+    this.set_data()
+  }
+  set_data(){
+    this.daily_finished_products_amount.series = [
+      {
+        name: "Amount",
+        data: this.finished_products.map((item) => item.amount)
+      }
+    ]
+    this.daily_finished_products_amount.xaxis.categories = [
+      ...this.finished_products.map((item) => item.name)
+    ]
+
+    this.daily_finished_products_price.series = [
+      {
+        name: "Cost",
+        data: this.finished_products.map((item) => item.price)
+      }
+    ]
+    this.daily_finished_products_price.xaxis.categories = [
+      ...this.finished_products.map((item) => item.name)
+    ]
+
+    this.daily_ingredients_amount.series = [
+      {
+        name: "Amount",
+        data: this.daily_ingredients.map((item) => item.amount)
+      }
+    ]
+    this.daily_ingredients_amount.xaxis.categories = [
+      ...this.daily_ingredients.map((item) => item.name)
+    ]
+
+    this.daily_ingredients_price.series = [
+      {
+        name: "Cost",
+        data: this.daily_ingredients.map((item) => item.price)
+      }
+    ]
+    this.daily_ingredients_price.xaxis.categories = [
+      ...this.daily_ingredients.map((item) => item.name)
+    ]
+
+
+
+
+
+    this.daily_waste_amount.series = [
+      {
+        name: "Amount",
+        data: this.daily_waste.map((item) => item.amount)
+      }
+    ]
+    this.daily_waste_amount.xaxis.categories = [
+      ...this.daily_waste.map((item) => item.name)
+    ]
+
+    this.daily_waste_price.series = [
+      {
+        name: "Cost",
+        data: this.daily_waste.map((item) => item.price)
+      }
+    ]
+    this.daily_waste_price.xaxis.categories = [
+      ...this.daily_waste.map((item) => item.name)
+    ]
   }
   filter_range_change(){
     this.filter_date = this.date_ranges['ranges'][this.date_ranges['labels'].indexOf(this.filter_range)];
@@ -130,6 +358,17 @@ export class UsageReportComponent implements OnInit {
         this.disable_criteria = [0, 0, 0, 0, 0, 0, 0];
         this.f_criteria = 'day';
         break;
+    }
+  }
+  get_class(val){
+    if(val == "Expired"){
+      return 'danger'
+    }else if(val == "Bad"){
+      return 'secondary'
+    }else if(val == "Waste"){
+      return 'warning'
+    }else{
+      return 'primary'
     }
   }
 }
