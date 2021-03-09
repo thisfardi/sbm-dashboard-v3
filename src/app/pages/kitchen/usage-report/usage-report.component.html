@@ -10,7 +10,7 @@
         <div class="card-body p-0">
           <h5 class="card-title header-title border-bottom p-3 mb-0 d-flex align-items-center">
             <p class="m-0">Filters</p>
-            <button class="ml-auto btn btn-primary btn-sm">Apply filter</button>
+            <button class="ml-auto btn btn-primary btn-sm" (click)="apply_filter()">Apply filter</button>
           </h5>
           <form class="form-inline m-3 filter-form">
             <div class="form-group mr-2 mb-2">
@@ -43,10 +43,10 @@
         <div class="col-xl-7">
           <div class="card">
             <div class="card-body">
-              <a href="" class="btn btn-primary btn-sm float-right">
+              <a href="javascript:;" class="btn btn-primary btn-sm float-right">
                 <i class="uil uil-export ml-1"></i> Export
               </a>
-              <h5 class="card-title mt-0 mb-0 header-title">Kitchen daily finished products (實際生產紀錄)</h5>
+              <h5 class="card-title mt-0 mb-0 header-title">Kitchen daily finished products (實際生產紀錄) - ({{finished_products.length}})</h5>
 
               <div class="table-responsive mt-4">
                 <table class="table table-hover table-nowrap mb-0">
@@ -77,22 +77,24 @@
         </div>
         <div class="col-xl-5">
           <div class="card">
-            <div class="card-body">
+            <div class="card-body" style="min-height: 451px;">
               <h5 class="card-title mt-0 mb-0 header-title">Amount and cost of the daily finished items</h5>
-              <apx-chart [series]="daily_finished_products_amount.series" [chart]="daily_finished_products_amount.chart"
-                [tooltip]="daily_finished_products_amount.tooltip" [yaxis]="daily_finished_products_amount.yaxis"
-                [legend]="daily_finished_products_amount.legend" [grid]="daily_finished_products_amount.grid"
-                [dataLabels]="daily_finished_products_amount.dataLabels" [stroke]="daily_finished_products_amount.stroke"
-                [xaxis]="daily_finished_products_amount.xaxis" [colors]="daily_finished_products_amount.colors"
-                [responsive]="daily_finished_products_amount.responsive">
-              </apx-chart>
-              <apx-chart [series]="daily_finished_products_price.series" [chart]="daily_finished_products_price.chart"
-                [tooltip]="daily_finished_products_price.tooltip" [yaxis]="daily_finished_products_price.yaxis"
-                [legend]="daily_finished_products_price.legend" [grid]="daily_finished_products_price.grid"
-                [dataLabels]="daily_finished_products_price.dataLabels" [stroke]="daily_finished_products_price.stroke"
-                [xaxis]="daily_finished_products_price.xaxis" [colors]="daily_finished_products_price.colors"
-                [responsive]="daily_finished_products_price.responsive">
-              </apx-chart>
+              <div *ngIf="finished_products.length != 0">
+                <apx-chart [series]="daily_finished_products_amount.series" [chart]="daily_finished_products_amount.chart"
+                  [tooltip]="daily_finished_products_amount.tooltip" [yaxis]="daily_finished_products_amount.yaxis"
+                  [legend]="daily_finished_products_amount.legend" [grid]="daily_finished_products_amount.grid"
+                  [dataLabels]="daily_finished_products_amount.dataLabels" [stroke]="daily_finished_products_amount.stroke"
+                  [xaxis]="daily_finished_products_amount.xaxis" [colors]="daily_finished_products_amount.colors"
+                  [responsive]="daily_finished_products_amount.responsive">
+                </apx-chart>
+                <apx-chart [series]="daily_finished_products_price.series" [chart]="daily_finished_products_price.chart"
+                  [tooltip]="daily_finished_products_price.tooltip" [yaxis]="daily_finished_products_price.yaxis"
+                  [legend]="daily_finished_products_price.legend" [grid]="daily_finished_products_price.grid"
+                  [dataLabels]="daily_finished_products_price.dataLabels" [stroke]="daily_finished_products_price.stroke"
+                  [xaxis]="daily_finished_products_price.xaxis" [colors]="daily_finished_products_price.colors"
+                  [responsive]="daily_finished_products_price.responsive">
+                </apx-chart>
+              </div>
             </div>
           </div>
         </div>
@@ -103,10 +105,10 @@
         <div class="col-xl-7">
           <div class="card">
             <div class="card-body">
-              <a href="" class="btn btn-primary btn-sm float-right">
+              <a href="javascript:;" class="btn btn-primary btn-sm float-right">
                 <i class="uil uil-export ml-1"></i> Export
               </a>
-              <h5 class="card-title mt-0 mb-0 header-title">Kitchen daily ingredients used (依據上表實際生產換算的原物料使用量統計)</h5>
+              <h5 class="card-title mt-0 mb-0 header-title">Kitchen daily ingredients used (依據上表實際生產換算的原物料使用量統計) - ({{daily_ingredients.length}})</h5>
 
               <div class="table-responsive mt-4">
                 <table class="table table-hover table-nowrap mb-0">
@@ -135,22 +137,24 @@
         </div>
         <div class="col-xl-5">
           <div class="card">
-            <div class="card-body">
+            <div class="card-body" style="min-height: 451px;">
               <h5 class="card-title mt-0 mb-0 header-title">Amount and cost of the daily ingredients used</h5>
-              <apx-chart [series]="daily_ingredients_amount.series" [chart]="daily_ingredients_amount.chart"
-                [tooltip]="daily_ingredients_amount.tooltip" [yaxis]="daily_ingredients_amount.yaxis"
-                [legend]="daily_ingredients_amount.legend" [grid]="daily_ingredients_amount.grid"
-                [dataLabels]="daily_ingredients_amount.dataLabels" [stroke]="daily_ingredients_amount.stroke"
-                [xaxis]="daily_ingredients_amount.xaxis" [colors]="daily_ingredients_amount.colors"
-                [responsive]="daily_ingredients_amount.responsive">
-              </apx-chart>
-              <apx-chart [series]="daily_ingredients_price.series" [chart]="daily_ingredients_price.chart"
-                [tooltip]="daily_ingredients_price.tooltip" [yaxis]="daily_ingredients_price.yaxis"
-                [legend]="daily_ingredients_price.legend" [grid]="daily_ingredients_price.grid"
-                [dataLabels]="daily_ingredients_price.dataLabels" [stroke]="daily_ingredients_price.stroke"
-                [xaxis]="daily_ingredients_price.xaxis" [colors]="daily_ingredients_price.colors"
-                [responsive]="daily_ingredients_price.responsive">
-              </apx-chart>
+              <div *ngIf="daily_ingredients.length != 0">
+                <apx-chart [series]="daily_ingredients_amount.series" [chart]="daily_ingredients_amount.chart"
+                  [tooltip]="daily_ingredients_amount.tooltip" [yaxis]="daily_ingredients_amount.yaxis"
+                  [legend]="daily_ingredients_amount.legend" [grid]="daily_ingredients_amount.grid"
+                  [dataLabels]="daily_ingredients_amount.dataLabels" [stroke]="daily_ingredients_amount.stroke"
+                  [xaxis]="daily_ingredients_amount.xaxis" [colors]="daily_ingredients_amount.colors"
+                  [responsive]="daily_ingredients_amount.responsive">
+                </apx-chart>
+                <apx-chart [series]="daily_ingredients_price.series" [chart]="daily_ingredients_price.chart"
+                  [tooltip]="daily_ingredients_price.tooltip" [yaxis]="daily_ingredients_price.yaxis"
+                  [legend]="daily_ingredients_price.legend" [grid]="daily_ingredients_price.grid"
+                  [dataLabels]="daily_ingredients_price.dataLabels" [stroke]="daily_ingredients_price.stroke"
+                  [xaxis]="daily_ingredients_price.xaxis" [colors]="daily_ingredients_price.colors"
+                  [responsive]="daily_ingredients_price.responsive">
+                </apx-chart>
+              </div>
             </div>
           </div>
         </div>
@@ -161,7 +165,7 @@
         <div class="col-xl-7">
           <div class="card">
             <div class="card-body">
-              <a href="" class="btn btn-primary btn-sm float-right">
+              <a href="javascript:;" class="btn btn-primary btn-sm float-right">
                 <i class="uil uil-export ml-1"></i> Export
               </a>
               <h5 class="card-title mt-0 mb-0 header-title">Kitchen daily waste (實際報廢統計換算)</h5>
@@ -173,6 +177,7 @@
                       <th scope="col">Item code</th>
                       <th scope="col">Item name</th>
                       <th scope="col">Material amount(g)</th>
+                      <th scope="col">Waste ratio</th>
                       <th scope="col">Cost ($)</th>
                       <th scope="col">Reason</th>
                     </tr>
@@ -182,6 +187,7 @@
                       <td>{{item.code}}</td>
                       <td>{{item.name}}</td>
                       <td>{{item.amount}}</td>
+                      <td>{{item.rate | percent}}</td>
                       <td>{{item.price}}</td>
                       <td>
                         <span class="badge badge-soft-{{get_class(item.reason)}}">{{ item.reason }}</span>
@@ -195,22 +201,24 @@
         </div>
         <div class="col-xl-5">
           <div class="card">
-            <div class="card-body">
+            <div class="card-body" style="min-height: 451px;">
               <h5 class="card-title mt-0 mb-0 header-title">Amount and cost of the daily waste</h5>
-              <apx-chart [series]="daily_waste_amount.series" [chart]="daily_waste_amount.chart"
-                [tooltip]="daily_waste_amount.tooltip" [yaxis]="daily_waste_amount.yaxis"
-                [legend]="daily_waste_amount.legend" [grid]="daily_waste_amount.grid"
-                [dataLabels]="daily_waste_amount.dataLabels" [stroke]="daily_waste_amount.stroke"
-                [xaxis]="daily_waste_amount.xaxis" [colors]="daily_waste_amount.colors"
-                [responsive]="daily_waste_amount.responsive">
-              </apx-chart>
-              <apx-chart [series]="daily_waste_price.series" [chart]="daily_waste_price.chart"
-                [tooltip]="daily_waste_price.tooltip" [yaxis]="daily_waste_price.yaxis"
-                [legend]="daily_waste_price.legend" [grid]="daily_waste_price.grid"
-                [dataLabels]="daily_waste_price.dataLabels" [stroke]="daily_waste_price.stroke"
-                [xaxis]="daily_waste_price.xaxis" [colors]="daily_waste_price.colors"
-                [responsive]="daily_waste_price.responsive">
-              </apx-chart>
+              <div *ngIf="daily_waste.length != 0">
+                <apx-chart [series]="daily_waste_amount.series" [chart]="daily_waste_amount.chart"
+                  [tooltip]="daily_waste_amount.tooltip" [yaxis]="daily_waste_amount.yaxis"
+                  [legend]="daily_waste_amount.legend" [grid]="daily_waste_amount.grid"
+                  [dataLabels]="daily_waste_amount.dataLabels" [stroke]="daily_waste_amount.stroke"
+                  [xaxis]="daily_waste_amount.xaxis" [colors]="daily_waste_amount.colors"
+                  [responsive]="daily_waste_amount.responsive">
+                </apx-chart>
+                <apx-chart [series]="daily_waste_price.series" [chart]="daily_waste_price.chart"
+                  [tooltip]="daily_waste_price.tooltip" [yaxis]="daily_waste_price.yaxis"
+                  [legend]="daily_waste_price.legend" [grid]="daily_waste_price.grid"
+                  [dataLabels]="daily_waste_price.dataLabels" [stroke]="daily_waste_price.stroke"
+                  [xaxis]="daily_waste_price.xaxis" [colors]="daily_waste_price.colors"
+                  [responsive]="daily_waste_price.responsive">
+                </apx-chart>
+              </div>
             </div>
           </div>
         </div>

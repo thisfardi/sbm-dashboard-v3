@@ -5,11 +5,11 @@ export const KITCHENMENU: MenuItem[] = [
     label: 'Kitchen',
     isTitle: true
   },
-  {
-    label: 'Item history',
-    icon: 'gift',
-    link: '/kitchen/item',
-  },
+  // {
+  //   label: 'Item history',
+  //   icon: 'gift',
+  //   link: '/kitchen/item',
+  // },
 
   {
     label: 'Usage report',

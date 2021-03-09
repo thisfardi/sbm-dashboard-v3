@@ -10,7 +10,7 @@
         <div class="card-body p-0">
           <h5 class="card-title header-title border-bottom p-3 mb-0 d-flex align-items-center">
             <p class="m-0">Filters</p>
-            <button class="ml-auto btn btn-primary btn-sm">Apply filter</button>
+            <button class="ml-auto btn btn-primary btn-sm" (click)="apply_filter()">Apply filter</button>
           </h5>
           <form class="form-inline m-3 filter-form">
             <div class="form-group mr-2 mb-2">
@@ -55,8 +55,6 @@
                       <th scope="col">Item code</th>
                       <th scope="col">Item name</th>
                       <th scope="col">Product amount</th>
-                      <th scope="col">Finished time</th>
-                      <th scope="col">Best serving by</th>
                       <th scope="col">Cost ($)</th>
                     </tr>
                   </thead>
@@ -65,8 +63,6 @@
                       <td>{{item.code}}</td>
                       <td>{{item.name}}</td>
                       <td>{{item.amount}}</td>
-                      <td>{{item.finished_time}}</td>
-                      <td>{{item.best_serving_by}}<span class="badge badge-soft-danger py-1 ml-1">Expired</span></td>
                       <td>{{item.price}}</td>
                     </tr>
                   </tbody>
@@ -77,22 +73,24 @@
         </div>
         <div class="col-xl-5">
           <div class="card">
-            <div class="card-body">
+            <div class="card-body" style="min-height: 451px;">
               <h5 class="card-title mt-0 mb-0 header-title">Amount and cost of the POS daily used items</h5>
-              <apx-chart [series]="pos_daily_usage_amount.series" [chart]="pos_daily_usage_amount.chart"
-                [tooltip]="pos_daily_usage_amount.tooltip" [yaxis]="pos_daily_usage_amount.yaxis"
-                [legend]="pos_daily_usage_amount.legend" [grid]="pos_daily_usage_amount.grid"
-                [dataLabels]="pos_daily_usage_amount.dataLabels" [stroke]="pos_daily_usage_amount.stroke"
-                [xaxis]="pos_daily_usage_amount.xaxis" [colors]="pos_daily_usage_amount.colors"
-                [responsive]="pos_daily_usage_amount.responsive">
-              </apx-chart>
-              <apx-chart [series]="pos_daily_usage_price.series" [chart]="pos_daily_usage_price.chart"
-                [tooltip]="pos_daily_usage_price.tooltip" [yaxis]="pos_daily_usage_price.yaxis"
-                [legend]="pos_daily_usage_price.legend" [grid]="pos_daily_usage_price.grid"
-                [dataLabels]="pos_daily_usage_price.dataLabels" [stroke]="pos_daily_usage_price.stroke"
-                [xaxis]="pos_daily_usage_price.xaxis" [colors]="pos_daily_usage_price.colors"
-                [responsive]="pos_daily_usage_price.responsive">
-              </apx-chart>
+              <div *ngIf="pos_daily_usage.length != 0">
+                <apx-chart [series]="pos_daily_usage_amount.series" [chart]="pos_daily_usage_amount.chart"
+                  [tooltip]="pos_daily_usage_amount.tooltip" [yaxis]="pos_daily_usage_amount.yaxis"
+                  [legend]="pos_daily_usage_amount.legend" [grid]="pos_daily_usage_amount.grid"
+                  [dataLabels]="pos_daily_usage_amount.dataLabels" [stroke]="pos_daily_usage_amount.stroke"
+                  [xaxis]="pos_daily_usage_amount.xaxis" [colors]="pos_daily_usage_amount.colors"
+                  [responsive]="pos_daily_usage_amount.responsive">
+                </apx-chart>
+                <apx-chart [series]="pos_daily_usage_price.series" [chart]="pos_daily_usage_price.chart"
+                  [tooltip]="pos_daily_usage_price.tooltip" [yaxis]="pos_daily_usage_price.yaxis"
+                  [legend]="pos_daily_usage_price.legend" [grid]="pos_daily_usage_price.grid"
+                  [dataLabels]="pos_daily_usage_price.dataLabels" [stroke]="pos_daily_usage_price.stroke"
+                  [xaxis]="pos_daily_usage_price.xaxis" [colors]="pos_daily_usage_price.colors"
+                  [responsive]="pos_daily_usage_price.responsive">
+                </apx-chart>
+              </div>
             </div>
           </div>
         </div>
@@ -115,7 +113,6 @@
                       <th scope="col">Item code</th>
                       <th scope="col">Item name</th>
                       <th scope="col">Material amount(g)</th>
-                      <th scope="col">Min. Package (Bag/Can/Bt)</th>
                       <th scope="col">Cost ($)</th>
                     </tr>
                   </thead>
@@ -124,7 +121,6 @@
                       <td>{{item.code}}</td>
                       <td>{{item.name}}</td>
                       <td>{{item.amount}}</td>
-                      <td>{{item.safety_level}}</td>
                       <td>{{item.price}}</td>
                     </tr>
                   </tbody>
@@ -135,22 +131,24 @@
         </div>
         <div class="col-xl-5">
           <div class="card">
-            <div class="card-body">
+            <div class="card-body" style="min-height: 451px;">
               <h5 class="card-title mt-0 mb-0 header-title">Amount and cost of the POS daily ingredients used</h5>
-              <apx-chart [series]="pos_daily_ingredient_amount.series" [chart]="pos_daily_ingredient_amount.chart"
-                [tooltip]="pos_daily_ingredient_amount.tooltip" [yaxis]="pos_daily_ingredient_amount.yaxis"
-                [legend]="pos_daily_ingredient_amount.legend" [grid]="pos_daily_ingredient_amount.grid"
-                [dataLabels]="pos_daily_ingredient_amount.dataLabels" [stroke]="pos_daily_ingredient_amount.stroke"
-                [xaxis]="pos_daily_ingredient_amount.xaxis" [colors]="pos_daily_ingredient_amount.colors"
-                [responsive]="pos_daily_ingredient_amount.responsive">
-              </apx-chart>
-              <apx-chart [series]="pos_daily_ingredient_price.series" [chart]="pos_daily_ingredient_price.chart"
-                [tooltip]="pos_daily_ingredient_price.tooltip" [yaxis]="pos_daily_ingredient_price.yaxis"
-                [legend]="pos_daily_ingredient_price.legend" [grid]="pos_daily_ingredient_price.grid"
-                [dataLabels]="pos_daily_ingredient_price.dataLabels" [stroke]="pos_daily_ingredient_price.stroke"
-                [xaxis]="pos_daily_ingredient_price.xaxis" [colors]="pos_daily_ingredient_price.colors"
-                [responsive]="pos_daily_ingredient_price.responsive">
-              </apx-chart>
+              <div *ngIf="pos_daily_ingredient.length != 0">
+                <apx-chart [series]="pos_daily_ingredient_amount.series" [chart]="pos_daily_ingredient_amount.chart"
+                  [tooltip]="pos_daily_ingredient_amount.tooltip" [yaxis]="pos_daily_ingredient_amount.yaxis"
+                  [legend]="pos_daily_ingredient_amount.legend" [grid]="pos_daily_ingredient_amount.grid"
+                  [dataLabels]="pos_daily_ingredient_amount.dataLabels" [stroke]="pos_daily_ingredient_amount.stroke"
+                  [xaxis]="pos_daily_ingredient_amount.xaxis" [colors]="pos_daily_ingredient_amount.colors"
+                  [responsive]="pos_daily_ingredient_amount.responsive">
+                </apx-chart>
+                <apx-chart [series]="pos_daily_ingredient_price.series" [chart]="pos_daily_ingredient_price.chart"
+                  [tooltip]="pos_daily_ingredient_price.tooltip" [yaxis]="pos_daily_ingredient_price.yaxis"
+                  [legend]="pos_daily_ingredient_price.legend" [grid]="pos_daily_ingredient_price.grid"
+                  [dataLabels]="pos_daily_ingredient_price.dataLabels" [stroke]="pos_daily_ingredient_price.stroke"
+                  [xaxis]="pos_daily_ingredient_price.xaxis" [colors]="pos_daily_ingredient_price.colors"
+                  [responsive]="pos_daily_ingredient_price.responsive">
+                </apx-chart>
+              </div>
             </div>
           </div>
         </div>

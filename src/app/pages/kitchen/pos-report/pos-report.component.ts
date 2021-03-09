@@ -44,110 +44,13 @@ export class PosReportComponent implements OnInit {
   history_loading = false
   shops = []
   shop_names = []
+  selected_shop_id = -1
   error = ''
 
   pos_daily_usage = [
-    {
-      code: '98754',
-      name: 'Milk Tea',
-      amount: '6600',
-      finished_time: '3/3 11:40',
-      best_serving_by: '2/20 14:40',
-      best_serving_hours: 2,
-      price: '14'
-    },
-    {
-      code: '98753',
-      name: 'Jasmine Green Tea',
-      amount: '5000',
-      finished_time: '3/3 11:40',
-      best_serving_by: '2/20 14:40',
-      best_serving_hours: 2,
-      price: '2'
-    },
-    {
-      code: '98752',
-      name: 'Black Tea',
-      amount: '4500',
-      finished_time: '3/3 11:40',
-      best_serving_by: '2/20 14:40',
-      best_serving_hours: 2,
-      price: '1.5'
-    },
-    {
-      code: '98751',
-      name: 'Boba',
-      amount: '1100',
-      finished_time: '3/3 11:40',
-      best_serving_by: '2/20 14:40',
-      best_serving_hours: 2,
-      price: '0.5'
-    },
-    {
-      code: '98750',
-      name: 'Puff Cream',
-      amount: '305',
-      finished_time: '3/3 11:40',
-      best_serving_by: '2/20 14:40',
-      best_serving_hours: 2,
-      price: '3'
-    },
-    {
-      code: '98749',
-      name: 'Pearl Sago',
-      amount: '1100',
-      finished_time: '3/3 11:40',
-      best_serving_by: '2/20 14:40',
-      best_serving_hours: 2,
-      price: '0.5'
-    },
-    {
-      code: '98748',
-      name: 'Pudding',
-      amount: '6600',
-      finished_time: '3/3 11:40',
-      best_serving_by: '2/20 14:40',
-      best_serving_hours: 2,
-      price: '1'
-    }
   ]
 
   pos_daily_ingredient = [
-    {
-      code: '98754',
-      name: 'Black Tea Leaves',
-      amount: '660',
-      safety_level: 2,
-      price: '11'
-    },
-    {
-      code: '98753',
-      name: 'Green Tea Leaves',
-      amount: '600',
-      safety_level: 1.2,
-      price: '14'
-    },
-    {
-      code: '98752',
-      name: 'Pearl Sago',
-      amount: '200',
-      safety_level: 0.5,
-      price: '12'
-    },
-    {
-      code: '98751',
-      name: 'Pudding Powder',
-      amount: '300',
-      safety_level: 2,
-      price: '5'
-    },
-    {
-      code: '98749',
-      name: 'Condesned Milk',
-      amount: '900',
-      safety_level: 2.3,
-      price: '1'
-    },
   ]
 
   constructor(private apiService: ApiService, private cookieService: CookieService, private parseService: ParseService, public exportService: ExportService, public historyService: HistoryService) { }
@@ -205,7 +108,6 @@ export class PosReportComponent implements OnInit {
     this.filter_range = this.date_ranges['labels'][0];
     this.filter_date = this.date_ranges['ranges'][0];
     this._fetchShops()
-    this.set_data()
   }
 
   _fetchShops() {
@@ -223,6 +125,7 @@ export class PosReportComponent implements OnInit {
             this.shops = [...data['data']]
             this.shop_names = data['data'].map(item => item.description)
             this.filter_shop_name = this.shop_names[0]
+            this.selected_shop_id = this.shops.filter(item => item.description == this.filter_shop_name)[0].id
             this._fetchHistoryData()
           }else{
             this.error = "Something went wrong. Please try again later."
@@ -238,17 +141,25 @@ export class PosReportComponent implements OnInit {
 
   _fetchHistoryData(){
     this.error = ''
+    this.selected_shop_id = this.shops.filter(item => item.description == this.filter_shop_name)[0].id
+    this.filter_date['from'] = moment(this.filter_date['from']).format('YYYY-MM-DD');
+    this.filter_date['to'] = this.filter_date['to'] ? moment(this.filter_date['to']).format('YYYY-MM-DD') : this.filter_date['from'];
     this.history_loading = true
     this.apiService.getKitchenHistory({
-      "shop_id":7,"date_range":{"from":"2021-03-01","to":"2021-03-01"}
+      shop_id: this.selected_shop_id,
+      date_range: {
+        from: this.filter_date['from'],
+        to: this.filter_date['to']
+      }
     })
       .pipe(first())
       .subscribe(
         data => {
-          console.log(data)
+          this.history_loading = false
+          this.set_data(data)
         },
         error => {
-          console.log(error)
+          this.history_loading = false
         }
       )
   }
@@ -315,7 +226,32 @@ export class PosReportComponent implements OnInit {
     }
   }
 
-  set_data(){
+  set_data(data){
+
+    if(data.hasOwnProperty('pos_usage')){
+      this.pos_daily_usage = data.pos_usage.map(item => {
+        return {
+          code: item.item_code,
+          name: item.item_name,
+          amount: item.product_amount,
+          price: item.cost
+        }
+      })
+    }
+    if(data.hasOwnProperty('pos_ingredients_used')){
+      this.pos_daily_ingredient = data.pos_ingredients_used.map(item => {
+        return {
+          name: item.item_name,
+          amount: item.product_amount,
+          code: item.item_code,
+          finished_time: item.time_stamp,
+          best_serving_by: item.best_serving_by,
+          price: item.cost
+        }
+      })
+    }
+
+
     this.pos_daily_usage_amount.series = [
       {
         name: "Amount",
@@ -356,4 +292,8 @@ export class PosReportComponent implements OnInit {
     ]
 
   }
+  apply_filter(){
+    this._fetchHistoryData()
+  }
+
 }
