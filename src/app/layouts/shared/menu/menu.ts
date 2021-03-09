@@ -61,27 +61,27 @@ export const MENU: MenuItem[] = [
     },
 
     {
-        label: 'Inventory system',
+        label: 'Kitchen dashboard',
         isTitle: true
     },
     {
-        label: 'Inventory history',
-        icon: 'package',
-        link: '/details/inventory',
+      label: 'Usage report',
+      icon: 'activity',
+      link: '/kitchen/usage-report',
     },
     {
-        label: 'Operators',
-        isTitle: true
+      label: 'POS report',
+      icon: 'bar-chart-2',
+      link: '/kitchen/pos-report',
     },
     {
-        label: 'Operators',
-        icon: 'users',
-        link: '/details/operators',
+      label: 'Daily analysis',
+      icon: 'book-open',
+      link: '/kitchen/daily-analysis',
     },
     {
-        label: 'Presence control',
-        icon: 'user-check',
-        link: '/details/presence',
-    },
-
+      label: 'Inventory analysis',
+      icon: 'box',
+      link: '/kitchen/inventory-analysis',
+    }
 ];

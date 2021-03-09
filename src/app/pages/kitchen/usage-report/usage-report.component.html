@@ -2,7 +2,7 @@
   <div class="row mt-4">
     <div *ngIf='db_error' class="col-md-12">
       <ngb-alert type="danger" [dismissible]="false">
-          Database connection error. Please try again later.
+        Database connection error. Please try again later.
       </ngb-alert>
     </div>
     <div class="col-md-12">
@@ -17,7 +17,7 @@
               <label class="col-form-label mr-4">Select shop</label>
               <app-miniloader [display]='item_loading'></app-miniloader>
               <div *ngIf='!item_loading'>
-                <ng-select [items]="kitchens" [(ngModel)]='filter_kitchen' [ngModelOptions]="{standalone: true}"></ng-select>
+                <ng-select [items]="shop_names" [(ngModel)]='filter_shop_name' [ngModelOptions]="{standalone: true}"></ng-select>
               </div>
             </div>
             <div class="form-group mb-2">
@@ -47,7 +47,7 @@
                 <i class="uil uil-export ml-1"></i> Export
               </a>
               <h5 class="card-title mt-0 mb-0 header-title">Kitchen daily finished products (實際生產紀錄)</h5>
-    
+
               <div class="table-responsive mt-4">
                 <table class="table table-hover table-nowrap mb-0">
                   <thead>
@@ -107,7 +107,7 @@
                 <i class="uil uil-export ml-1"></i> Export
               </a>
               <h5 class="card-title mt-0 mb-0 header-title">Kitchen daily ingredients used (依據上表實際生產換算的原物料使用量統計)</h5>
-    
+
               <div class="table-responsive mt-4">
                 <table class="table table-hover table-nowrap mb-0">
                   <thead>
@@ -165,7 +165,7 @@
                 <i class="uil uil-export ml-1"></i> Export
               </a>
               <h5 class="card-title mt-0 mb-0 header-title">Kitchen daily waste (實際報廢統計換算)</h5>
-    
+
               <div class="table-responsive mt-4">
                 <table class="table table-hover table-nowrap mb-0">
                   <thead>

@@ -234,4 +234,12 @@ export class ApiService {
               return res;
           }))
     }
+
+
+    getKitchenHistory(data){
+      return this.http.post(`http://198.11.172.117:7101/history.aspx`, data)
+          .pipe(map(res => {
+              return res;
+          }))
+    }
 }

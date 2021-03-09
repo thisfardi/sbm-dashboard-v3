@@ -9,7 +9,7 @@ import { ExportService } from '../../../core/services/export.service';
 import { HistoryService } from '../../../core/services/history.service';
 
 import { ChartType } from '../charts.model';
-import { 
+import {
   daily_finished_products_amount_chart,
   daily_finished_products_price_chart,
   daily_ingredients_amount_chart,
@@ -28,7 +28,6 @@ export class UsageReportComponent implements OnInit {
     private apiService: ApiService, private cookieService: CookieService, private parseService: ParseService, public exportService: ExportService, public historyService: HistoryService
   ) { }
 
-  kitchens = [];
   company: string = JSON.parse(this.cookieService.getCookie('currentUser')).company;
   date_ranges: Object;
 
@@ -37,7 +36,7 @@ export class UsageReportComponent implements OnInit {
 
   filter_range: string;
   filter_date: Object;
-  filter_kitchen: string;
+  filter_shop_name: string;
 
   db_error: Boolean = false;
   daily_finished_products_amount: ChartType
@@ -46,6 +45,7 @@ export class UsageReportComponent implements OnInit {
   daily_ingredients_price: ChartType
   daily_waste_amount: ChartType
   daily_waste_price: ChartType
+
   finished_products = [
     {
       code: '98754',
@@ -188,6 +188,11 @@ export class UsageReportComponent implements OnInit {
     },
   ]
 
+  shop_loading = false
+  history_loading = false
+  shops = []
+  shop_names = []
+  error = ''
   ngOnInit() {
     this.daily_finished_products_amount = daily_finished_products_amount_chart
     this.daily_finished_products_price = daily_finished_products_price_chart
@@ -242,8 +247,54 @@ export class UsageReportComponent implements OnInit {
     }
     this.filter_range = this.date_ranges['labels'][0];
     this.filter_date = this.date_ranges['ranges'][0];
-
+    this._fetchShops()
     this.set_data()
+  }
+  _fetchShops() {
+    this.shops = [];
+    this.error = ''
+    this.shop_loading = true;
+    this.apiService.shops(this.parseService.encode({
+      db: JSON.parse(this.cookieService.getCookie('currentUser')).database
+    }))
+      .pipe(first())
+      .subscribe(
+        data => {
+          this.shop_loading = false;
+          if(data['status'] == 'success'){
+            this.shops = [...data['data']]
+            this.shop_names = data['data'].map(item => item.description)
+            this.filter_shop_name = this.shop_names[0]
+            this._fetchHistoryData()
+          }else{
+            this.error = "Something went wrong. Please try again later."
+          }
+        },
+        error => {
+          console.log(error)
+          this.error = "DB error. Please check network connection and try again."
+          this.shop_loading = false;
+        }
+      )
+  }
+  _fetchHistoryData(){
+    this.error = ''
+    this.history_loading = true
+    this.apiService.getKitchenHistory({
+      "shop_id":7,"date_range":{"from":"2021-03-01","to":"2021-03-01"}
+    })
+      .pipe(first())
+      .subscribe(
+        data => {
+          console.log(data)
+        },
+        error => {
+          console.log(error)
+        }
+      )
+  }
+  get_data(){
+
   }
   set_data(){
     this.daily_finished_products_amount.series = [
@@ -310,6 +361,7 @@ export class UsageReportComponent implements OnInit {
       ...this.daily_waste.map((item) => item.name)
     ]
   }
+
   filter_range_change(){
     this.filter_date = this.date_ranges['ranges'][this.date_ranges['labels'].indexOf(this.filter_range)];
     if(this.filter_range == 'Custom range'){
