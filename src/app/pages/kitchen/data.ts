@@ -67,7 +67,11 @@ const amountChart: ChartType = {
     tooltip: {
         y: {
             formatter(val) {
-                return val + '(g)';
+              if(parseInt(val) > 1000){
+                return (Math.floor(val / 1000 * 100) / 100).toString() + 'kg'
+              }else{
+                return (Math.floor(val * 100) / 100).toString() + 'g'
+              }
             }
         },
         theme: 'dark',
@@ -141,7 +145,11 @@ const itemChart: ChartType = {
     tooltip: {
         y: {
             formatter(val) {
-                return val + '(g)';
+              if(parseInt(val) > 1000){
+                return (Math.floor(val / 1000 * 100) / 100).toString() + 'kg'
+              }else{
+                return (Math.floor(val * 100) / 100).toString() + 'g'
+              }
             }
         },
         theme: 'dark',
@@ -256,7 +264,11 @@ const daily_finished_products_amount_chart: ChartType = {
     tooltip: {
         y: {
             formatter(val) {
-                return val + '(g)';
+              if(parseInt(val) > 1000){
+                return (Math.floor(val / 1000 * 100) / 100).toString() + 'kg'
+              }else{
+                return (Math.floor(val * 100) / 100).toString() + 'g'
+              }
             }
         },
         theme: 'dark',
@@ -331,9 +343,13 @@ const daily_finished_products_price_chart: ChartType = {
     },
     tooltip: {
         y: {
-            formatter(val) {
-                return val + ' $';
+          formatter(val) {
+            if(parseInt(val) > 1000){
+              return '$' + (Math.floor(val / 1000 * 100) / 100).toString() + 'k'
+            }else{
+              return '$' + (Math.floor(val * 100) / 100).toString()
             }
+          }
         },
         theme: 'dark',
         x: { show: true }
@@ -407,9 +423,13 @@ const daily_ingredients_amount_chart: ChartType = {
     },
     tooltip: {
         y: {
-            formatter(val) {
-                return val + '(g)';
+          formatter(val) {
+            if(parseInt(val) > 1000){
+              return (Math.floor(val / 1000 * 100) / 100).toString() + 'kg'
+            }else{
+              return (Math.floor(val * 100) / 100).toString() + 'g'
             }
+          }
         },
         theme: 'dark',
         x: { show: true }
@@ -483,9 +503,13 @@ const daily_ingredients_price_chart: ChartType = {
     },
     tooltip: {
         y: {
-            formatter(val) {
-                return val + ' $';
+          formatter(val) {
+            if(parseInt(val) > 1000){
+              return '$' + (Math.floor(val / 1000 * 100) / 100).toString() + 'k'
+            }else{
+              return '$' + (Math.floor(val * 100) / 100).toString()
             }
+          }
         },
         theme: 'dark',
         x: { show: true }
@@ -560,7 +584,11 @@ const daily_waste_amount_chart: ChartType = {
     tooltip: {
         y: {
             formatter(val) {
-                return val + '(g)';
+              if(parseInt(val) > 1000){
+                return (Math.floor(val / 1000 * 100) / 100).toString() + 'kg'
+              }else{
+                return (Math.floor(val * 100) / 100).toString() + 'g'
+              }
             }
         },
         theme: 'dark',
@@ -635,9 +663,13 @@ const daily_waste_price_chart: ChartType = {
     },
     tooltip: {
         y: {
-            formatter(val) {
-                return val + ' $';
+          formatter(val) {
+            if(parseInt(val) > 1000){
+              return '$' + (Math.floor(val / 1000 * 100) / 100).toString() + 'k'
+            }else{
+              return '$' + (Math.floor(val * 100) / 100).toString()
             }
+          }
         },
         theme: 'dark',
         x: { show: true }
@@ -697,7 +729,20 @@ const pos_daily_usage_amount_chart: ChartType = {
     yaxis: {
         title: {
             text: 'Amount (g)'
-        }
+        },
+        labels: {
+          style: {
+            color: '#FFB0AF',
+          },
+          formatter: function (value) {
+            if(parseInt(value) > 1000){
+              return (Math.floor(value / 1000 * 100) / 100).toString() + 'kg'
+            }else{
+              return (Math.floor(value * 100) / 100).toString() + 'g'
+            }
+
+          }
+        },
     },
     fill: {
         opacity: 1
@@ -713,7 +758,11 @@ const pos_daily_usage_amount_chart: ChartType = {
     tooltip: {
         y: {
             formatter(val) {
-                return val + '(g)';
+              if(parseInt(val) > 1000){
+                return (Math.floor(val / 1000 * 100) / 100).toString() + 'kg'
+              }else{
+                return (Math.floor(val * 100) / 100).toString() + 'g'
+              }
             }
         },
         theme: 'dark',
@@ -773,7 +822,20 @@ const pos_daily_usage_price_chart: ChartType = {
     yaxis: {
         title: {
             text: 'Cost ($)'
-        }
+        },
+        labels: {
+          style: {
+            color: '#FFB0AF',
+          },
+          formatter: function (value) {
+            if(parseInt(value) > 1000){
+              return '$' + (Math.floor(value / 1000 * 100) / 100).toString() + 'k'
+            }else{
+              return '$' + (Math.floor(value * 100) / 100).toString()
+            }
+
+          }
+        },
     },
     fill: {
         opacity: 1
@@ -788,9 +850,13 @@ const pos_daily_usage_price_chart: ChartType = {
     },
     tooltip: {
         y: {
-            formatter(val) {
-                return val + ' $';
+          formatter(val) {
+            if(parseInt(val) > 1000){
+              return '$' + (Math.floor(val / 1000 * 100) / 100).toString() + 'k'
+            }else{
+              return '$' + (Math.floor(val * 100) / 100).toString()
             }
+          }
         },
         theme: 'dark',
         x: { show: true }
@@ -849,7 +915,20 @@ const pos_daily_ingredient_amount_chart: ChartType = {
     yaxis: {
         title: {
             text: 'Amount (g)'
-        }
+        },
+        labels: {
+          style: {
+            color: '#FFB0AF',
+          },
+          formatter: function (value) {
+            if(parseInt(value) > 1000){
+              return (Math.floor(value / 1000 * 100) / 100).toString() + 'kg'
+            }else{
+              return (Math.floor(value * 100) / 100).toString() + 'g'
+            }
+
+          }
+        },
     },
     fill: {
         opacity: 1
@@ -865,7 +944,11 @@ const pos_daily_ingredient_amount_chart: ChartType = {
     tooltip: {
         y: {
             formatter(val) {
-                return val + '(g)';
+              if(parseInt(val) > 1000){
+                return (Math.floor(val / 1000 * 100) / 100).toString() + 'kg'
+              }else{
+                return (Math.floor(val * 100) / 100).toString() + 'g'
+              }
             }
         },
         theme: 'dark',
@@ -925,7 +1008,20 @@ const pos_daily_ingredient_price_chart: ChartType = {
     yaxis: {
         title: {
             text: 'Cost ($)'
-        }
+        },
+        labels: {
+          style: {
+            color: '#FFB0AF',
+          },
+          formatter: function (value) {
+            if(parseInt(value) > 1000){
+              return '$' + (Math.floor(value / 1000 * 100) / 100).toString() + 'k'
+            }else{
+              return '$' + (Math.floor(value * 100) / 100).toString()
+            }
+
+          }
+        },
     },
     fill: {
         opacity: 1
@@ -941,7 +1037,11 @@ const pos_daily_ingredient_price_chart: ChartType = {
     tooltip: {
         y: {
             formatter(val) {
-                return val + ' $';
+              if(parseInt(val) > 1000){
+                return '$' + (Math.floor(val / 1000 * 100) / 100).toString() + 'k'
+              }else{
+                return '$' + (Math.floor(val * 100) / 100).toString()
+              }
             }
         },
         theme: 'dark',
@@ -949,17 +1049,313 @@ const pos_daily_ingredient_price_chart: ChartType = {
     }
 }
 
-export {
-    amountChart, ratioChart, itemChart,
-    daily_finished_products_amount_chart,
-    daily_finished_products_price_chart,
-    daily_ingredients_amount_chart,
-    daily_ingredients_price_chart,
-    daily_waste_amount_chart,
-    daily_waste_price_chart,
 
-    pos_daily_usage_amount_chart,
-    pos_daily_usage_price_chart,
-    pos_daily_ingredient_amount_chart,
-    pos_daily_ingredient_price_chart
+const daily_finished_products_comparison_chart: ChartType = {
+  chart: {
+    height: 380,
+    type: 'line',
+    stacked: false,
+    toolbar: {
+      show: false
+    }
+  },
+  dataLabels: {
+    enabled: false
+  },
+  stroke: {
+    width: [2, 2],
+    curve: 'smooth'
+  },
+  markers: {
+    size: 4,
+    colors: undefined,
+    strokeColors: '#fff',
+    strokeWidth: 2,
+    strokeOpacity: 0.9,
+    strokeDashArray: 0,
+    fillOpacity: 1,
+    discrete: [],
+    shape: "circle",
+    radius: 2,
+    offsetX: 0,
+    offsetY: 0,
+    onClick: undefined,
+    onDblClick: undefined,
+    showNullDataPoints: true,
+    hover: {
+      size: undefined,
+      sizeOffset: 3
+    }
+  },
+  series: [],
+  colors: ['#5369f8', '#A4303F'],
+    xaxis: {
+      categories: [],
+    },
+    yaxis: [{
+      labels: {
+        style: {
+          color: '#FFB0AF',
+        },
+        formatter: function (value) {
+          if(parseInt(value) > 1000){
+            return (Math.floor(value / 1000 * 100) / 100).toString() + 'kg'
+          }else{
+            return (Math.floor(value * 100) / 100).toString() + 'g'
+          }
+
+        }
+      },
+      title: {
+        text: 'Amount',
+        offsetX: 5
+      },
+    }],
+    tooltip: {
+      theme: 'dark',
+      x: { show: true },
+      followCursor: true,
+      y: {
+        formatter(value) {
+          if(parseInt(value) > 1000){
+            return (Math.floor(value / 1000 * 100) / 100).toString() + 'kg'
+          }else{
+            return (Math.floor(value * 100) / 100).toString() + 'g'
+          }
+        }
+      }
+    },
+    responsive: [{
+      breakpoint: 600,
+      options: {
+        legend: {
+          show: true
+        }
+      }
+    }]
+};
+const pos_daily_usage_comparison_chart: ChartType = {
+  chart: {
+    height: 380,
+    type: 'line',
+    stacked: false,
+    toolbar: {
+      show: false
+    }
+  },
+  dataLabels: {
+    enabled: false
+  },
+  stroke: {
+    width: [2, 2],
+    curve: 'smooth'
+  },
+  markers: {
+    size: 4,
+    colors: undefined,
+    strokeColors: '#fff',
+    strokeWidth: 2,
+    strokeOpacity: 0.9,
+    strokeDashArray: 0,
+    fillOpacity: 1,
+    discrete: [],
+    shape: "circle",
+    radius: 2,
+    offsetX: 0,
+    offsetY: 0,
+    onClick: undefined,
+    onDblClick: undefined,
+    showNullDataPoints: true,
+    hover: {
+      size: undefined,
+      sizeOffset: 3
+    }
+  },
+  series: [],
+  colors: ['#5369f8', '#A4303F'],
+    xaxis: {
+      categories: [],
+    },
+    yaxis: [{
+      labels: {
+        style: {
+          color: '#FFB0AF',
+        },
+        formatter: function (value) {
+          if(parseInt(value) > 1000){
+            return (Math.floor(value / 1000 * 100) / 100).toString() + 'kg'
+          }else{
+            return (Math.floor(value * 100) / 100).toString() + 'g'
+          }
+
+        }
+      },
+      title: {
+        text: 'Amount',
+        offsetX: 5
+      },
+    }],
+    tooltip: {
+      theme: 'dark',
+      x: { show: true },
+      followCursor: true,
+      y: {
+        formatter(value) {
+          if(parseInt(value) > 1000){
+            return (Math.floor(value / 1000 * 100) / 100).toString() + 'kg'
+          }else{
+            return (Math.floor(value * 100) / 100).toString() + 'g'
+          }
+        }
+      }
+    },
+    responsive: [{
+      breakpoint: 600,
+      options: {
+        legend: {
+          show: true
+        }
+      }
+    }]
+};
+const pos_daily_ingredient_comparison_chart: ChartType = {
+  chart: {
+    height: 380,
+    type: 'line',
+    stacked: false,
+    toolbar: {
+      show: false
+    }
+  },
+  dataLabels: {
+    enabled: false
+  },
+  stroke: {
+    width: [2, 2],
+    curve: 'smooth'
+  },
+  markers: {
+    size: 4,
+    colors: undefined,
+    strokeColors: '#fff',
+    strokeWidth: 2,
+    strokeOpacity: 0.9,
+    strokeDashArray: 0,
+    fillOpacity: 1,
+    discrete: [],
+    shape: "circle",
+    radius: 2,
+    offsetX: 0,
+    offsetY: 0,
+    onClick: undefined,
+    onDblClick: undefined,
+    showNullDataPoints: true,
+    hover: {
+      size: undefined,
+      sizeOffset: 3
+    }
+  },
+  series: [],
+  colors: ['#5369f8', '#A4303F'],
+    xaxis: {
+      categories: [],
+    },
+    yaxis: [{
+      labels: {
+        style: {
+          color: '#FFB0AF',
+        },
+        formatter: function (value) {
+          if(parseInt(value) > 1000){
+            return (Math.floor(value / 1000 * 100) / 100).toString() + 'kg'
+          }else{
+            return (Math.floor(value * 100) / 100).toString() + 'g'
+          }
+
+        }
+      },
+      title: {
+        text: 'Amount',
+        offsetX: 5
+      },
+    }],
+    tooltip: {
+      theme: 'dark',
+      x: { show: true },
+      followCursor: true,
+      y: {
+        formatter(value) {
+          if(parseInt(value) > 1000){
+            return (Math.floor(value / 1000 * 100) / 100).toString() + 'kg'
+          }else{
+            return (Math.floor(value * 100) / 100).toString() + 'g'
+          }
+        }
+      }
+    },
+    responsive: [{
+      breakpoint: 600,
+      options: {
+        legend: {
+          show: true
+        }
+      }
+    }]
+};
+const netsale_material_waste_comparison_chart: ChartType = {
+    chart: {
+        height: 380,
+        type: 'pie',
+        toolbar: {
+            show: true
+        }
+    },
+    series: [],
+    labels: [],
+    colors: ['#43d39e', '#f77e53', '#ffbe0b'],
+    legend: {
+        show: true,
+        position: 'bottom',
+        horizontalAlign: 'center',
+        verticalAlign: 'middle',
+        floating: false,
+        fontSize: '14px',
+        offsetX: 0,
+        offsetY: -10
+    },
+    dataLabels: {
+        enabled: true
+    },
+    responsive: [{
+        breakpoint: 600,
+        options: {
+            chart: {
+                height: 380
+            },
+            legend: {
+                show: true,
+                offsetY: 0
+            },
+        }
+    }]
+};
+
+export {
+  amountChart, ratioChart, itemChart,
+  daily_finished_products_amount_chart,
+  daily_finished_products_price_chart,
+  daily_ingredients_amount_chart,
+  daily_ingredients_price_chart,
+  daily_waste_amount_chart,
+  daily_waste_price_chart,
+
+  pos_daily_usage_amount_chart,
+  pos_daily_usage_price_chart,
+  pos_daily_ingredient_amount_chart,
+  pos_daily_ingredient_price_chart,
+
+  daily_finished_products_comparison_chart,
+  pos_daily_usage_comparison_chart,
+  pos_daily_ingredient_comparison_chart,
+  netsale_material_waste_comparison_chart
 };

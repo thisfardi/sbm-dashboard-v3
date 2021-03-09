@@ -1,0 +1,31 @@
+.form-group{
+  input{
+    min-width: 250px;
+  }
+  .ng-select{
+    min-width: 250px;
+  }
+}
+
+@media (max-width: 1350px){
+  .form-group{
+    width: 100%;
+    margin-right: 0 !important;
+    .ng-select{
+      min-width: 100%;
+    }
+    input{
+      min-width: 100%;
+    }
+  }
+}
+.table-responsive{
+  height: 370px;
+  table{
+    td{
+      cursor: pointer;
+      max-height: 20px;
+      overflow: hidden;
+    }
+  }
+}

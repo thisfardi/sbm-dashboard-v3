@@ -1,1 +1,104 @@
-<p>daily-analysis works!</p>
+<div class="container-fluid">
+  <div class="row mt-4">
+    <div *ngIf='db_error' class="col-md-12">
+      <ngb-alert type="danger" [dismissible]="false">
+        Database connection error. Please try again later.
+      </ngb-alert>
+    </div>
+    <div class="col-md-12">
+      <div class="card">
+        <div class="card-body p-0">
+          <h5 class="card-title header-title border-bottom p-3 mb-0 d-flex align-items-center">
+            <p class="m-0">Filters</p>
+            <button class="ml-auto btn btn-primary btn-sm" (click)="apply_filter()">Apply filter</button>
+          </h5>
+          <form class="form-inline m-3 filter-form">
+            <div class="form-group mr-2 mb-2">
+              <label class="col-form-label mr-4">Select shop</label>
+              <app-miniloader [display]='shop_loading'></app-miniloader>
+              <div *ngIf='!shop_loading'>
+                <ng-select [items]="shop_names" [(ngModel)]='filter_shop_name' [ngModelOptions]="{standalone: true}"></ng-select>
+              </div>
+            </div>
+            <div class="form-group mb-2">
+              <label class="col-form-label mr-3">Item </label>
+              <app-miniloader [display]='shop_loading'></app-miniloader>
+              <div *ngIf='!shop_loading'>
+                <ng-select [items]="shop_names" [(ngModel)]='filter_shop_name' [ngModelOptions]="{standalone: true}"></ng-select>
+              </div>
+            </div>
+            <div class="form-group ml-auto mr-2 mb-2">
+              <label class="col-form-label mr-3">Select date range</label>
+              <ng-select [items]="date_ranges['labels']" [(ngModel)]='filter_range' [ngModelOptions]="{standalone: true}" (change)="filter_range_change()"></ng-select>
+            </div>
+            <div class="form-group mb-2">
+              <input id="filter_date_range" type="text" class="form-control" disabled placeholder="2020-01-01 to 2020 01-31" mwlFlatpickr mode="range" [convertModelValue]="true" [(ngModel)]="filter_date" [ngModelOptions]="{standalone: true}"/>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-12">
+      <div class="card">
+        <div class="card-body" style="min-height: 451px;">
+          <h5 class="card-title mt-0 mb-0 header-title">Real production and theoretical production comparison</h5>
+          <div *ngIf="daily_finished_products.length != 0">
+            <apx-chart [series]="daily_finished_products_comparison.series" [chart]="daily_finished_products_comparison.chart"
+              [tooltip]="daily_finished_products_comparison.tooltip" [yaxis]="daily_finished_products_comparison.yaxis"
+              [legend]="daily_finished_products_comparison.legend" [grid]="daily_finished_products_comparison.grid"
+              [dataLabels]="daily_finished_products_comparison.dataLabels" [stroke]="daily_finished_products_comparison.stroke"
+              [xaxis]="daily_finished_products_comparison.xaxis" [colors]="daily_finished_products_comparison.colors"
+              [responsive]="daily_finished_products_comparison.responsive" [markers]="daily_finished_products_comparison.markers">
+            </apx-chart>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-12">
+      <div class="card">
+        <div class="card-body" style="min-height: 451px;">
+          <h5 class="card-title mt-0 mb-0 header-title">POS item usage and theoretical usage comparison</h5>
+          <div *ngIf="pos_daily_ingredient.length != 0">
+            <apx-chart [series]="pos_daily_usage_comparison.series" [chart]="pos_daily_usage_comparison.chart"
+              [tooltip]="pos_daily_usage_comparison.tooltip" [yaxis]="pos_daily_usage_comparison.yaxis"
+              [legend]="pos_daily_usage_comparison.legend" [grid]="pos_daily_usage_comparison.grid"
+              [dataLabels]="pos_daily_usage_comparison.dataLabels" [stroke]="pos_daily_usage_comparison.stroke"
+              [xaxis]="pos_daily_usage_comparison.xaxis" [colors]="pos_daily_usage_comparison.colors"
+              [responsive]="pos_daily_usage_comparison.responsive" [markers]="pos_daily_usage_comparison.markers">
+            </apx-chart>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-8">
+      <div class="card">
+        <div class="card-body" style="min-height: 451px;">
+          <h5 class="card-title mt-0 mb-0 header-title">POS ingredient usage and theoretical usage comparison</h5>
+          <div *ngIf="pos_daily_ingredient.length != 0">
+            <apx-chart [series]="pos_daily_ingredient_comparison.series" [chart]="pos_daily_ingredient_comparison.chart"
+              [tooltip]="pos_daily_ingredient_comparison.tooltip" [yaxis]="pos_daily_ingredient_comparison.yaxis"
+              [legend]="pos_daily_ingredient_comparison.legend" [grid]="pos_daily_ingredient_comparison.grid"
+              [dataLabels]="pos_daily_ingredient_comparison.dataLabels" [stroke]="pos_daily_ingredient_comparison.stroke"
+              [xaxis]="pos_daily_ingredient_comparison.xaxis" [colors]="pos_daily_ingredient_comparison.colors"
+              [responsive]="pos_daily_ingredient_comparison.responsive" [markers]="pos_daily_ingredient_comparison.markers">
+            </apx-chart>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-4">
+      <div class="card">
+        <div class="card-body" style="min-height: 451px;">
+          <h5 class="card-title mt-0 mb-0 header-title">Netsale, Material cost, Waste cost comparison</h5>
+          <div *ngIf="pos_daily_usage.length != 0">
+            <apx-chart [series]="netsale_material_waste_comparison.series" [chart]="netsale_material_waste_comparison.chart"
+              [labels]="netsale_material_waste_comparison.labels" [dataLabels]="netsale_material_waste_comparison.dataLabels"
+              [legend]="netsale_material_waste_comparison.legend" [colors]="netsale_material_waste_comparison.colors"
+              [responsive]="netsale_material_waste_comparison.responsive">
+            </apx-chart>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
