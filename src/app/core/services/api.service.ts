@@ -237,7 +237,7 @@ export class ApiService {
 
 
     getKitchenHistory(data){
-      return this.http.post(`http://198.11.172.117:7101/history.aspx`, data)
+      return this.http.post(`https://cors-anywhere.herokuapp.com/http://198.11.172.117:7101/history.aspx`, data)
           .pipe(map(res => {
               return res;
           }))
