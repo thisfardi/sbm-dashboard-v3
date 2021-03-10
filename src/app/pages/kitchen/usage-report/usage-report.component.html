@@ -40,7 +40,7 @@
     </div>
     <div class="col-md-12">
       <div class="row">
-        <div class="col-xl-7">
+        <div class="col-xl-5">
           <div class="card">
             <div class="card-body">
               <a href="javascript:;" class="btn btn-primary btn-sm float-right">
@@ -54,9 +54,9 @@
                     <tr>
                       <th scope="col">Item code</th>
                       <th scope="col">Item name</th>
-                      <th scope="col">Product amount</th>
+                      <th scope="col">Amount</th>
                       <th scope="col">Finished time</th>
-                      <th scope="col">Best serving by</th>
+                      <!-- <th scope="col">Best serving by</th> -->
                       <th scope="col">Cost ($)</th>
                     </tr>
                   </thead>
@@ -66,7 +66,7 @@
                       <td>{{item.name}}</td>
                       <td>{{item.amount}}</td>
                       <td>{{item.finished_time}}</td>
-                      <td>{{item.best_serving_by}}<span class="badge badge-soft-danger py-1 ml-1">Expired</span></td>
+                      <!-- <td>{{item.best_serving_by}}<span class="badge badge-soft-danger py-1 ml-1">Expired</span></td> -->
                       <td>{{item.price}}</td>
                     </tr>
                   </tbody>
@@ -75,7 +75,7 @@
             </div> <!-- end card-body-->
           </div> <!-- end card-->
         </div>
-        <div class="col-xl-5">
+        <div class="col-xl-7">
           <div class="card">
             <div class="card-body" style="min-height: 451px;">
               <h5 class="card-title mt-0 mb-0 header-title">Amount and cost of the daily finished items</h5>
@@ -102,7 +102,7 @@
     </div>
     <div class="col-md-12">
       <div class="row">
-        <div class="col-xl-7">
+        <div class="col-xl-5">
           <div class="card">
             <div class="card-body">
               <a href="javascript:;" class="btn btn-primary btn-sm float-right">
@@ -116,8 +116,8 @@
                     <tr>
                       <th scope="col">Item code</th>
                       <th scope="col">Item name</th>
-                      <th scope="col">Material amount(g)</th>
-                      <th scope="col">Min. Package (Bag/Can/Bt)</th>
+                      <th scope="col">Amount(g)</th>
+                      <th scope="col">Bag/Can/Bt</th>
                       <th scope="col">Cost ($)</th>
                     </tr>
                   </thead>
@@ -135,7 +135,7 @@
             </div> <!-- end card-body-->
           </div> <!-- end card-->
         </div>
-        <div class="col-xl-5">
+        <div class="col-xl-7">
           <div class="card">
             <div class="card-body" style="min-height: 451px;">
               <h5 class="card-title mt-0 mb-0 header-title">Amount and cost of the daily ingredients used</h5>
@@ -162,7 +162,7 @@
     </div>
     <div class="col-md-12">
       <div class="row">
-        <div class="col-xl-7">
+        <div class="col-xl-5">
           <div class="card">
             <div class="card-body">
               <a href="javascript:;" class="btn btn-primary btn-sm float-right">
@@ -176,22 +176,22 @@
                     <tr>
                       <th scope="col">Item code</th>
                       <th scope="col">Item name</th>
-                      <th scope="col">Material amount(g)</th>
+                      <th scope="col">Amount(g)</th>
                       <th scope="col">Waste ratio</th>
                       <th scope="col">Cost ($)</th>
-                      <th scope="col">Reason</th>
+                      <!-- <th scope="col">Reason</th> -->
                     </tr>
                   </thead>
                   <tbody>
                     <tr *ngFor="let item of daily_waste">
                       <td>{{item.code}}</td>
                       <td>{{item.name}}</td>
-                      <td>{{item.amount}}</td>
+                      <td>{{item.amount | number}}</td>
                       <td>{{item.rate | percent}}</td>
                       <td>{{item.price}}</td>
-                      <td>
+                      <!-- <td>
                         <span class="badge badge-soft-{{get_class(item.reason)}}">{{ item.reason }}</span>
-                      </td>
+                      </td> -->
                     </tr>
                   </tbody>
                 </table>
@@ -199,7 +199,7 @@
             </div> <!-- end card-body-->
           </div> <!-- end card-->
         </div>
-        <div class="col-xl-5">
+        <div class="col-xl-7">
           <div class="card">
             <div class="card-body" style="min-height: 451px;">
               <h5 class="card-title mt-0 mb-0 header-title">Amount and cost of the daily waste</h5>

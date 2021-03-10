@@ -151,6 +151,16 @@ export class UsageReportComponent implements OnInit {
     this.filter_date['from'] = moment(this.filter_date['from']).format('YYYY-MM-DD');
     this.filter_date['to'] = this.filter_date['to'] ? moment(this.filter_date['to']).format('YYYY-MM-DD') : this.filter_date['from'];
     this.history_loading = true
+
+    this.finished_products = [
+    ]
+  
+    this.daily_ingredients = [
+    ]
+  
+    this.daily_waste = [
+    ]
+
     this.apiService.getKitchenHistory({
       shop_id: this.selected_shop_id,
       date_range: {

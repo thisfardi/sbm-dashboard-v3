@@ -15,6 +15,7 @@ export class LeftsidebarComponent implements OnInit {
 
     name: string;
     email: string;
+    company: string = '';
     @Input() sidebarType: string;
 
     constructor(private router: Router, private authenticationService: AuthenticationService, private cookieService: CookieService) { }
@@ -24,6 +25,7 @@ export class LeftsidebarComponent implements OnInit {
 
           this.name = user_info.name;
           this.email = user_info.email;
+          this.company = user_info.company;
       }
 
   /**
@@ -39,5 +41,9 @@ export class LeftsidebarComponent implements OnInit {
     logout() {
         this.authenticationService.logout();
         this.router.navigate(['/account/login'], { queryParams: { returnUrl: '/' } });
+    }
+
+    toLow(value: string){
+        return value.toLowerCase()
     }
 }

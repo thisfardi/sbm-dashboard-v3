@@ -4,8 +4,8 @@
     <!-- LOGO -->
     <a routerLink="/" class="navbar-brand mr-0 mr-md-2 logo">
       <span class="logo-lg">
-        <img src="assets/images/logo.png" alt="" height="24" />
-        <span class="d-inline h5 ml-1 text-logo ml-2">SBM Dashboard v3.0</span>
+        <img src="assets/images/logos/logo-dark.png" alt="" height="48" />
+        <span class="d-inline h5 ml-1 text-logo ml-2">Dashboard v3.0</span>
       </span>
       <span class="logo-sm">
         <img src="assets/images/logo.png" alt="" height="24">
@@ -21,7 +21,7 @@
       </li>
     </ul>
 
-    <ul class="navbar-nav flex-row ml-auto d-flex list-unstyled topnav-menu float-right mb-0">
+    <ul class="navbar-nav flex-row ml-auto d-flex align-items-center list-unstyled topnav-menu float-right mb-0">
       <li class="d-none d-sm-block">
         <div class="app-search">
           <form>
@@ -32,72 +32,11 @@
           </form>
         </div>
       </li>
-
-      <li class="dropdown d-none d-lg-block" placement="left" ngbTooltip="Change language" ngbDropdown>
-        <a class="nav-link dropdown-toggle mr-0" ngbDropdownToggle href="javascript: void(0);" role="button">
-          <i [attr.data-feather]="'globe'" appFeatherIcon></i>
+      <li class="d-none d-sm-block">
+        <a href="javascript:void(0);" class="notify-item" (click)="logout()">
+          <i [attr.data-feather]="'log-out'" class="icon-dual icon-xs mr-2"></i>
+          <span>&nbsp;Logout</span>
         </a>
-        <div class="dropdown-menu dropdown-menu-right" ngbDropdownMenu>
-          <!-- item-->
-          <a href="javascript:void(0);" class="dropdown-item notify-item" ngbDropdownItem>
-            <img src="assets/images/flags/germany.jpg" alt="user-image" class="mr-2" height="12"> <span
-              class="align-middle">German</span>
-          </a>
-
-          <!-- item-->
-          <a href="javascript:void(0);" class="dropdown-item notify-item" ngbDropdownItem>
-            <img src="assets/images/flags/italy.jpg" alt="user-image" class="mr-2" height="12"> <span
-              class="align-middle">Italian</span>
-          </a>
-        </div>
-      </li>
-      <li class="dropdown notification-list" placement="left" ngbTooltip="Settings">
-        <a href="javascript:void(0);" class="nav-link right-bar-toggle" (click)="toggleRightSidebar()">
-          <i [attr.data-feather]="'settings'" class="right-bar-toggle" appFeatherIcon></i>
-        </a>
-      </li>
-
-      <li class="dropdown notification-list align-self-center profile-dropdown" ngbDropdown>
-        <a class="nav-link dropdown-toggle nav-user mr-0" ngbDropdownToggle href="javascript: void(0);" role="button">
-          <div class="media user-profile">
-            <img src="assets/images/users/avatar-7.jpg" alt="user-image" class="rounded-circle align-self-center" />
-            <div class="media-body text-left">
-              <h6 class="pro-user-name ml-2 my-0">
-                <span>{{ name }}</span>
-                <span class="pro-user-desc text-muted d-block mt-1">{{ email }} </span>
-              </h6>
-            </div>
-            <i [attr.data-feather]="'chevron-down'" class="ml-2 align-self-center" appFeatherIcon></i>
-          </div>
-        </a>
-        <div class="dropdown-menu profile-dropdown-items dropdown-menu-right" ngbDropdownMenu>
-          <a routerLink="/pages-profile" class="dropdown-item notify-item" ngbDropdownItem>
-            <i [attr.data-feather]="'user'" class="icon-dual icon-xs mr-2" appFeatherIcon></i>
-            <span>&nbsp;My Account</span>
-          </a>
-
-          <a href="javascript:void(0);" class="dropdown-item notify-item" ngbDropdownItem>
-            <i [attr.data-feather]="'settings'" class="icon-dual icon-xs mr-2" appFeatherIcon></i>
-            <span>&nbsp;Settings</span>
-          </a>
-
-          <a href="javascript:void(0);" class="dropdown-item notify-item" ngbDropdownItem>
-            <i [attr.data-feather]="'help-circle'" class="icon-dual icon-xs mr-2" appFeatherIcon></i>
-            <span>&nbsp;Support</span>
-          </a>
-
-          <a href="javascript: void(0);" class="dropdown-item notify-item" ngbDropdownItem>
-            <i [attr.data-feather]="'lock'" class="icon-dual icon-xs mr-2" appFeatherIcon></i>
-            <span>&nbsp;Lock Screen</span>
-          </a>
-
-          <div class="dropdown-divider"></div>
-
-          <a href="javascript:void(0);" (click)="logout()" class="dropdown-item notify-item" ngbDropdownItem>
-            <i [attr.data-feather]="'log-out'" class="icon-dual icon-xs mr-2" appFeatherIcon></i>
-            <span>&nbsp;Logout</span>
-          </a>
-        </div>
       </li>
     </ul>
   </div>

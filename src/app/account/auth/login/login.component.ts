@@ -24,7 +24,7 @@ export class LoginComponent implements OnInit, AfterViewInit {
 
     bg = '';
 
-    interval: number;
+    interval: any;
 
     notDashboardUser: Boolean = false;
 
@@ -103,7 +103,7 @@ export class LoginComponent implements OnInit, AfterViewInit {
                               if(data['res']['access'] == 'dashboard'){
                                 this.returnUrl = '/';
                               }else if(data['res']['access'] == 'kitchen'){
-                                this.returnUrl = '/kitchen/item';
+                                this.returnUrl = '/kitchen/usage-report';
                               }else{
                                 this.returnUrl = '/inventory/stocks'
                               }

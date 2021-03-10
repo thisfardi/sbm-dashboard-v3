@@ -145,6 +145,12 @@ export class PosReportComponent implements OnInit {
     this.filter_date['from'] = moment(this.filter_date['from']).format('YYYY-MM-DD');
     this.filter_date['to'] = this.filter_date['to'] ? moment(this.filter_date['to']).format('YYYY-MM-DD') : this.filter_date['from'];
     this.history_loading = true
+
+    this.pos_daily_usage = [
+    ]
+  
+    this.pos_daily_ingredient = [
+    ]
     this.apiService.getKitchenHistory({
       shop_id: this.selected_shop_id,
       date_range: {

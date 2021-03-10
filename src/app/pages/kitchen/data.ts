@@ -46,7 +46,7 @@ const amountChart: ChartType = {
         }
     },
     legend: {
-        offsetY: 10,
+        show: false
     },
     yaxis: {
         title: {
@@ -124,7 +124,7 @@ const itemChart: ChartType = {
         }
     },
     legend: {
-        offsetY: 10,
+        show: false
     },
     yaxis: {
         title: {
@@ -248,7 +248,20 @@ const daily_finished_products_amount_chart: ChartType = {
     yaxis: {
         title: {
             text: 'Amount (g)'
-        }
+        },
+        labels: {
+          style: {
+            color: '#FFB0AF',
+          },
+          formatter: function (value) {
+            if(parseInt(value) > 1000){
+              return (Math.floor(value / 1000 * 100) / 100).toString() + 'kg'
+            }else{
+              return (Math.floor(value * 100) / 100).toString() + 'g'
+            }
+
+          }
+        },
     },
     fill: {
         opacity: 1
@@ -323,12 +336,25 @@ const daily_finished_products_price_chart: ChartType = {
         }
     },
     legend: {
-        offsetY: 10,
+        show: false
     },
     yaxis: {
         title: {
             text: 'Cost ($)'
-        }
+        },
+        labels: {
+          style: {
+            color: '#FFB0AF',
+          },
+          formatter: function (value) {
+            if(parseInt(value) > 1000){
+              return '$' + (Math.floor(value / 1000 * 100) / 100).toString() + 'k'
+            }else{
+              return '$' + (Math.floor(value * 100) / 100).toString()
+            }
+
+          }
+        },
     },
     fill: {
         opacity: 1
@@ -408,7 +434,20 @@ const daily_ingredients_amount_chart: ChartType = {
     yaxis: {
         title: {
             text: 'Amount (g)'
-        }
+        },
+        labels: {
+          style: {
+            color: '#FFB0AF',
+          },
+          formatter: function (value) {
+            if(parseInt(value) > 1000){
+              return (Math.floor(value / 1000 * 100) / 100).toString() + 'kg'
+            }else{
+              return (Math.floor(value * 100) / 100).toString() + 'g'
+            }
+
+          }
+        },
     },
     fill: {
         opacity: 1
@@ -483,12 +522,25 @@ const daily_ingredients_price_chart: ChartType = {
         }
     },
     legend: {
-        offsetY: 10,
+        show: false
     },
     yaxis: {
         title: {
             text: 'Cost ($)'
-        }
+        },
+        labels: {
+          style: {
+            color: '#FFB0AF',
+          },
+          formatter: function (value) {
+            if(parseInt(value) > 1000){
+              return '$'+(Math.floor(value / 1000 * 100) / 100).toString() + 'k'
+            }else{
+              return '$'+(Math.floor(value * 100) / 100).toString() 
+            }
+
+          }
+        },
     },
     fill: {
         opacity: 1
@@ -568,7 +620,20 @@ const daily_waste_amount_chart: ChartType = {
     yaxis: {
         title: {
             text: 'Amount (g)'
-        }
+        },
+        labels: {
+          style: {
+            color: '#FFB0AF',
+          },
+          formatter: function (value) {
+            if(parseInt(value) > 1000){
+              return (Math.floor(value / 1000 * 100) / 100).toString() + 'kg'
+            }else{
+              return (Math.floor(value * 100) / 100).toString() + 'g'
+            }
+
+          }
+        },
     },
     fill: {
         opacity: 1
@@ -643,12 +708,25 @@ const daily_waste_price_chart: ChartType = {
         }
     },
     legend: {
-        offsetY: 10,
+        show: false
     },
     yaxis: {
         title: {
             text: 'Cost ($)'
-        }
+        },
+        labels: {
+          style: {
+            color: '#FFB0AF',
+          },
+          formatter: function (value) {
+            if(parseInt(value) > 1000){
+              return '$' + (Math.floor(value / 1000 * 100) / 100).toString() + 'k'
+            }else{
+              return '$' + (Math.floor(value * 100) / 100).toString()
+            }
+
+          }
+        },
     },
     fill: {
         opacity: 1
@@ -817,7 +895,7 @@ const pos_daily_usage_price_chart: ChartType = {
         }
     },
     legend: {
-        offsetY: 10,
+        show: false
     },
     yaxis: {
         title: {
@@ -1003,7 +1081,7 @@ const pos_daily_ingredient_price_chart: ChartType = {
         }
     },
     legend: {
-        offsetY: 10,
+        show: false
     },
     yaxis: {
         title: {
