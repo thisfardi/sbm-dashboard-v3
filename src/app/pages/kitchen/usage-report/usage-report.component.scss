@@ -27,6 +27,10 @@
       max-height: 20px;
       overflow: hidden;
       max-width: 150px;
+      .selected-item{
+        color: red;
+        font-weight: bolder;
+      }
     }
   }
 }

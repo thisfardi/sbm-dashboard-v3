@@ -49,6 +49,9 @@ export class PosReportComponent implements OnInit {
 
   pos_daily_usage = [
   ]
+  filterd_pos_daily_usage = []
+  uniq_pos_daily_usage_name = ["All items"]
+  selected_pos_daily_usage_item = "All items"
 
   pos_daily_ingredient = [
   ]
@@ -243,7 +246,16 @@ export class PosReportComponent implements OnInit {
           price: item.cost
         }
       })
+      this.uniq_pos_daily_usage_name = ["All items"]
+      this.pos_daily_usage.forEach(item => {
+        if(!this.uniq_pos_daily_usage_name.includes(item.name)){
+          this.uniq_pos_daily_usage_name.push(item.name)
+        }
+      })
+      this.selected_pos_daily_usage_item = "All items"
+      this.filterd_pos_daily_usage = [...this.pos_daily_usage]
     }
+    
     if(data.hasOwnProperty('pos_ingredients_used')){
       this.pos_daily_ingredient = data.pos_ingredients_used.map(item => {
         return {
@@ -300,6 +312,18 @@ export class PosReportComponent implements OnInit {
   }
   apply_filter(){
     this._fetchHistoryData()
+  }
+  filter_item_change(){
+    this.filterd_pos_daily_usage = []
+    if(this.selected_pos_daily_usage_item == "All items"){
+      this.filterd_pos_daily_usage = [...this.pos_daily_usage]
+    }else{
+      this.filterd_pos_daily_usage = [...this.pos_daily_usage.filter(item => item.name == this.selected_pos_daily_usage_item)]
+    }
+  }
+  select_item(name){
+    this.selected_pos_daily_usage_item = name
+    this.filter_item_change()
   }
 
 }

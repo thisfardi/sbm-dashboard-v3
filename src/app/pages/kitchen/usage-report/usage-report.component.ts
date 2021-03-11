@@ -48,6 +48,10 @@ export class UsageReportComponent implements OnInit {
 
   finished_products = [
   ]
+  filtered_finished_products = []
+  uniq_finished_products_code = []
+  uniq_finished_products_name = []
+  selected_finished_product = ""
 
   daily_ingredients = [
   ]
@@ -196,6 +200,17 @@ export class UsageReportComponent implements OnInit {
         }
       })
     }
+    this.uniq_finished_products_code = []
+    this.uniq_finished_products_name = []
+    this.finished_products.forEach(item => {
+      if(!this.uniq_finished_products_code.includes(item.code)){
+        this.uniq_finished_products_code.push(item.code)
+        this.uniq_finished_products_name.push(item.name)
+      }
+    })
+    this.selected_finished_product = this.uniq_finished_products_name[0]
+    this.filter_item_change()
+    
 
     if(data.hasOwnProperty('ingredient_list')){
       this.daily_ingredients = data.ingredient_list.map(item => {
@@ -223,24 +238,30 @@ export class UsageReportComponent implements OnInit {
       })
     }
 
+    this.render_charts()
+  }
+
+  render_charts(){
+
+    
     this.daily_finished_products_amount.series = [
       {
         name: "Amount",
-        data: this.finished_products.map((item) => item.amount)
+        data: this.filtered_finished_products.map((item) => item.amount)
       }
     ]
     this.daily_finished_products_amount.xaxis.categories = [
-      ...this.finished_products.map((item) => item.name)
+      ...this.filtered_finished_products.map((item) => item.finished_time.split(' ')[1])
     ]
 
     this.daily_finished_products_price.series = [
       {
         name: "Cost",
-        data: this.finished_products.map((item) => item.price)
+        data: this.filtered_finished_products.map((item) => item.price)
       }
     ]
     this.daily_finished_products_price.xaxis.categories = [
-      ...this.finished_products.map((item) => item.name)
+      ...this.filtered_finished_products.map((item) => item.finished_time.split(' ')[1])
     ]
 
 
@@ -263,8 +284,6 @@ export class UsageReportComponent implements OnInit {
     this.daily_ingredients_price.xaxis.categories = [
       ...this.daily_ingredients.map((item) => item.name)
     ]
-
-
 
 
 
@@ -357,5 +376,18 @@ export class UsageReportComponent implements OnInit {
 
   prettify_time_stamp(time){
     return moment(time).format('YYYY-MM-DD hh:mm:ss')
+  }
+
+  filter_item_change(){
+    this.filtered_finished_products = []
+    setTimeout(() => {
+      this.filtered_finished_products = [...this.finished_products.filter(item => item.name == this.selected_finished_product)]
+      this.render_charts()
+    }, 100)
+  }
+
+  select_item(name){
+    this.selected_finished_product = name
+    this.filter_item_change()
   }
 }
