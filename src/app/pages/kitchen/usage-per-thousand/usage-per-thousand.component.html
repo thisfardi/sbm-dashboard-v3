@@ -1,0 +1,124 @@
+<div class="container-fluid">
+  <div class="row mt-4">
+    <div *ngIf='db_error || error' class="col-md-12">
+      <ngb-alert type="danger" [dismissible]="false">
+        Database connection error. Please try again later.
+      </ngb-alert>
+    </div>
+    <div class="col-md-12">
+      <div class="card">
+        <div class="card-body p-0">
+          <h5 class="card-title header-title border-bottom p-3 mb-0 d-flex align-items-center">
+            <p class="m-0">Filters</p>
+            <button class="ml-auto btn btn-primary btn-sm" (click)="apply_filter()">Apply filter</button>
+          </h5>
+          <form class="form-inline m-3 filter-form">
+            <div class="form-group mr-2 mb-2">
+              <label class="col-form-label mr-4">Select shop</label>
+              <app-miniloader [display]='shop_loading'></app-miniloader>
+              <div *ngIf='!shop_loading'>
+                <ng-select [items]="shop_names" [(ngModel)]='filter_shop_name' [ngModelOptions]="{standalone: true}"></ng-select>
+              </div>
+            </div>
+            <div class="form-group mb-2">
+              <label class="col-form-label mr-3">Producted item </label>
+              <app-miniloader [display]='history_loading'></app-miniloader>
+              <div *ngIf='!history_loading'>
+                <ng-select [items]="uniq_finished_products_name" [(ngModel)]='selected_finished_product' [ngModelOptions]="{standalone: true}" (change)="filter_item_change()"></ng-select>
+              </div>
+            </div>
+            <div class="form-group ml-auto mr-2 mb-2">
+              <label class="col-form-label mr-3">Select date range</label>
+              <ng-select [items]="date_ranges['labels']" [(ngModel)]='filter_range' [ngModelOptions]="{standalone: true}" (change)="filter_range_change()"></ng-select>
+            </div>
+            <div class="form-group mb-2">
+              <input id="filter_date_range" type="text" class="form-control" disabled placeholder="2020-01-01 to 2020 01-31" mwlFlatpickr mode="range" [convertModelValue]="true" [(ngModel)]="filter_date" [ngModelOptions]="{standalone: true}"/>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-12">
+      <div class="card">
+        <div class="card-body">
+          <a href="javascript:;" class="btn btn-primary btn-sm float-right" (click)="exportService.exportToCSV($event, filter_shop_name + ' - Usage per thousand ' + filter_date['from'] + ' to ' + filter_date['to'])">
+            <i class="uil uil-export ml-1"></i> Export
+          </a>
+          <h5 class="card-title mt-0 mb-0 header-title">Usage per thousand</h5>
+          <div class="table-responsive mt-4">
+            <table class="table table-hover table-nowrap mb-0">
+              <thead>
+                <tr>
+                  <th scope="col" colspan="5">Period: {{get_date_range().from}} ~ {{get_date_range().to}}</th>
+                  <th scope="col">Netsale</th>
+                  <th scope="col" class="text-danger">{{selected_item.netsale | currency}}</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <th scope="col">Sku/Item#</th>
+                  <th scope="col">Item name</th>
+                  <th scope="col">Unit</th>
+                  <th scope="col">Unit price</th>
+                  <th scope="col">Idea usage</th>
+                  <th scope="col">Idea usage cost</th>
+                  <th scope="col">Idea food cost</th>
+                </tr>
+              </tbody>
+              <tbody>
+                <tr>
+                  <td>{{selected_item.code}}</td>
+                  <td>{{selected_item.name}}</td>
+                  <td>Bag</td>
+                  <td>{{selected_item.price / selected_item.total | currency}}</td>
+                  <td>{{selected_item.total}}</td>
+                  <td>{{selected_item.price | currency}}</td>
+                  <td>{{selected_item.price / selected_item.netsale | percent:'0.1-2'}}</td>
+                </tr>
+              </tbody>
+              <thead>
+                <tr>
+                  <th scope="col" colspan="3">Estimated stock per sales</th>
+                  <th scope="col">Expected sales amount</th>
+                  <th scope="col">
+                    <ng-select [(ngModel)]='selected_ex_sales' [ngModelOptions]="{standalone: true}">
+                      <ng-option *ngFor="let item of ex_sales" [value]="item" class="text-danger">{{item | currency}}</ng-option>
+                    </ng-select>
+                  </th>
+                  <th scope="col">Security factor</th>
+                  <th scope="col">
+                    <ng-select [(ngModel)]='selected_sc_factor' [ngModelOptions]="{standalone: true}">
+                      <ng-option *ngFor="let item of sc_factor" [value]="item" class="text-danger">{{item | percent: '1.0-1'}}</ng-option>
+                    </ng-select>
+                  </th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <th scope="col">Sku/Item#</th>
+                  <th scope="col">Item name</th>
+                  <th scope="col">Idea usage(by Min. Unit)</th>
+                  <th scope="col">Recommended stock(by Min. Unit)</th>
+                  <th scope="col">Recommendation usage(by Carton Box)</th>
+                  <th scope="col">Recommendation Min.Order</th>
+                  <th scope="col">Cost of Min.Order</th>
+                </tr>
+              </tbody>
+              <tbody>
+                <tr>
+                  <td>{{selected_item.code}}</td>
+                  <td>{{selected_item.name}}</td>
+                  <td>{{selected_item.total / selected_item.netsale * selected_ex_sales | number:'1.0-1'}}</td>
+                  <td>{{selected_item.total / selected_item.netsale * selected_ex_sales * (1 + selected_sc_factor) | number:'1.0-1'}}</td>
+                  <td>{{selected_item.total / selected_item.netsale * selected_ex_sales * (1 + selected_sc_factor) / 30 | number:'1.0-1'}}</td>
+                  <td>{{trunc(selected_item.total / selected_item.netsale * selected_ex_sales * (1 + selected_sc_factor) / 30) + 1}}</td>
+                  <td>{{selected_item.total / selected_item.netsale * selected_ex_sales * (1 + selected_sc_factor) * selected_item.price / selected_item.total | currency}}</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

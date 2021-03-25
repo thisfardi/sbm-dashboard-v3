@@ -7,6 +7,7 @@ import { UsageReportComponent } from './usage-report/usage-report.component';
 import { PosReportComponent } from './pos-report/pos-report.component';
 import { DailyAnalysisComponent } from './daily-analysis/daily-analysis.component';
 import { InventoryAnalysisComponent } from './inventory-analysis/inventory-analysis.component';
+import { UsagePerThousandComponent } from './usage-per-thousand/usage-per-thousand.component';
 
 const routes: Routes = [
   {
@@ -16,6 +17,10 @@ const routes: Routes = [
   {
     path: 'usage-report',
     component: UsageReportComponent
+  },
+  {
+    path: 'usage-per-thousand',
+    component: UsagePerThousandComponent
   },
   {
     path: 'pos-report',

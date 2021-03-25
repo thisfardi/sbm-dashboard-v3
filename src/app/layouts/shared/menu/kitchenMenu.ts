@@ -17,6 +17,11 @@ export const KITCHENMENU: MenuItem[] = [
     link: '/kitchen/usage-report',
   },
   {
+    label: 'Usage per thousand',
+    icon: 'bar-chart',
+    link: '/kitchen/usage-per-thousand',
+  },
+  {
     label: 'POS report',
     icon: 'bar-chart-2',
     link: '/kitchen/pos-report',

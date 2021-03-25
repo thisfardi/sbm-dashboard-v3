@@ -8,27 +8,19 @@ import { CookieService } from '../../../core/services/cookie.service';
 import { ExportService } from '../../../core/services/export.service';
 import { HistoryService } from '../../../core/services/history.service';
 
-import { ChartType } from '../charts.model';
-import {
-  daily_finished_products_amount_chart,
-  daily_finished_products_price_chart,
-  daily_ingredients_amount_chart,
-  daily_ingredients_price_chart,
-  daily_waste_amount_chart,
-  daily_waste_price_chart
-} from '../data';
 @Component({
-  selector: 'app-usage-report',
-  templateUrl: './usage-report.component.html',
-  styleUrls: ['./usage-report.component.scss']
+  selector: 'app-usage-per-thousand',
+  templateUrl: './usage-per-thousand.component.html',
+  styleUrls: ['./usage-per-thousand.component.scss']
 })
-export class UsageReportComponent implements OnInit {
+export class UsagePerThousandComponent implements OnInit {
 
   constructor(
     private apiService: ApiService, private cookieService: CookieService, private parseService: ParseService, public exportService: ExportService, public historyService: HistoryService
   ) { }
 
   company: string = JSON.parse(this.cookieService.getCookie('currentUser')).company;
+  database: string = JSON.parse(this.cookieService.getCookie('currentUser')).database;
   date_ranges: Object;
 
   f_criteria: string = 'hour';
@@ -39,25 +31,6 @@ export class UsageReportComponent implements OnInit {
   filter_shop_name: string;
 
   db_error: Boolean = false;
-  daily_finished_products_amount: ChartType
-  daily_finished_products_price: ChartType
-  daily_ingredients_amount: ChartType
-  daily_ingredients_price: ChartType
-  daily_waste_amount: ChartType
-  daily_waste_price: ChartType
-
-  finished_products = [
-  ]
-  filtered_finished_products = []
-  uniq_finished_products_code = []
-  uniq_finished_products_name = ["All items"]
-  selected_finished_product = "All items"
-
-  daily_ingredients = [
-  ]
-
-  daily_waste = [
-  ]
 
   shop_loading = false
   history_loading = false
@@ -65,13 +38,31 @@ export class UsageReportComponent implements OnInit {
   selected_shop_id = -1
   shop_names = []
   error = ''
+
+  finished_products = [
+  ]
+  filtered_finished_products = []
+  uniq_finished_products_code = []
+  uniq_finished_products_name = []
+  selected_finished_product = ""
+
+  selected_item = {
+    name: '#',
+    code: '#',
+    total: 0,
+    price: 0,
+    netsale: 0
+  }
+  price = 0
+  total = 0
+  netsale = 0
+
+  ex_sales = [10000, 20000, 40000]
+  selected_ex_sales = 10000
+  sc_factor = [0.1, 0.2, .3, .4, .5]
+  selected_sc_factor = .2
+
   ngOnInit() {
-    this.daily_finished_products_amount = daily_finished_products_amount_chart
-    this.daily_finished_products_price = daily_finished_products_price_chart
-    this.daily_ingredients_amount = daily_ingredients_amount_chart
-    this.daily_ingredients_price = daily_ingredients_price_chart
-    this.daily_waste_amount = daily_waste_amount_chart
-    this.daily_waste_price = daily_waste_price_chart
     this.date_ranges = {
       labels: ['Today', 'Yesterday', 'This week', 'Last week', 'This month', 'Last month', 'This year', 'Last year', 'All time', 'Custom range'],
       ranges: [
@@ -121,6 +112,12 @@ export class UsageReportComponent implements OnInit {
     this.filter_date = this.date_ranges['ranges'][0];
     this._fetchShops()
   }
+  get_date_range(){
+    return {
+      from: moment(this.filter_date['from']).format('MM/DD/YYYY'),
+      to: this.filter_date['to'] ? moment(this.filter_date['to']).format('MM/DD/YYYY') : moment(this.filter_date['from']).format('MM/DD/YYYY')
+    }
+  }
   _fetchShops() {
     this.shops = [];
     this.error = ''
@@ -137,7 +134,8 @@ export class UsageReportComponent implements OnInit {
             this.shop_names = data['data'].map(item => item.description)
             this.filter_shop_name = this.shop_names[0]
             this.selected_shop_id = this.shops.filter(item => item.description == this.filter_shop_name)[0].id
-            this._fetchHistoryData()
+            this._fetchNetsale()
+
           }else{
             this.error = "Something went wrong. Please try again later."
           }
@@ -149,22 +147,45 @@ export class UsageReportComponent implements OnInit {
         }
       )
   }
+  _fetchNetsale(){
+    this.filter_date['from'] = moment(this.filter_date['from']).format('YYYY-MM-DD');
+    this.filter_date['to'] = this.filter_date['to'] ? moment(this.filter_date['to']).format('YYYY-MM-DD') : this.filter_date['from'];
+    this.history_loading = true
+    this.apiService.sum_data(this.parseService.encode({
+      from: this.filter_date['from'],
+      to: this.filter_date['to'],
+      shop: this.filter_shop_name,
+      db: this.database
+    }))
+      .pipe(first())
+      .subscribe(
+        data => {
+          let sum_data = data['data']
+          if(data['status'] == 'success'){
+            this.netsale = data['data'].netsale.reduce((netsale, item) => {
+              return netsale += parseFloat(item['netsale'])
+            }, 0)
+            this._fetchHistoryData()
+          }else{
+            this.db_error = true;
+          }
+          this.history_loading = false
+        },
+        error => {
+          this.db_error = true;
+          this.history_loading = false
+        }
+      )
+
+  }
   _fetchHistoryData(){
     this.error = ''
     this.selected_shop_id = this.shops.filter(item => item.description == this.filter_shop_name)[0].id
     this.filter_date['from'] = moment(this.filter_date['from']).format('YYYY-MM-DD');
     this.filter_date['to'] = this.filter_date['to'] ? moment(this.filter_date['to']).format('YYYY-MM-DD') : this.filter_date['from'];
     this.history_loading = true
-
     this.finished_products = [
     ]
-  
-    this.daily_ingredients = [
-    ]
-  
-    this.daily_waste = [
-    ]
-
     this.apiService.getKitchenHistory({
       shop_id: this.selected_shop_id,
       date_range: {
@@ -183,144 +204,6 @@ export class UsageReportComponent implements OnInit {
         }
       )
   }
-  get_data(){
-
-  }
-  set_data(data){
-
-    if(data.hasOwnProperty('producted_list')){
-      this.finished_products = data.producted_list.map(item => {
-        return {
-          name: item.item_name,
-          amount: item.product_amount,
-          code: item.item_code,
-          finished_time: item.time_stamp,
-          best_serving_by: item.best_serving_by,
-          price: item.cost
-        }
-      })
-    }
-    this.uniq_finished_products_code = []
-    this.uniq_finished_products_name = ["All items"]
-    this.finished_products.forEach(item => {
-      if(!this.uniq_finished_products_code.includes(item.code)){
-        this.uniq_finished_products_code.push(item.code)
-        this.uniq_finished_products_name.push(item.name)
-      }
-    })
-    this.selected_finished_product = this.finished_products.length != 0 ? this.uniq_finished_products_name[1] : this.uniq_finished_products_name["All items"]
-    this.filter_item_change()
-    
-
-    if(data.hasOwnProperty('ingredient_list')){
-      this.daily_ingredients = data.ingredient_list.map(item => {
-        return {
-          code: item.item_code,
-          name: item.item_name,
-          amount: item.material_amount,
-          safety_level: item.bag,
-          price: item.cost
-        }
-      })
-    }
-
-    if(data.hasOwnProperty('dispose_rate_list')){
-      this.daily_waste = data.dispose_rate_list.map(item => {
-        return {
-          code: item.item_code,
-          name: item.item_name,
-          amount: parseFloat(item.product_amount) * parseFloat(item.waste_rate),
-          product_amount: item.product_amount,
-          reason: "Waste",
-          price: 0,
-          rate: item.waste_rate
-        }
-      })
-    }
-
-    this.render_charts()
-  }
-
-  render_charts(){
-
-    
-    this.daily_finished_products_amount.series = [
-      {
-        name: "Amount",
-        data: this.filtered_finished_products.map((item) => item.amount)
-      }
-    ]
-    if(this.selected_finished_product == "All items"){
-      this.daily_finished_products_amount.xaxis.categories = [
-        ...this.filtered_finished_products.map((item) => item.name)
-      ]
-    }else{
-      this.daily_finished_products_amount.xaxis.categories = [
-        ...this.filtered_finished_products.map((item) => item.finished_time.split(' ')[1])
-      ]
-    }
-
-    this.daily_finished_products_price.series = [
-      {
-        name: "Cost",
-        data: this.filtered_finished_products.map((item) => item.price)
-      }
-    ]
-    
-    if(this.selected_finished_product == "All items"){
-      this.daily_finished_products_price.xaxis.categories = [
-        ...this.filtered_finished_products.map((item) => item.name)
-      ]
-    }else{
-      this.daily_finished_products_price.xaxis.categories = [
-        ...this.filtered_finished_products.map((item) => item.finished_time.split(' ')[1])
-      ]
-    }
-
-
-    this.daily_ingredients_amount.series = [
-      {
-        name: "Amount",
-        data: this.daily_ingredients.map((item) => item.amount)
-      }
-    ]
-    this.daily_ingredients_amount.xaxis.categories = [
-      ...this.daily_ingredients.map((item) => item.name)
-    ]
-
-    this.daily_ingredients_price.series = [
-      {
-        name: "Cost",
-        data: this.daily_ingredients.map((item) => item.price)
-      }
-    ]
-    this.daily_ingredients_price.xaxis.categories = [
-      ...this.daily_ingredients.map((item) => item.name)
-    ]
-
-
-
-    this.daily_waste_amount.series = [
-      {
-        name: "Amount",
-        data: this.daily_waste.map((item) => item.amount)
-      }
-    ]
-    this.daily_waste_amount.xaxis.categories = [
-      ...this.daily_waste.map((item) => item.name)
-    ]
-
-    this.daily_waste_price.series = [
-      {
-        name: "Cost",
-        data: this.daily_waste.map((item) => item.price)
-      }
-    ]
-    this.daily_waste_price.xaxis.categories = [
-      ...this.daily_waste.map((item) => item.name)
-    ]
-  }
-
   filter_range_change(){
     this.filter_date = this.date_ranges['ranges'][this.date_ranges['labels'].indexOf(this.filter_range)];
     if(this.filter_range == 'Custom range'){
@@ -371,43 +254,57 @@ export class UsageReportComponent implements OnInit {
         break;
     }
   }
-  get_class(val){
-    if(val == "Expired"){
-      return 'danger'
-    }else if(val == "Bad"){
-      return 'secondary'
-    }else if(val == "Waste"){
-      return 'warning'
-    }else{
-      return 'primary'
-    }
-  }
 
+  set_data(data){
+    if(data.hasOwnProperty('producted_list')){
+      this.finished_products = data.producted_list.map(item => {
+        return {
+          name: item.item_name,
+          amount: item.product_amount,
+          code: item.item_code,
+          finished_time: item.time_stamp,
+          best_serving_by: item.best_serving_by,
+          price: item.cost
+        }
+      })
+    }
+    this.uniq_finished_products_code = []
+    this.uniq_finished_products_name = []
+    this.finished_products.forEach(item => {
+      if(!this.uniq_finished_products_code.includes(item.code)){
+        this.uniq_finished_products_code.push(item.code)
+        this.uniq_finished_products_name.push(item.name)
+      }
+    })
+    this.selected_finished_product = this.uniq_finished_products_name[0]
+    this.filter_item_change()
+  }
+  filter_item_change(){
+    this.filtered_finished_products = [...this.finished_products.filter(item => item.name == this.selected_finished_product)]
+
+    this.total = this.filtered_finished_products.reduce((total, item) => {
+      return total += parseFloat(item.amount)
+    }, 0) / 1000
+    this.price = this.filtered_finished_products.reduce((total, item) => {
+      return total += parseFloat(item.price)
+    }, 0)
+    this.selected_item = {
+      name: this.filtered_finished_products.length != 0 ? this.filtered_finished_products[0].name : '',
+      code: this.filtered_finished_products.length != 0 ? this.filtered_finished_products[0].code : '',
+      total: this.total,
+      price: this.price,
+      netsale: this.netsale
+    }
+    console.log(this.selected_item)
+  }
   apply_filter(){
-    this._fetchHistoryData()
+    this._fetchNetsale()
   }
 
   prettify_time_stamp(time){
     return moment(time).format('YYYY-MM-DD hh:mm:ss')
   }
-
-  filter_item_change(){
-    this.filtered_finished_products = []
-    if(this.selected_finished_product == "All items"){
-      setTimeout(() => {
-        this.filtered_finished_products = [...this.finished_products]
-        this.render_charts()
-      }, 100)
-    }else{
-      setTimeout(() => {
-        this.filtered_finished_products = [...this.finished_products.filter(item => item.name == this.selected_finished_product)]
-        this.render_charts()
-      }, 100)
-    }
-  }
-
-  select_item(name){
-    this.selected_finished_product = name
-    this.filter_item_change()
+  trunc(val){
+    return Math.trunc(parseFloat(val))
   }
 }

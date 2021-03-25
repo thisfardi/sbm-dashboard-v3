@@ -21,6 +21,7 @@ import { UsageReportComponent } from './usage-report/usage-report.component';
 import { PosReportComponent } from './pos-report/pos-report.component';
 import { DailyAnalysisComponent } from './daily-analysis/daily-analysis.component';
 import { InventoryAnalysisComponent } from './inventory-analysis/inventory-analysis.component';
+import { UsagePerThousandComponent } from './usage-per-thousand/usage-per-thousand.component';
 
 @NgModule({
     imports: [
@@ -35,7 +36,7 @@ import { InventoryAnalysisComponent } from './inventory-analysis/inventory-analy
         NgApexchartsModule
     ],
     // tslint:disable-next-line: max-line-length
-    declarations: [ItemComponent, RawComponent, UsageReportComponent, PosReportComponent, DailyAnalysisComponent, InventoryAnalysisComponent]
+    declarations: [ItemComponent, RawComponent, UsageReportComponent, PosReportComponent, DailyAnalysisComponent, InventoryAnalysisComponent, UsagePerThousandComponent]
 })
 
 export class KitchenModule { }

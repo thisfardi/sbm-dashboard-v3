@@ -46,7 +46,7 @@
               <a href="javascript:;" class="btn btn-primary btn-sm float-right" (click)="exportService.exportToCSV($event, filter_shop_name + ' kitchen daily finished products from ' + filter_date['from'] + ' to ' + filter_date['to'])">
                 <i class="uil uil-export ml-1"></i> Export
               </a>
-              <h5 class="card-title mt-0 mb-0 header-title">Kitchen daily finished products (實際生產紀錄) - ({{finished_products.length}})</h5>
+              <h5 class="card-title mt-0 mb-0 header-title">Kitchen daily finished products (實際生產紀錄)</h5>
 
               <div class="table-responsive mt-4">
                 <table class="table table-hover table-nowrap mb-0">
@@ -67,7 +67,7 @@
                       <td>{{item.amount}}</td>
                       <td>{{item.finished_time}}</td>
                       <!-- <td>{{item.best_serving_by}}<span class="badge badge-soft-danger py-1 ml-1">Expired</span></td> -->
-                      <td>{{item.price}}</td>
+                      <td>{{item.price | currency}}</td>
                     </tr>
                   </tbody>
                 </table>
@@ -128,7 +128,7 @@
                       <td><span class="{{ selected_finished_product == item.name ? 'selected-item' : '' }}">{{item.name}}</span></td>
                       <td><span class="{{ selected_finished_product == item.name ? 'selected-item' : '' }}">{{item.amount | number}}</span></td>
                       <td><span class="{{ selected_finished_product == item.name ? 'selected-item' : '' }}">{{item.rate | percent}}</span></td>
-                      <td><span class="{{ selected_finished_product == item.name ? 'selected-item' : '' }}">{{item.price}}</span></td>
+                      <td><span class="{{ selected_finished_product == item.name ? 'selected-item' : '' }}">{{item.price | currency}}</span></td>
                       <!-- <td>
                         <span class="badge badge-soft-{{get_class(item.reason)}}">{{ item.reason }}</span>
                       </td> -->
@@ -190,8 +190,8 @@
                       <td>{{item.code}}</td>
                       <td>{{item.name}}</td>
                       <td>{{item.amount}}</td>
-                      <td>{{item.safety_level}}</td>
-                      <td>{{item.price}}</td>
+                      <td>{{item.safety_level | number}}</td>
+                      <td>{{item.price | currency}}</td>
                     </tr>
                   </tbody>
                 </table>
@@ -224,6 +224,6 @@
         </div>
       </div>
     </div>
-    
+
   </div>
 </div>
