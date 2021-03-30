@@ -26,7 +26,7 @@ import {
 export class DailyAnalysisComponent implements OnInit {
 
   date_ranges: Object;
-  f_criteria: string = 'hour';
+  f_criteria: string = 'day';
   disable_criteria = [0, 1, 1, 1, 1, 1, 1];
 
   filter_range: string;
@@ -42,19 +42,30 @@ export class DailyAnalysisComponent implements OnInit {
   shop_names = []
   selected_shop_id = -1
   error = ''
+  netsale = 0
 
   daily_finished_products_comparison: ChartType
   pos_daily_usage_comparison: ChartType
   pos_daily_ingredient_comparison: ChartType
   netsale_material_waste_comparison: ChartType
 
-  daily_finished_products = []
+  filtered_daily_finished_products = []
+  uniq_finished_products_code = []
+  uniq_finished_products_name = []
+  selected_finished_product = ""
 
-  pos_daily_usage = [
-  ]
+  daily_finished_products = [] // producted
+  pos_daily_usage = [] // usage
+  pos_daily_dispose = [] // POS disposal
+  filtered_pos_daily_usage = []
+  filtered_pos_daily_dispose = []
 
-  pos_daily_ingredient = [
-  ]
+  daily_ingredients = [] // RM
+  daily_ingredients_dispose = [] // RM dispose
+  pos_daily_ingredient = [] // POS RM
+  filtered_daily_ingredients = []
+  filtered_daily_ingredients_dispose = []
+  filtered_pos_daily_ingredient = []
 
   constructor(
     private apiService: ApiService,
@@ -136,7 +147,8 @@ export class DailyAnalysisComponent implements OnInit {
             this.shop_names = data['data'].map(item => item.description)
             this.filter_shop_name = this.shop_names[0]
             this.selected_shop_id = this.shops.filter(item => item.description == this.filter_shop_name)[0].id
-            this._fetchHistoryData()
+
+            this._fetchNetsale()
           }else{
             this.error = "Something went wrong. Please try again later."
           }
@@ -148,6 +160,37 @@ export class DailyAnalysisComponent implements OnInit {
         }
       )
   }
+  _fetchNetsale(){
+    this.filter_date['from'] = moment(this.filter_date['from']).format('YYYY-MM-DD');
+    this.filter_date['to'] = this.filter_date['to'] ? moment(this.filter_date['to']).format('YYYY-MM-DD') : this.filter_date['from'];
+    this.history_loading = true
+    this.apiService.sum_data(this.parseService.encode({
+      from: this.filter_date['from'],
+      to: this.filter_date['to'],
+      shop: this.filter_shop_name,
+      db: JSON.parse(this.cookieService.getCookie('currentUser')).database
+    }))
+      .pipe(first())
+      .subscribe(
+        data => {
+          let sum_data = data['data']
+          if(data['status'] == 'success'){
+            this.netsale = data['data'].netsale.reduce((netsale, item) => {
+              return netsale += parseFloat(item['netsale'])
+            }, 0)
+            console.log(this.netsale)
+            this._fetchHistoryData()
+          }else{
+            this.db_error = true;
+          }
+          this.history_loading = false
+        },
+        error => {
+          this.db_error = true;
+          this.history_loading = false
+        }
+      )
+  }
   _fetchHistoryData(){
     this.error = ''
     this.selected_shop_id = this.shops.filter(item => item.description == this.filter_shop_name)[0].id
@@ -155,15 +198,19 @@ export class DailyAnalysisComponent implements OnInit {
     this.filter_date['to'] = this.filter_date['to'] ? moment(this.filter_date['to']).format('YYYY-MM-DD') : this.filter_date['from'];
     this.history_loading = true
     this.daily_finished_products = []
+    this.pos_daily_usage = []
+    this.pos_daily_dispose = []
 
-    this.pos_daily_usage = [
-    ]
+    this.daily_ingredients = []
+    this.daily_ingredients_dispose = []
+    this.pos_daily_ingredient = []
 
-    this.pos_daily_ingredient = [
-    ]
     this.apiService.getKitchenHistory({
+      //shop_id: 7,
       shop_id: this.selected_shop_id,
       date_range: {
+        // from: '2021-03-02',
+        // to: '2021-03-02',
         from: this.filter_date['from'],
         to: this.filter_date['to']
       }
@@ -190,27 +237,27 @@ export class DailyAnalysisComponent implements OnInit {
     switch(this.filter_range){
       case 'Today':
         this.disable_criteria = [0, 1, 1, 1, 1, 1, 1];
-        this.f_criteria = 'hour';
+        this.f_criteria = 'day';
         break;
       case 'Yesterday':
         this.disable_criteria = [0, 1, 1, 1, 1, 1, 1];
-        this.f_criteria = 'hour';
+        this.f_criteria = 'day';
         break;
       case 'This week':
         this.disable_criteria = [1, 0, 1, 1, 1, 1, 1];
-        this.f_criteria = 'day';
+        this.f_criteria = 'days';
         break;
       case 'Last week':
         this.disable_criteria = [1, 0, 1, 1, 1, 1, 1];
-        this.f_criteria = 'day';
+        this.f_criteria = 'days';
         break;
       case 'This month':
         this.disable_criteria = [1, 0, 1, 1, 1, 1, 1];
-        this.f_criteria = 'day';
+        this.f_criteria = 'week';
         break;
       case 'Last month':
         this.disable_criteria = [1, 0, 1, 1, 1, 1, 1];
-        this.f_criteria = 'day';
+        this.f_criteria = 'week';
         break;
       case 'This year':
         this.disable_criteria = [1, 1, 1, 1, 1, 0, 1];
@@ -232,48 +279,68 @@ export class DailyAnalysisComponent implements OnInit {
   }
 
   apply_filter(){
-    this._fetchHistoryData()
+    this._fetchNetsale()
   }
 
   set_data(data){
     console.log(data)
-
     if(data.hasOwnProperty('producted_list')){
-      let items = []
-      let item_names = []
-      let amount_values = []
-      this.daily_finished_products = [...data.producted_list]
-      data.producted_list.forEach(item => {
-        if(!items.includes(item.item_code)){
-          items.push(item.item_code)
-          item_names.push(item.item_name)
-          amount_values.push(0)
+      this.daily_finished_products = data.producted_list.map(item => {
+        return {
+          name: item.item_name,
+          amount: item.product_amount,
+          code: item.item_code,
+          finished_time: item.time_stamp,
+          best_serving_by: item.best_serving_by,
+          price: item.cost,
+          //timestamp: item.timestamp
         }
       })
-      data.producted_list.forEach(item => {
-        amount_values[items.indexOf(item.item_code)] += parseFloat(item.product_amount)
-      })
-
-      this.daily_finished_products_comparison.series = [
-        {
-          name: "Real production amount",
-          data: [...amount_values]
-        },
-        {
-          name: "Theoretical production amount",
-          data: [...amount_values.map(item => (item + (-1) * (0.5 - Math.random()) * item * Math.random()))]
-        }
-      ]
-      this.daily_finished_products_comparison.xaxis.categories = [...item_names]
     }
-
     if(data.hasOwnProperty('pos_usage')){
       this.pos_daily_usage = data.pos_usage.map(item => {
         return {
           code: item.item_code,
           name: item.item_name,
           amount: item.product_amount,
-          price: item.cost
+          price: item.cost,
+          //timestamp: item.timestamp
+        }
+      })
+    }
+    if(data.hasOwnProperty('dispose_rate_list')){
+      this.pos_daily_dispose = data.dispose_rate_list.map(item => {
+        return {
+          code: item.item_code,
+          name: item.item_name,
+          amount: item.product_amount,
+          dispose_amount: item.dispose,
+          rate: item.waste_rate,
+          //timestamp: item.timestamp
+        }
+      })
+    }
+
+    if(data.hasOwnProperty('ingredient_list')){
+      this.daily_ingredients = data.ingredient_list.map(item => {
+        return {
+          code: item.item_code,
+          name: item.item_name,
+          amount: item.material_amount,
+          price: item.cost,
+          bag: item.bag,
+          //timestamp: item.timestamp
+        }
+      })
+    }
+    if(data.hasOwnProperty('dispose_list')){
+      this.daily_ingredients_dispose = data.dispose_list.map(item => {
+        return {
+          code: item.item_code,
+          name: item.item_name,
+          //amount: item.product_amount,
+          price: item.cost,
+          //timestamp: item.timestamp
         }
       })
     }
@@ -285,42 +352,166 @@ export class DailyAnalysisComponent implements OnInit {
           code: item.item_code,
           finished_time: item.time_stamp,
           best_serving_by: item.best_serving_by,
-          price: item.cost
+          price: item.cost,
+          //timestamp: item.timestamp
         }
       })
     }
+    this.uniq_finished_products_code = []
+    this.uniq_finished_products_name = []
+    this.daily_finished_products.forEach(item => {
+      if(!this.uniq_finished_products_code.includes(item.code)){
+        this.uniq_finished_products_code.push(item.code)
+        this.uniq_finished_products_name.push(item.name)
+      }
+    })
+    this.selected_finished_product = this.daily_finished_products.length != 0 ? this.uniq_finished_products_name[0] : ""
+    this.filter_item_change()
+  }
+  group_filtered_data(){
+    if(this.f_criteria == 'day'){
+      this.filtered_daily_finished_products = [this.filtered_daily_finished_products.reduce((arr, item) => {
+        if(!arr['name']){
+          arr['name'] = item['name']
+          arr['code'] = item['code']
+          arr['amount'] = 0
+          arr['price'] = 0
+        }
+        arr['amount'] += parseFloat(item['amount'])
+        arr['price'] += parseFloat(item['price'])
+        return arr
+      }, {})]
+      this.filtered_pos_daily_usage = [this.filtered_pos_daily_usage.reduce((arr, item) => {
+        if(!arr['name']){
+          arr['name'] = item['name']
+          arr['code'] = item['code']
+          arr['amount'] = 0
+          arr['price'] = 0
+        }
+        arr['amount'] += parseFloat(item['amount'])
+        arr['price'] += parseFloat(item['price'])
+        return arr
+      }, {})]
+      this.filtered_pos_daily_dispose = [this.filtered_pos_daily_dispose.reduce((arr, item) => {
+        if(!arr['name']){
+          arr['name'] = item['name']
+          arr['code'] = item['code']
+          arr['amount'] = 0
+          arr['dispose_amount'] = 0
+        }
+        arr['amount'] += parseFloat(item['amount'])
+        arr['dispose_amount'] += parseFloat(item['dispose_amount'])
+        return arr
+      }, {})]
 
+      this.filtered_daily_ingredients = [this.filtered_daily_ingredients.reduce((arr, item) => {
+        if(!arr['name']){
+          arr['name'] = item['name']
+          arr['code'] = item['code']
+          arr['amount'] = 0
+          arr['price'] = 0
+        }
+        arr['amount'] += parseFloat(item['amount'])
+        arr['price'] += parseFloat(item['price'])
+        return arr
+      }, {})]
+      this.filtered_daily_ingredients_dispose = [this.filtered_daily_ingredients_dispose.reduce((arr, item) => {
+        if(!arr['name']){
+          arr['name'] = item['name']
+          arr['code'] = item['code']
+          arr['price'] = 0
+        }
+        arr['price'] += parseFloat(item['price'])
+        return arr
+      }, {})]
+      this.filtered_pos_daily_ingredient = [this.filtered_pos_daily_ingredient.reduce((arr, item) => {
+        if(!arr['name']){
+          arr['name'] = item['name']
+          arr['code'] = item['code']
+          arr['amount'] = 0
+          arr['price'] = 0
+        }
+        arr['amount'] += parseFloat(item['amount'])
+        arr['price'] += parseFloat(item['price'])
+        return arr
+      }, {})]
+
+    }
+    else if (this.f_criteria == 'days'){
+
+    }
+    else if (this.f_criteria == 'week'){
+
+    }else{
+
+    }
+    this.render_chart()
+  }
+  render_chart(){
+    this.daily_finished_products_comparison.xaxis.categories = [this.filtered_daily_finished_products[0].name ? this.filtered_daily_finished_products[0].name : '']
+    this.daily_finished_products_comparison.series = [
+      {
+        name: "Kitchen cook",
+        data: [
+          this.filtered_daily_finished_products[0].amount ? this.filtered_daily_finished_products[0].amount : 0,
+        ]
+      },
+      {
+        name: "POS usage",
+        data: [
+          this.filtered_pos_daily_usage[0].amount ? this.filtered_pos_daily_usage[0].amount : 0,
+        ]
+      },
+      {
+        name: "POS disposal",
+        data: [
+          this.filtered_pos_daily_dispose[0].dispose_amount ? this.filtered_pos_daily_dispose[0].dispose_amount : 0,
+        ]
+      }
+    ]
+    this.pos_daily_usage_comparison.xaxis.categories = [this.filtered_daily_ingredients[0].name ? this.filtered_daily_ingredients[0].name : '']
     this.pos_daily_usage_comparison.series = [
       {
-        name: "Real usage amount",
-        data: this.pos_daily_usage.map((item) => item.amount)
+        name: "Kitchen RM usage",
+        data: [
+          this.filtered_daily_ingredients[0].amount ? this.filtered_daily_ingredients[0].amount : 0,
+        ]
       },
       {
-        name: "Theoretical usage amount",
-        data: this.pos_daily_usage.map(item => (item.amount + (-1) * (0.5 - Math.random()) * item.amount * Math.random()))
-      }
-    ]
-    this.pos_daily_usage_comparison.xaxis.categories = [
-      ...this.pos_daily_usage.map((item) => item.name)
-    ]
-
-    this.pos_daily_ingredient_comparison.series = [
-      {
-        name: "Real ingredient usage amount",
-        data: this.pos_daily_ingredient.map((item) => item.amount)
+        name: "POS RM usage",
+        data: [
+          this.filtered_pos_daily_ingredient[0].amount ? this.filtered_pos_daily_ingredient[0].amount : 0,
+        ]
       },
       {
-        name: "Theoretical ingredient usage amount",
-        data: this.pos_daily_ingredient.map(item => (item.amount + (-1) * (0.5 - Math.random()) * item.amount * Math.random()))
-      }
+        name: "Kitchen dispose",
+        data: [
+          this.filtered_daily_ingredients_dispose[0].dispose_amount ? this.filtered_daily_ingredients_dispose[0].dispose_amount : 0,
+        ]
+      },
     ]
-    this.pos_daily_ingredient_comparison.xaxis.categories = [
-      ...this.pos_daily_ingredient.map((item) => item.name)
+    this.netsale_material_waste_comparison.series = [
+      this.netsale,
+      this.filtered_daily_ingredients[0].price ? this.filtered_daily_ingredients[0].price : 0,
+      this.filtered_daily_ingredients_dispose[0].price ? this.filtered_daily_ingredients_dispose[0].price : 0
     ]
-
-
-    this.netsale_material_waste_comparison.series = [2109.3, 981.2, 350.3]
     this.netsale_material_waste_comparison.labels = ["Netsale", "Material cost", "Waste cost"]
+  }
+  filter_item_change(){
+    this.filtered_daily_finished_products = []
+    setTimeout(() => {
+      this.filtered_daily_finished_products = [...this.daily_finished_products.filter(item => item.name.toLowerCase() == this.selected_finished_product.toLowerCase())]
+      this.filtered_pos_daily_usage = [...this.pos_daily_usage.filter(item => item.name.toLowerCase() == this.selected_finished_product.toLowerCase())]
+      this.filtered_pos_daily_dispose = [...this.pos_daily_dispose.filter(item => item.name.toLowerCase() == this.selected_finished_product.toLowerCase())]
 
+      this.filtered_daily_ingredients = [...this.daily_ingredients.filter(item => item.name.toLowerCase() == this.selected_finished_product.toLowerCase())]
+      this.filtered_daily_ingredients_dispose = [...this.daily_ingredients_dispose.filter(item => item.name.toLowerCase() == this.selected_finished_product.toLowerCase())]
+      this.filtered_pos_daily_ingredient = [...this.pos_daily_ingredient.filter(item => item.name.toLowerCase() == this.selected_finished_product.toLowerCase())]
+      this.group_filtered_data()
+    }, 100)
+  }
+  select_item(name){
+    this.selected_finished_product = name
+    this.filter_item_change()
   }
 }

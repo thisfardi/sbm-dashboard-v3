@@ -158,10 +158,10 @@ export class UsageReportComponent implements OnInit {
 
     this.finished_products = [
     ]
-  
+
     this.daily_ingredients = [
     ]
-  
+
     this.daily_waste = [
     ]
 
@@ -210,7 +210,7 @@ export class UsageReportComponent implements OnInit {
     })
     this.selected_finished_product = this.finished_products.length != 0 ? this.uniq_finished_products_name[1] : this.uniq_finished_products_name["All items"]
     this.filter_item_change()
-    
+
 
     if(data.hasOwnProperty('ingredient_list')){
       this.daily_ingredients = data.ingredient_list.map(item => {
@@ -243,7 +243,7 @@ export class UsageReportComponent implements OnInit {
 
   render_charts(){
 
-    
+
     this.daily_finished_products_amount.series = [
       {
         name: "Amount",
@@ -259,6 +259,7 @@ export class UsageReportComponent implements OnInit {
         ...this.filtered_finished_products.map((item) => item.finished_time.split(' ')[1])
       ]
     }
+    console.log(this.daily_finished_products_amount)
 
     this.daily_finished_products_price.series = [
       {
@@ -266,7 +267,7 @@ export class UsageReportComponent implements OnInit {
         data: this.filtered_finished_products.map((item) => item.price)
       }
     ]
-    
+
     if(this.selected_finished_product == "All items"){
       this.daily_finished_products_price.xaxis.categories = [
         ...this.filtered_finished_products.map((item) => item.name)

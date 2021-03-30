@@ -536,7 +536,7 @@ const daily_ingredients_price_chart: ChartType = {
             if(parseInt(value) > 1000){
               return '$'+(Math.floor(value / 1000 * 100) / 100).toString() + 'k'
             }else{
-              return '$'+(Math.floor(value * 100) / 100).toString() 
+              return '$'+(Math.floor(value * 100) / 100).toString()
             }
 
           }
@@ -1131,7 +1131,7 @@ const pos_daily_ingredient_price_chart: ChartType = {
 const daily_finished_products_comparison_chart: ChartType = {
   chart: {
     height: 380,
-    type: 'line',
+    type: 'bar',
     stacked: false,
     toolbar: {
       show: false
@@ -1140,33 +1140,8 @@ const daily_finished_products_comparison_chart: ChartType = {
   dataLabels: {
     enabled: false
   },
-  stroke: {
-    width: [2, 2],
-    curve: 'smooth'
-  },
-  markers: {
-    size: 4,
-    colors: undefined,
-    strokeColors: '#fff',
-    strokeWidth: 2,
-    strokeOpacity: 0.9,
-    strokeDashArray: 0,
-    fillOpacity: 1,
-    discrete: [],
-    shape: "circle",
-    radius: 2,
-    offsetX: 0,
-    offsetY: 0,
-    onClick: undefined,
-    onDblClick: undefined,
-    showNullDataPoints: true,
-    hover: {
-      size: undefined,
-      sizeOffset: 3
-    }
-  },
   series: [],
-  colors: ['#5369f8', '#A4303F'],
+  colors: ['#5369f8', '#A4303F', '#444'],
     xaxis: {
       categories: [],
     },
@@ -1215,7 +1190,7 @@ const daily_finished_products_comparison_chart: ChartType = {
 const pos_daily_usage_comparison_chart: ChartType = {
   chart: {
     height: 380,
-    type: 'line',
+    type: 'bar',
     stacked: false,
     toolbar: {
       show: false
@@ -1224,33 +1199,8 @@ const pos_daily_usage_comparison_chart: ChartType = {
   dataLabels: {
     enabled: false
   },
-  stroke: {
-    width: [2, 2],
-    curve: 'smooth'
-  },
-  markers: {
-    size: 4,
-    colors: undefined,
-    strokeColors: '#fff',
-    strokeWidth: 2,
-    strokeOpacity: 0.9,
-    strokeDashArray: 0,
-    fillOpacity: 1,
-    discrete: [],
-    shape: "circle",
-    radius: 2,
-    offsetX: 0,
-    offsetY: 0,
-    onClick: undefined,
-    onDblClick: undefined,
-    showNullDataPoints: true,
-    hover: {
-      size: undefined,
-      sizeOffset: 3
-    }
-  },
   series: [],
-  colors: ['#5369f8', '#A4303F'],
+  colors: ['#5369f8', '#A4303F', '#444'],
     xaxis: {
       categories: [],
     },
@@ -1299,7 +1249,7 @@ const pos_daily_usage_comparison_chart: ChartType = {
 const pos_daily_ingredient_comparison_chart: ChartType = {
   chart: {
     height: 380,
-    type: 'line',
+    type: 'bar',
     stacked: false,
     toolbar: {
       show: false
@@ -1308,33 +1258,8 @@ const pos_daily_ingredient_comparison_chart: ChartType = {
   dataLabels: {
     enabled: false
   },
-  stroke: {
-    width: [2, 2],
-    curve: 'smooth'
-  },
-  markers: {
-    size: 4,
-    colors: undefined,
-    strokeColors: '#fff',
-    strokeWidth: 2,
-    strokeOpacity: 0.9,
-    strokeDashArray: 0,
-    fillOpacity: 1,
-    discrete: [],
-    shape: "circle",
-    radius: 2,
-    offsetX: 0,
-    offsetY: 0,
-    onClick: undefined,
-    onDblClick: undefined,
-    showNullDataPoints: true,
-    hover: {
-      size: undefined,
-      sizeOffset: 3
-    }
-  },
   series: [],
-  colors: ['#5369f8', '#A4303F'],
+  colors: ['#5369f8', '#A4303F', '#444'],
     xaxis: {
       categories: [],
     },
@@ -1380,6 +1305,7 @@ const pos_daily_ingredient_comparison_chart: ChartType = {
       }
     }]
 };
+
 const netsale_material_waste_comparison_chart: ChartType = {
     chart: {
         height: 380,

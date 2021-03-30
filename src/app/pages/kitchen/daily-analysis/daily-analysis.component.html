@@ -20,7 +20,13 @@
                 <ng-select [items]="shop_names" [(ngModel)]='filter_shop_name' [ngModelOptions]="{standalone: true}"></ng-select>
               </div>
             </div>
-            
+            <div class="form-group mb-2">
+              <label class="col-form-label mr-3">Producted item </label>
+              <app-miniloader [display]='history_loading'></app-miniloader>
+              <div *ngIf='!history_loading'>
+                <ng-select [items]="uniq_finished_products_name" [(ngModel)]='selected_finished_product' [ngModelOptions]="{standalone: true}" (change)="filter_item_change()"></ng-select>
+              </div>
+            </div>
             <div class="form-group ml-auto mr-2 mb-2">
               <label class="col-form-label mr-3">Select date range</label>
               <ng-select [items]="date_ranges['labels']" [(ngModel)]='filter_range' [ngModelOptions]="{standalone: true}" (change)="filter_range_change()"></ng-select>
@@ -32,27 +38,37 @@
         </div>
       </div>
     </div>
-    <div class="col-md-12">
+    <div class="col-md-4">
       <div class="card">
         <div class="card-body" style="min-height: 451px;">
-          <h5 class="card-title mt-0 mb-0 header-title">Real production and theoretical production comparison</h5>
-          <div *ngIf="daily_finished_products.length != 0">
+          <h5 class="card-title mt-0 mb-0 header-title">
+            Cook, POS usage & Disposal compare
+            <span *ngIf="filtered_daily_finished_products.length != 0 && filtered_daily_finished_products[0].amount != 0">
+              (Dispose ratio: {{filtered_pos_daily_dispose[0].dispose_amount / filtered_daily_finished_products[0].amount | percent: '0.1-1'}})
+            </span>
+          </h5>
+          <div *ngIf="daily_finished_products_comparison.series.length != 0">
             <apx-chart [series]="daily_finished_products_comparison.series" [chart]="daily_finished_products_comparison.chart"
               [tooltip]="daily_finished_products_comparison.tooltip" [yaxis]="daily_finished_products_comparison.yaxis"
               [legend]="daily_finished_products_comparison.legend" [grid]="daily_finished_products_comparison.grid"
               [dataLabels]="daily_finished_products_comparison.dataLabels" [stroke]="daily_finished_products_comparison.stroke"
               [xaxis]="daily_finished_products_comparison.xaxis" [colors]="daily_finished_products_comparison.colors"
-              [responsive]="daily_finished_products_comparison.responsive" [markers]="daily_finished_products_comparison.markers">
+              [responsive]="daily_finished_products_comparison.responsive">
             </apx-chart>
           </div>
         </div>
       </div>
     </div>
-    <div class="col-md-12">
+    <div class="col-md-4">
       <div class="card">
         <div class="card-body" style="min-height: 451px;">
-          <h5 class="card-title mt-0 mb-0 header-title">POS item usage and theoretical usage comparison</h5>
-          <div *ngIf="pos_daily_ingredient.length != 0">
+          <h5 class="card-title mt-0 mb-0 header-title">
+            Raw material and Disposal
+            <span *ngIf="filtered_daily_ingredients.length != 0 && filtered_daily_ingredients[0].amount != 0">
+              (Dispose ratio: {{filtered_daily_ingredients_dispose[0].dispose_amount / filtered_daily_ingredients[0].amount | percent: '0.1-1'}})
+            </span>
+          </h5>
+          <div *ngIf="pos_daily_usage_comparison.series.length != 0">
             <apx-chart [series]="pos_daily_usage_comparison.series" [chart]="pos_daily_usage_comparison.chart"
               [tooltip]="pos_daily_usage_comparison.tooltip" [yaxis]="pos_daily_usage_comparison.yaxis"
               [legend]="pos_daily_usage_comparison.legend" [grid]="pos_daily_usage_comparison.grid"
@@ -64,27 +80,11 @@
         </div>
       </div>
     </div>
-    <div class="col-md-8">
-      <div class="card">
-        <div class="card-body" style="min-height: 451px;">
-          <h5 class="card-title mt-0 mb-0 header-title">POS ingredient usage and theoretical usage comparison</h5>
-          <div *ngIf="pos_daily_ingredient.length != 0">
-            <apx-chart [series]="pos_daily_ingredient_comparison.series" [chart]="pos_daily_ingredient_comparison.chart"
-              [tooltip]="pos_daily_ingredient_comparison.tooltip" [yaxis]="pos_daily_ingredient_comparison.yaxis"
-              [legend]="pos_daily_ingredient_comparison.legend" [grid]="pos_daily_ingredient_comparison.grid"
-              [dataLabels]="pos_daily_ingredient_comparison.dataLabels" [stroke]="pos_daily_ingredient_comparison.stroke"
-              [xaxis]="pos_daily_ingredient_comparison.xaxis" [colors]="pos_daily_ingredient_comparison.colors"
-              [responsive]="pos_daily_ingredient_comparison.responsive" [markers]="pos_daily_ingredient_comparison.markers">
-            </apx-chart>
-          </div>
-        </div>
-      </div>
-    </div>
     <div class="col-md-4">
       <div class="card">
         <div class="card-body" style="min-height: 451px;">
           <h5 class="card-title mt-0 mb-0 header-title">Netsale, Material cost, Waste cost comparison</h5>
-          <div *ngIf="pos_daily_usage.length != 0">
+          <div *ngIf="netsale != 0 && netsale_material_waste_comparison.series.length != 0">
             <apx-chart [series]="netsale_material_waste_comparison.series" [chart]="netsale_material_waste_comparison.chart"
               [labels]="netsale_material_waste_comparison.labels" [dataLabels]="netsale_material_waste_comparison.dataLabels"
               [legend]="netsale_material_waste_comparison.legend" [colors]="netsale_material_waste_comparison.colors"
