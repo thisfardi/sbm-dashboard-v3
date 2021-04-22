@@ -22,7 +22,18 @@ import { PosReportComponent } from './pos-report/pos-report.component';
 import { DailyAnalysisComponent } from './daily-analysis/daily-analysis.component';
 import { InventoryAnalysisComponent } from './inventory-analysis/inventory-analysis.component';
 import { UsagePerThousandComponent } from './usage-per-thousand/usage-per-thousand.component';
+import { FusionChartsModule } from 'angular-fusioncharts';
 
+// Load FusionCharts
+import * as FusionCharts from 'fusioncharts';
+// Load Charts module
+import * as Charts from 'fusioncharts/fusioncharts.charts';
+// Load fusion theme
+import * as Fusion from 'fusioncharts/themes/fusioncharts.theme.fusion'
+
+import * as Power from "fusioncharts/fusioncharts.powercharts";
+
+FusionChartsModule.fcRoot(FusionCharts, Charts, Fusion, Power);
 @NgModule({
     imports: [
         CommonModule,
@@ -33,7 +44,8 @@ import { UsagePerThousandComponent } from './usage-per-thousand/usage-per-thousa
         FormsModule,
         WidgetModule,
         NgbAlertModule,
-        NgApexchartsModule
+        NgApexchartsModule,
+        FusionChartsModule
     ],
     // tslint:disable-next-line: max-line-length
     declarations: [ItemComponent, RawComponent, UsageReportComponent, PosReportComponent, DailyAnalysisComponent, InventoryAnalysisComponent, UsagePerThousandComponent]

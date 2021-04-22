@@ -1344,6 +1344,23 @@ const netsale_material_waste_comparison_chart: ChartType = {
     }]
 };
 
+const netsale_cook_dispose_compare_piechart = {
+  width: '100%',
+  height: 400,
+  type: "pie3d",
+  dataFormat: "json",
+  dataSource: {
+    chart: {
+      showvalues: "1",
+      showpercentintooltip: "0",
+      numberprefix: "$",
+      enablemultislicing: "1",
+      theme: "fusion"
+    },
+    data: []
+  }
+}
+
 export {
   amountChart, ratioChart, itemChart,
   daily_finished_products_amount_chart,
@@ -1361,5 +1378,6 @@ export {
   daily_finished_products_comparison_chart,
   pos_daily_usage_comparison_chart,
   pos_daily_ingredient_comparison_chart,
-  netsale_material_waste_comparison_chart
+  netsale_material_waste_comparison_chart,
+  netsale_cook_dispose_compare_piechart
 };

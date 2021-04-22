@@ -14,7 +14,7 @@ import {
   daily_finished_products_comparison_chart,
   pos_daily_usage_comparison_chart,
   pos_daily_ingredient_comparison_chart,
-  netsale_material_waste_comparison_chart
+  netsale_cook_dispose_compare_piechart
 } from '../data';
 
 
@@ -47,7 +47,7 @@ export class DailyAnalysisComponent implements OnInit {
   daily_finished_products_comparison: ChartType
   pos_daily_usage_comparison: ChartType
   pos_daily_ingredient_comparison: ChartType
-  netsale_material_waste_comparison: ChartType
+  netsale_cook_dispose_compare_piechart: any
 
   filtered_daily_finished_products = []
   uniq_finished_products_code = []
@@ -67,6 +67,7 @@ export class DailyAnalysisComponent implements OnInit {
   filtered_daily_ingredients_dispose = []
   filtered_pos_daily_ingredient = []
 
+
   constructor(
     private apiService: ApiService,
     private cookieService: CookieService,
@@ -79,7 +80,7 @@ export class DailyAnalysisComponent implements OnInit {
     this.daily_finished_products_comparison = daily_finished_products_comparison_chart
     this.pos_daily_usage_comparison = pos_daily_usage_comparison_chart
     this.pos_daily_ingredient_comparison = pos_daily_ingredient_comparison_chart
-    this.netsale_material_waste_comparison = netsale_material_waste_comparison_chart
+    this.netsale_cook_dispose_compare_piechart = netsale_cook_dispose_compare_piechart
 
     this.date_ranges = {
       labels: ['Today', 'Yesterday', 'This week', 'Last week', 'This month', 'Last month', 'This year', 'Last year', 'All time', 'Custom range'],
@@ -178,7 +179,7 @@ export class DailyAnalysisComponent implements OnInit {
             this.netsale = data['data'].netsale.reduce((netsale, item) => {
               return netsale += parseFloat(item['netsale'])
             }, 0)
-            console.log(this.netsale)
+
             this._fetchHistoryData()
           }else{
             this.db_error = true;
@@ -283,7 +284,6 @@ export class DailyAnalysisComponent implements OnInit {
   }
 
   set_data(data){
-    console.log(data)
     if(data.hasOwnProperty('producted_list')){
       this.daily_finished_products = data.producted_list.map(item => {
         return {
@@ -448,54 +448,88 @@ export class DailyAnalysisComponent implements OnInit {
     this.render_chart()
   }
   render_chart(){
-    this.daily_finished_products_comparison.xaxis.categories = [this.filtered_daily_finished_products[0].name ? this.filtered_daily_finished_products[0].name : '']
-    this.daily_finished_products_comparison.series = [
-      {
-        name: "Kitchen cook",
-        data: [
-          this.filtered_daily_finished_products[0].amount ? this.filtered_daily_finished_products[0].amount : 0,
-        ]
-      },
-      {
-        name: "POS usage",
-        data: [
-          this.filtered_pos_daily_usage[0].amount ? this.filtered_pos_daily_usage[0].amount : 0,
-        ]
-      },
-      {
-        name: "POS disposal",
-        data: [
-          this.filtered_pos_daily_dispose[0].dispose_amount ? this.filtered_pos_daily_dispose[0].dispose_amount : 0,
-        ]
-      }
-    ]
-    this.pos_daily_usage_comparison.xaxis.categories = [this.filtered_daily_ingredients[0].name ? this.filtered_daily_ingredients[0].name : '']
-    this.pos_daily_usage_comparison.series = [
-      {
+    // Cook, POS usage & Disposal compare
+    this.daily_finished_products_comparison.xaxis.categories = []
+    this.daily_finished_products_comparison.series = []
+    if(this.filtered_daily_finished_products.length > 0){
+      this.daily_finished_products_comparison.xaxis.categories.push(this.filtered_daily_finished_products[0].name ? this.filtered_daily_finished_products[0].name : '')
+      this.daily_finished_products_comparison.series.push(
+        {
+          name: "Kitchen cook",
+          data: [
+            this.filtered_daily_finished_products[0].amount ? this.filtered_daily_finished_products[0].amount : 0
+          ]
+        }
+      )
+    }
+    if(this.filtered_pos_daily_usage.length > 0){
+      this.daily_finished_products_comparison.series.push(
+        {
+          name: "POS usage",
+          data: [
+            this.filtered_pos_daily_usage[0].amount ? this.filtered_pos_daily_usage[0].amount : 0
+          ]
+        }
+      )
+    }
+    if(this.filtered_pos_daily_dispose.length > 0){
+      this.daily_finished_products_comparison.series.push(
+        {
+          name: "POS disposal",
+          data: [
+            this.filtered_pos_daily_dispose[0].dispose_amount ? this.filtered_pos_daily_dispose[0].dispose_amount : 0
+          ]
+        }
+      )
+    }
+
+    // Raw material and Disposal
+    this.pos_daily_usage_comparison.xaxis.categories = []
+    this.pos_daily_usage_comparison.series = []
+    if(this.filtered_daily_ingredients.length > 0) {
+      this.pos_daily_usage_comparison.xaxis.categories.push(this.filtered_daily_ingredients[0].name ? this.filtered_daily_ingredients[0].name : '')
+      this.pos_daily_usage_comparison.series.push({
         name: "Kitchen RM usage",
         data: [
           this.filtered_daily_ingredients[0].amount ? this.filtered_daily_ingredients[0].amount : 0,
         ]
-      },
-      {
+      })
+    }
+    if(this.filtered_pos_daily_ingredient.length > 0){
+      this.pos_daily_usage_comparison.series.push({
         name: "POS RM usage",
         data: [
           this.filtered_pos_daily_ingredient[0].amount ? this.filtered_pos_daily_ingredient[0].amount : 0,
         ]
-      },
-      {
+      })
+    }
+    if(this.filtered_daily_ingredients_dispose.length > 0){
+      this.pos_daily_usage_comparison.series.push({
         name: "Kitchen dispose",
         data: [
           this.filtered_daily_ingredients_dispose[0].dispose_amount ? this.filtered_daily_ingredients_dispose[0].dispose_amount : 0,
         ]
-      },
-    ]
-    this.netsale_material_waste_comparison.series = [
-      this.netsale,
-      this.filtered_daily_ingredients[0].price ? this.filtered_daily_ingredients[0].price : 0,
-      this.filtered_daily_ingredients_dispose[0].price ? this.filtered_daily_ingredients_dispose[0].price : 0
-    ]
-    this.netsale_material_waste_comparison.labels = ["Netsale", "Material cost", "Waste cost"]
+      })
+    }
+
+    // Netsale, Material cost, Waste cost comparison
+    this.netsale_cook_dispose_compare_piechart.dataSource.data = []
+    this.netsale_cook_dispose_compare_piechart.dataSource.data.push({
+      label: "Netsale",
+      value: this.netsale
+    })
+    if(this.filtered_daily_ingredients.length > 0){
+      this.netsale_cook_dispose_compare_piechart.dataSource.data.push({
+        label: "Material cost",
+        value: this.filtered_daily_ingredients[0].price ? this.filtered_daily_ingredients[0].price : 0
+      })
+    }
+    if(this.filtered_daily_ingredients_dispose.length > 0){
+      this.netsale_cook_dispose_compare_piechart.dataSource.data.push({
+        label: "Waste cost",
+        value: this.filtered_daily_ingredients_dispose[0].price ? this.filtered_daily_ingredients_dispose[0].price : 0
+      })
+    }
   }
   filter_item_change(){
     this.filtered_daily_finished_products = []

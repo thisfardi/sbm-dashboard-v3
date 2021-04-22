@@ -38,7 +38,7 @@
         </div>
       </div>
     </div>
-    <div class="col-md-4">
+    <div class="col-md-6">
       <div class="card">
         <div class="card-body" style="min-height: 451px;">
           <h5 class="card-title mt-0 mb-0 header-title">
@@ -59,13 +59,13 @@
         </div>
       </div>
     </div>
-    <div class="col-md-4">
+    <div class="col-md-6">
       <div class="card">
         <div class="card-body" style="min-height: 451px;">
           <h5 class="card-title mt-0 mb-0 header-title">
             Raw material and Disposal
             <span *ngIf="filtered_daily_ingredients.length != 0 && filtered_daily_ingredients[0].amount != 0">
-              (Dispose ratio: {{filtered_daily_ingredients_dispose[0].dispose_amount / filtered_daily_ingredients[0].amount | percent: '0.1-1'}})
+              (Dispose ratio: {{filtered_daily_ingredients_dispose[0].dispose_amount ? filtered_daily_ingredients_dispose[0].dispose_amount / filtered_daily_ingredients[0].amount : 0 | percent: '0.1-1'}})
             </span>
           </h5>
           <div *ngIf="pos_daily_usage_comparison.series.length != 0">
@@ -80,17 +80,27 @@
         </div>
       </div>
     </div>
-    <div class="col-md-4">
+    <div class="col-md-6">
       <div class="card">
         <div class="card-body" style="min-height: 451px;">
           <h5 class="card-title mt-0 mb-0 header-title">Netsale, Material cost, Waste cost comparison</h5>
-          <div *ngIf="netsale != 0 && netsale_material_waste_comparison.series.length != 0">
-            <apx-chart [series]="netsale_material_waste_comparison.series" [chart]="netsale_material_waste_comparison.chart"
-              [labels]="netsale_material_waste_comparison.labels" [dataLabels]="netsale_material_waste_comparison.dataLabels"
-              [legend]="netsale_material_waste_comparison.legend" [colors]="netsale_material_waste_comparison.colors"
-              [responsive]="netsale_material_waste_comparison.responsive">
-            </apx-chart>
+          <div *ngIf="netsale != 0">
+            <fusioncharts
+              [width]="netsale_cook_dispose_compare_piechart.width"
+              [height]="netsale_cook_dispose_compare_piechart.height"
+              [type]="netsale_cook_dispose_compare_piechart.type"
+              [dataFormat]="netsale_cook_dispose_compare_piechart.dataFormat"
+              [dataSource]="netsale_cook_dispose_compare_piechart.dataSource"
+            >
+            </fusioncharts>
           </div>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-6">
+      <div class="card">
+        <div class="card-body" style="min-height: 451px">
+          <h5 class="card-title mt-0 mb-0 header-title">Overview | {{filter_shop_name}} | {{filter_range}}</h5>
         </div>
       </div>
     </div>
