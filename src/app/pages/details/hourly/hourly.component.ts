@@ -168,6 +168,9 @@ export class HourlyComponent implements OnInit {
         this.empty_data = false;
         this.db_error = false;
         this.hourly_loading = true;
+        this.total_trans = 0
+        this.total_article = 0
+        this.total_amount = 0
         this.apiService.hourly_detail(this.parseService.encode({
             from: moment(this.dash_date).format('YYYY-MM-DD'),
             to: moment(this.dash_date).format('YYYY-MM-DD'),
