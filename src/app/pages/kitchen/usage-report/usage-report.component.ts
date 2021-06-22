@@ -7,7 +7,7 @@ import { ParseService } from '../../../core/services/parse.service';
 import { CookieService } from '../../../core/services/cookie.service';
 import { ExportService } from '../../../core/services/export.service';
 import { HistoryService } from '../../../core/services/history.service';
-
+import { AuthenticationService } from '../../../core/services/auth.service';
 import { ChartType } from '../charts.model';
 import {
   daily_finished_products_amount_chart,
@@ -25,7 +25,7 @@ import {
 export class UsageReportComponent implements OnInit {
 
   constructor(
-    private apiService: ApiService, private cookieService: CookieService, private parseService: ParseService, public exportService: ExportService, public historyService: HistoryService
+    private apiService: ApiService, private cookieService: CookieService, private parseService: ParseService, private authService: AuthenticationService, public exportService: ExportService, public historyService: HistoryService
   ) { }
 
   company: string = JSON.parse(this.cookieService.getCookie('currentUser')).company;
@@ -125,16 +125,20 @@ export class UsageReportComponent implements OnInit {
     this.shops = [];
     this.error = ''
     this.shop_loading = true;
+    let user_shops = JSON.parse(this.authService.currentUser().shop_name)
     this.apiService.shops(this.parseService.encode({
-      db: JSON.parse(this.cookieService.getCookie('currentUser')).database
+      db: JSON.parse(this.cookieService.getCookie('currentUser')).database,
+      servername: this.authService.currentUser().servername,
+      serverpassword: this.authService.currentUser().serverpassword,
+      uid: this.authService.currentUser().uid
     }))
       .pipe(first())
       .subscribe(
         data => {
           this.shop_loading = false;
           if(data['status'] == 'success'){
-            this.shops = [...data['data']]
-            this.shop_names = data['data'].map(item => item.description)
+            this.shops = [...data['data'].filter(item => user_shops.indexOf(item.description) != -1)]
+            this.shop_names = this.shops.map(item => item.description)
             this.filter_shop_name = this.shop_names[0]
             this.selected_shop_id = this.shops.filter(item => item.description == this.filter_shop_name)[0].id
             this._fetchHistoryData()
@@ -151,7 +155,7 @@ export class UsageReportComponent implements OnInit {
   }
   _fetchHistoryData(){
     this.error = ''
-    this.selected_shop_id = this.shops.filter(item => item.description == this.filter_shop_name)[0].id
+    this.selected_shop_id = this.shops.filter(item => item.description == this.filter_shop_name)[0].code
     this.filter_date['from'] = moment(this.filter_date['from']).format('YYYY-MM-DD');
     this.filter_date['to'] = this.filter_date['to'] ? moment(this.filter_date['to']).format('YYYY-MM-DD') : this.filter_date['from'];
     this.history_loading = true
@@ -167,6 +171,7 @@ export class UsageReportComponent implements OnInit {
 
     this.apiService.getKitchenHistory({
       shop_id: this.selected_shop_id,
+      type: 4,
       date_range: {
         from: this.filter_date['from'],
         to: this.filter_date['to']
@@ -259,7 +264,6 @@ export class UsageReportComponent implements OnInit {
         ...this.filtered_finished_products.map((item) => item.finished_time.split(' ')[1])
       ]
     }
-    console.log(this.daily_finished_products_amount)
 
     this.daily_finished_products_price.series = [
       {

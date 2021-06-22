@@ -7,6 +7,7 @@ import { ParseService } from '../../../core/services/parse.service';
 import { CookieService } from '../../../core/services/cookie.service';
 import { ExportService } from '../../../core/services/export.service';
 import { HistoryService } from '../../../core/services/history.service';
+import { AuthenticationService } from '../../../core/services/auth.service';
 
 @Component({
     selector: 'app-monthly',
@@ -33,7 +34,7 @@ export class MonthlyComponent implements OnInit {
 
     is_happy_lemon: Boolean = false;
 
-    constructor(private apiService: ApiService, private cookieService: CookieService, private parseService: ParseService, public exportService: ExportService, public historyService: HistoryService) { }
+    constructor(private apiService: ApiService, private cookieService: CookieService, private authService: AuthenticationService, private parseService: ParseService, public exportService: ExportService, public historyService: HistoryService) { }
 
     ngOnInit() {
         this.filter_shop = this.shops[0];
@@ -113,6 +114,9 @@ export class MonthlyComponent implements OnInit {
             shop: this.filter_shop,
             from: this.filter_date['from'],
             to: this.filter_date['to'],
+            servername: this.authService.currentUser().servername,
+            serverpassword: this.authService.currentUser().serverpassword,
+            uid: this.authService.currentUser().uid
         }))
             .pipe(first())
             .subscribe(

@@ -3,7 +3,7 @@ import { first } from 'rxjs/operators';
 
 import { ApiService } from '../../../core/services/api.service';
 import { ParseService } from '../../../core/services/parse.service';
-
+import { AuthenticationService } from '../../../core/services/auth.service';
 import { AdminService } from '../admin.service';
 
 @Component({
@@ -13,7 +13,7 @@ import { AdminService } from '../admin.service';
 })
 export class ShopsComponent implements OnInit {
 
-    constructor(private adminService: AdminService, private apiService: ApiService, private parseService: ParseService) { }
+    constructor(private adminService: AdminService, private authService: AuthenticationService, private apiService: ApiService, private parseService: ParseService) { }
 
     shops: Object;
     database: Object;
@@ -43,7 +43,11 @@ export class ShopsComponent implements OnInit {
 
     // API call
     _fetchDatabase() {
-        this.apiService.database()
+        this.apiService.database(this.parseService.encode({
+            servername: this.authService.currentUser().servername,
+            serverpassword: this.authService.currentUser().serverpassword,
+            uid: this.authService.currentUser().uid
+          }))
             .pipe(first())
             .subscribe(
                 data => {
@@ -62,7 +66,10 @@ export class ShopsComponent implements OnInit {
         this.shops = [];
         this.shop_loading = true;
         this.apiService.shops(this.parseService.encode({
-            db: db
+            db: db,
+            servername: this.authService.currentUser().servername,
+            serverpassword: this.authService.currentUser().serverpassword,
+            uid: this.authService.currentUser().uid
         }))
             .pipe(first())
             .subscribe(

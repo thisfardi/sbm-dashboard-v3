@@ -34,6 +34,12 @@ export class ApiService {
                 return res;
             }));
     }
+    install(data) {
+        return this.http.post(`${api_url}/auth/install`, data)
+            .pipe(map(res => {
+                return res;
+            }));
+    }
     logHistory(data) {
         return this.http.post(`${api_url}/auth/logHistory`, data)
             .pipe(map(res => {
@@ -46,14 +52,14 @@ export class ApiService {
                 return res;
             }));
     }
-    users() {
-        return this.http.post(`${api_url}/auth/all_users`, {})
+    users(data) {
+        return this.http.post(`${api_url}/auth/all_users`, data)
             .pipe(map(res => {
                 return res;
             }))
     }
-    database() {
-        return this.http.post(`${api_url}/auth/${ db }`, {})
+    database(data) {
+        return this.http.post(`${api_url}/auth/${ db }`, data)
             .pipe(map(res => {
                 return res;
             }))

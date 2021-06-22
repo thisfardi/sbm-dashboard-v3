@@ -7,7 +7,7 @@ import { ParseService } from '../../../core/services/parse.service';
 import { CookieService } from '../../../core/services/cookie.service';
 import { ExportService } from '../../../core/services/export.service';
 import { HistoryService } from '../../../core/services/history.service';
-
+import { AuthenticationService } from '../../../core/services/auth.service';
 import { ChartType } from '../charts.model';
 import {
   pos_daily_usage_amount_chart,
@@ -56,7 +56,7 @@ export class PosReportComponent implements OnInit {
   pos_daily_ingredient = [
   ]
 
-  constructor(private apiService: ApiService, private cookieService: CookieService, private parseService: ParseService, public exportService: ExportService, public historyService: HistoryService) { }
+  constructor(private apiService: ApiService, private cookieService: CookieService, private authService: AuthenticationService, private parseService: ParseService, public exportService: ExportService, public historyService: HistoryService) { }
 
   ngOnInit() {
     this.pos_daily_usage_amount = pos_daily_usage_amount_chart
@@ -118,7 +118,10 @@ export class PosReportComponent implements OnInit {
     this.error = ''
     this.shop_loading = true;
     this.apiService.shops(this.parseService.encode({
-      db: JSON.parse(this.cookieService.getCookie('currentUser')).database
+      db: JSON.parse(this.cookieService.getCookie('currentUser')).database,
+      servername: this.authService.currentUser().servername,
+      serverpassword: this.authService.currentUser().serverpassword,
+      uid: this.authService.currentUser().uid
     }))
       .pipe(first())
       .subscribe(
@@ -151,7 +154,7 @@ export class PosReportComponent implements OnInit {
 
     this.pos_daily_usage = [
     ]
-  
+
     this.pos_daily_ingredient = [
     ]
     this.apiService.getKitchenHistory({
@@ -255,7 +258,7 @@ export class PosReportComponent implements OnInit {
       this.selected_pos_daily_usage_item = "All items"
       this.filterd_pos_daily_usage = [...this.pos_daily_usage]
     }
-    
+
     if(data.hasOwnProperty('pos_ingredients_used')){
       this.pos_daily_ingredient = data.pos_ingredients_used.map(item => {
         return {

@@ -9,7 +9,7 @@ import { ParseService } from '../../../core/services/parse.service';
 import { CookieService } from '../../../core/services/cookie.service';
 import { ExportService } from '../../../core/services/export.service';
 import { HistoryService } from '../../../core/services/history.service';
-
+import { AuthenticationService } from '../../../core/services/auth.service';
 import { AdminService } from '../admin.service';
 
 @Component({
@@ -40,7 +40,7 @@ export class UserEventsComponent implements OnInit {
     current_status: string = 'Offline';
     last_login: string;
 
-    constructor(private adminService: AdminService, private apiService: ApiService, private cookieService: CookieService, private parseService: ParseService, public exportService: ExportService, public historyService: HistoryService) { }
+    constructor(private adminService: AdminService, private apiService: ApiService, private authService: AuthenticationService, private cookieService: CookieService, private parseService: ParseService, public exportService: ExportService, public historyService: HistoryService) { }
 
     ngOnInit() {
         this.date_ranges = {
@@ -125,6 +125,9 @@ export class UserEventsComponent implements OnInit {
             user: this.filter_user,
             from: this.filter_date['from'],
             to: this.filter_date['to'],
+            servername: this.authService.currentUser().servername,
+            serverpassword: this.authService.currentUser().serverpassword,
+            uid: this.authService.currentUser().uid
         })
             .pipe(first())
             .subscribe(
@@ -150,7 +153,11 @@ export class UserEventsComponent implements OnInit {
             )
     }
     _fetchUserList() {
-        this.apiService.users()
+        this.apiService.users(this.parseService.encode({
+            servername: this.authService.currentUser().servername,
+            serverpassword: this.authService.currentUser().serverpassword,
+            uid: this.authService.currentUser().uid
+          }))
             .pipe(first())
             .subscribe(
                 data => {

@@ -6,7 +6,7 @@ import { ApiService } from '../../core/services/api.service';
 import { ParseService } from '../../core/services/parse.service';
 import { CookieService } from '../../core/services/cookie.service';
 import { HistoryService } from '../../core/services/history.service';
-
+import { AuthenticationService } from '../../core/services/auth.service';
 import { ExportService } from '../../core/services/export.service';
 
 import { revenueAreaChart, targetsBarChart, salesDonutChart, ordersData } from './data';
@@ -34,7 +34,7 @@ export class DashboardComponent implements OnInit {
   month3      = ['First 10 days', 'Second 10 days', 'Third 10 days'];
   months      = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
 
-  constructor(private apiService: ApiService, private cookieService: CookieService, private parseService: ParseService, public exportService: ExportService, public historyService: HistoryService) { }
+  constructor(private apiService: ApiService, private cookieService: CookieService, private authService: AuthenticationService, private parseService: ParseService, public exportService: ExportService, public historyService: HistoryService) { }
 
   revenueAreaChart: ChartType;
   targetsBarChart: ChartType;
@@ -190,7 +190,10 @@ export class DashboardComponent implements OnInit {
       from: this.filter_date['from'],
       to: this.filter_date['to'],
       shop: this.current_shop,
-      db: this.user_database
+      db: this.user_database,
+      servername: this.authService.currentUser().servername,
+      serverpassword: this.authService.currentUser().serverpassword,
+      uid: this.authService.currentUser().uid
     }))
       .pipe(first())
       .subscribe(
@@ -344,7 +347,10 @@ export class DashboardComponent implements OnInit {
         to: temp_to,
         shop: this.current_shop,
         db: this.user_database,
-        division: this.sale_division
+        division: this.sale_division,
+        servername: this.authService.currentUser().servername,
+        serverpassword: this.authService.currentUser().serverpassword,
+        uid: this.authService.currentUser().uid
       }))
         .pipe(first())
         .subscribe(
@@ -416,7 +422,10 @@ export class DashboardComponent implements OnInit {
           from: this.filter_date['from'],
           to: this.filter_date['to'],
           shop: this.current_shop,
-          db: this.user_database
+          db: this.user_database,
+          servername: this.authService.currentUser().servername,
+          serverpassword: this.authService.currentUser().serverpassword,
+          uid: this.authService.currentUser().uid
       }))
           .pipe(first())
           .subscribe(

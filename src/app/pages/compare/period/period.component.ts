@@ -7,7 +7,7 @@ import { ParseService } from '../../../core/services/parse.service';
 import { CookieService } from '../../../core/services/cookie.service';
 import { ExportService } from '../../../core/services/export.service';
 import { HistoryService } from '../../../core/services/history.service';
-
+import { AuthenticationService } from '../../../core/services/auth.service';
 import { netsalePeriodChart, transactionPeriodChart, avgPeriodChart, taxPeriodChart, tipPeriodChart, promotionPeriodChart, discountPeriodChart, paymentPeriodChart } from '../data';
 
 @Component({
@@ -91,7 +91,7 @@ export class PeriodComponent implements OnInit {
     discount_period_chart: Object;
     payment_period_chart: Object;
 
-    constructor(private apiService: ApiService, private cookieService: CookieService, private parseService: ParseService, public exportService: ExportService, public historyService: HistoryService) { }
+    constructor(private apiService: ApiService, private cookieService: CookieService, private authService: AuthenticationService, private parseService: ParseService, public exportService: ExportService, public historyService: HistoryService) { }
 
     ngOnInit() {
 
@@ -212,6 +212,9 @@ export class PeriodComponent implements OnInit {
             to: this.filter_date['to'],
             from_secondary: this.filter_date_secondary['from'],
             to_secondary: this.filter_date_secondary['to'],
+            servername: this.authService.currentUser().servername,
+            serverpassword: this.authService.currentUser().serverpassword,
+            uid: this.authService.currentUser().uid
         }))
             .pipe(first())
             .subscribe(
@@ -313,6 +316,9 @@ export class PeriodComponent implements OnInit {
             to: this.filter_date['to'],
             from_secondary: this.filter_date_secondary['from'],
             to_secondary: this.filter_date_secondary['to'],
+            servername: this.authService.currentUser().servername,
+            serverpassword: this.authService.currentUser().serverpassword,
+            uid: this.authService.currentUser().uid
         }))
             .pipe(first())
             .subscribe(
@@ -452,6 +458,9 @@ export class PeriodComponent implements OnInit {
             to: this.filter_date['to'],
             from_secondary: this.filter_date_secondary['from'],
             to_secondary: this.filter_date_secondary['to'],
+            servername: this.authService.currentUser().servername,
+            serverpassword: this.authService.currentUser().serverpassword,
+            uid: this.authService.currentUser().uid
         }))
             .pipe(first())
             .subscribe(

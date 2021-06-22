@@ -6,7 +6,7 @@ import { ApiService } from '../../../core/services/api.service';
 import { ParseService } from '../../../core/services/parse.service';
 import { CookieService } from '../../../core/services/cookie.service';
 import { HistoryService } from '../../../core/services/history.service';
-
+import { AuthenticationService } from '../../../core/services/auth.service';
 import { saleChart, saleDetailChart, avgChart, promotionChart, tipChart, taxChart, paymentChart, articleChart } from '../data';
 
 @Component({
@@ -41,7 +41,7 @@ export class ShopComponent implements OnInit {
 
     checked_shops = []
 
-    constructor(private apiService: ApiService, private cookieService: CookieService, private parseService: ParseService, public historyService: HistoryService) { }
+    constructor(private apiService: ApiService, private cookieService: CookieService, private authService: AuthenticationService, private parseService: ParseService, public historyService: HistoryService) { }
 
     ngOnInit() {
         
@@ -134,7 +134,10 @@ export class ShopComponent implements OnInit {
             db: this.database,
             shops: this.checked_shops,
             from: this.filter_date['from'],
-            to: this.filter_date['to']
+            to: this.filter_date['to'],
+            servername: this.authService.currentUser().servername,
+            serverpassword: this.authService.currentUser().serverpassword,
+            uid: this.authService.currentUser().uid
         }))
             .pipe(first())
             .subscribe(
@@ -162,7 +165,10 @@ export class ShopComponent implements OnInit {
             db: this.database,
             shops: this.checked_shops,
             from: this.filter_date['from'],
-            to: this.filter_date['to']
+            to: this.filter_date['to'],
+            servername: this.authService.currentUser().servername,
+            serverpassword: this.authService.currentUser().serverpassword,
+            uid: this.authService.currentUser().uid
         }))
             .pipe(first())
             .subscribe(
@@ -190,7 +196,10 @@ export class ShopComponent implements OnInit {
             db: this.database,
             shops: this.checked_shops,
             from: this.filter_date['from'],
-            to: this.filter_date['to']
+            to: this.filter_date['to'],
+            servername: this.authService.currentUser().servername,
+            serverpassword: this.authService.currentUser().serverpassword,
+            uid: this.authService.currentUser().uid
         }))
             .pipe(first())
             .subscribe(

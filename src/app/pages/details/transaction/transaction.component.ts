@@ -7,7 +7,7 @@ import { ParseService } from '../../../core/services/parse.service';
 import { CookieService } from '../../../core/services/cookie.service';
 import { ExportService } from '../../../core/services/export.service';
 import { HistoryService } from '../../../core/services/history.service';
-
+import { AuthenticationService } from '../../../core/services/auth.service';
 import { ChartType } from '../charts.model';
 import { transChart, avgChart } from '../data';
 
@@ -53,7 +53,7 @@ export class TransactionComponent implements OnInit {
     filter_range: string;
     filter_date: Object;
 
-    constructor(private apiService: ApiService, private cookieService: CookieService, private parseService: ParseService, public exportService: ExportService, public historyService: HistoryService) { }
+    constructor(private apiService: ApiService, private cookieService: CookieService, private authService: AuthenticationService, private parseService: ParseService, public exportService: ExportService, public historyService: HistoryService) { }
 
     ngOnInit() {
         this.filter_shop = this.shops[0];
@@ -117,7 +117,10 @@ export class TransactionComponent implements OnInit {
         this.causal_loading = true;
         this.f_causals = [];
         this.apiService.causals(this.parseService.encode({
-            db: this.database
+            db: this.database,
+            servername: this.authService.currentUser().servername,
+            serverpassword: this.authService.currentUser().serverpassword,
+            uid: this.authService.currentUser().uid
         }))
             .pipe(first())
             .subscribe(
@@ -157,7 +160,10 @@ export class TransactionComponent implements OnInit {
             to: this.filter_date['to'],
             d: this.f_criteria,
             group_id: this.f_group,
-            causals: this.f_causals_checked
+            causals: this.f_causals_checked,
+            servername: this.authService.currentUser().servername,
+            serverpassword: this.authService.currentUser().serverpassword,
+            uid: this.authService.currentUser().uid
         }))
             .pipe(first())
             .subscribe(

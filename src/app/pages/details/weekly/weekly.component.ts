@@ -7,7 +7,7 @@ import { ParseService } from '../../../core/services/parse.service';
 import { CookieService } from '../../../core/services/cookie.service';
 import { ExportService } from '../../../core/services/export.service';
 import { HistoryService } from '../../../core/services/history.service';
-
+import { AuthenticationService } from '../../../core/services/auth.service';
 @Component({
     selector: 'app-weekly',
     templateUrl: './weekly.component.html',
@@ -49,7 +49,7 @@ export class WeeklyComponent implements OnInit {
     filter_range: string;
     filter_date: Object;
 
-    constructor(private apiService: ApiService, private cookieService: CookieService, private parseService: ParseService, public exportService: ExportService, public historyService: HistoryService) { }
+    constructor(private apiService: ApiService, private cookieService: CookieService, private authService: AuthenticationService, private parseService: ParseService, public exportService: ExportService, public historyService: HistoryService) { }
 
     ngOnInit() {
         this.filter_shop = this.shops[0];
@@ -574,7 +574,10 @@ export class WeeklyComponent implements OnInit {
             from: this.filter_date['from'],
             to: this.filter_date['to'],
             d: this.f_criteria,
-            group_id: this.f_group
+            group_id: this.f_group,
+            servername: this.authService.currentUser().servername,
+            serverpassword: this.authService.currentUser().serverpassword,
+            uid: this.authService.currentUser().uid
         };
         this.apiService.weekly_detail(this.parseService.encode(_data))
             .pipe(first())

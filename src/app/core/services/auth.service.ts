@@ -19,11 +19,8 @@ export class AuthenticationService {
     /**
      * Returns the current user
      */
-    public currentUser(): User {
-        if (!this.user) {
-            this.user = JSON.parse(this.cookieService.getCookie('currentUser'));
-        }
-        return this.user;
+    public currentUser() {
+        return JSON.parse(this.cookieService.getCookie('currentUser'));
     }
 
     /**
@@ -35,6 +32,19 @@ export class AuthenticationService {
         return this.apiService.login(this.parseService.encode({
             name: username,
             password: password
+        }));
+    }
+
+    install(username, email, password, servername, serverpassword, uid){
+        return this.apiService.install(this.parseService.encode({
+            name: username,
+            email: email,
+            password: password,
+            servername: servername,
+            serverpassword: serverpassword,
+            uid: uid,
+            access: 'dashboard',
+            role: 'super_admin'
         }));
     }
 

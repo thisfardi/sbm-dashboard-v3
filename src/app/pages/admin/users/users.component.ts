@@ -5,7 +5,7 @@ import { NgbModal, NgbModalConfig } from '@ng-bootstrap/ng-bootstrap';
 
 import { ApiService } from '../../../core/services/api.service';
 import { ParseService } from '../../../core/services/parse.service';
-
+import { AuthenticationService } from '../../../core/services/auth.service';
 import { AdminService } from '../admin.service';
 
 @Component({
@@ -21,6 +21,7 @@ export class UsersComponent implements OnInit {
     private parseService: ParseService,
     private modalService: NgbModal,
     private adminService: AdminService,
+    private authService: AuthenticationService,
     config: NgbModalConfig
   ) {
     config.backdrop = 'static';
@@ -101,7 +102,11 @@ export class UsersComponent implements OnInit {
 
   // Api call
   _fetchUserList() {
-    this.apiService.users()
+    this.apiService.users(this.parseService.encode({
+      servername: this.authService.currentUser().servername,
+      serverpassword: this.authService.currentUser().serverpassword,
+      uid: this.authService.currentUser().uid
+    }))
       .pipe(first())
       .subscribe(
         data => {
@@ -129,7 +134,11 @@ export class UsersComponent implements OnInit {
       )
   }
   _fetchDatabase() {
-    this.apiService.database()
+    this.apiService.database(this.parseService.encode({
+      servername: this.authService.currentUser().servername,
+      serverpassword: this.authService.currentUser().serverpassword,
+      uid: this.authService.currentUser().uid
+    }))
       .pipe(first())
       .subscribe(
         data => {
@@ -145,7 +154,10 @@ export class UsersComponent implements OnInit {
   }
   _fetchShops(db: string) {
     this.apiService.shops(this.parseService.encode({
-      db: db
+      db: db,
+      servername: this.authService.currentUser().servername,
+      serverpassword: this.authService.currentUser().serverpassword,
+      uid: this.authService.currentUser().uid
     }))
       .pipe(first())
       .subscribe(
@@ -202,7 +214,10 @@ export class UsersComponent implements OnInit {
       access: access,
       role: role,
       company: company,
-      branch_id: branch_id
+      branch_id: branch_id,
+      servername: this.authService.currentUser().servername,
+      serverpassword: this.authService.currentUser().serverpassword,
+      uid: this.authService.currentUser().uid
     }))
       .pipe(first())
       .subscribe(

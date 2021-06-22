@@ -7,7 +7,7 @@ import { ParseService } from '../../../core/services/parse.service';
 import { CookieService } from '../../../core/services/cookie.service';
 import { ExportService } from '../../../core/services/export.service';
 import { HistoryService } from '../../../core/services/history.service';
-
+import { AuthenticationService } from '../../../core/services/auth.service';
 @Component({
     selector: 'app-hourly',
     templateUrl: './hourly.component.html',
@@ -39,7 +39,7 @@ export class HourlyComponent implements OnInit {
 
     table_title = "Click articles count to see group/article details";
 
-    constructor(private apiService: ApiService, private cookieService: CookieService, private parseService: ParseService, public exportService: ExportService, public historyService: HistoryService) { }
+    constructor(private apiService: ApiService, private cookieService: CookieService, private authService: AuthenticationService, private parseService: ParseService, public exportService: ExportService, public historyService: HistoryService) { }
 
     ngOnInit() {
         this.current_shop = this.user_shops[0];
@@ -67,7 +67,10 @@ export class HourlyComponent implements OnInit {
             shop: this.current_shop,
             db: this.user_database,
             group_id: this.f_group,
-            h: h
+            h: h,
+            servername: this.authService.currentUser().servername,
+            serverpassword: this.authService.currentUser().serverpassword,
+            uid: this.authService.currentUser().uid
         }))
             .pipe(first())
             .subscribe(
@@ -175,7 +178,11 @@ export class HourlyComponent implements OnInit {
             from: moment(this.dash_date).format('YYYY-MM-DD'),
             to: moment(this.dash_date).format('YYYY-MM-DD'),
             shop: this.current_shop,
-            db: this.user_database
+            db: this.user_database,
+            group_id: this.f_group,
+            servername: this.authService.currentUser().servername,
+            serverpassword: this.authService.currentUser().serverpassword,
+            uid: this.authService.currentUser().uid
         }))
             .pipe(first())
             .subscribe(

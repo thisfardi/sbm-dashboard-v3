@@ -1,0 +1,134 @@
+
+<div class="account-pages my-5">
+  <div class="container">
+    <div class="row justify-content-center">
+      <div class="col-xl-5 col-lg-6 col-md-8">
+        <div class="card">
+          <div class="card-body p-4">
+            <app-ui-preloader [display]="loading"></app-ui-preloader>
+            <div class="text-center">
+              <div class="mx-auto mb-5">
+                <a routerLink="/">
+                  <img src="assets/images/logo.png" alt="" height="24" />
+                  <h3 class="d-inline align-middle ml-1 text-logo">SBM Dashboard v3.0</h3>
+                </a>
+              </div>
+
+              <h6 class="h5 mb-0 mt-4">Welcome!</h6>
+              <p class="text-muted mt-3 mb-3">You are installing the dashboard for your server. Please fill out the required informations.
+              </p>
+            </div>
+            <form class="authentication-form" name="installForm" [formGroup]="installForm" (ngSubmit)="onSubmit()" novalidate>
+              <ngb-alert type="danger" *ngIf="error" [dismissible]="false">{{ error }}</ngb-alert>
+              <ngb-alert type="primary" *ngIf="success_msg" [dismissible]="false">{{ success_msg }}</ngb-alert>
+              <div class="form-group">
+                  <label class="form-control-label">Admin name</label>
+                  <div class="input-group input-group-merge">
+                      <div class="input-group-prepend">
+                          <span class="input-group-text">
+                              <i class="icon-dual" data-feather="user" appFeatherIcon></i>
+                          </span>
+                      </div>
+                      <input type="text" class="form-control" formControlName="username" id="username" placeholder="Enter your name" [ngClass]="{ 'is-invalid': submitted && f.username.errors }" required tabindex='1'/>
+                      <div *ngIf="submitted && f.username.errors" class="invalid-feedback">
+                          <div *ngIf="f.username.errors.required">User name is required</div>
+                          <!-- <div *ngIf="f.email.errors.email">Email must be a valid email address</div> -->
+                      </div>
+                  </div>
+              </div>
+              <div class="form-group mt-2">
+                <label class="form-control-label">Email</label>
+                <div class="input-group input-group-merge">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text">
+                            <i data-feather="mail" class="icon-dual" appFeatherIcon></i>
+                        </span>
+                    </div>
+                    <input type="email" class="form-control" formControlName="email" [ngClass]="{ 'is-invalid': submitted && f.email.errors }" id="email" placeholder="Enter your email" required tabindex='2'/>
+                    <div *ngIf="submitted && f.email.errors" class="invalid-feedback">
+                        <div *ngIf="f.password.errors.required">Email is required</div>
+                    </div>
+                </div>
+              </div>
+              <div class="form-group mt-2">
+                  <label class="form-control-label">Dashboard password</label>
+                  <div class="input-group input-group-merge">
+                      <div class="input-group-prepend">
+                          <span class="input-group-text">
+                              <i data-feather="lock" class="icon-dual" appFeatherIcon></i>
+                          </span>
+                      </div>
+                      <input type="password" class="form-control" formControlName="password" [ngClass]="{ 'is-invalid': submitted && f.password.errors }" id="password" placeholder="Enter your password" required tabindex='3'/>
+                      <div *ngIf="submitted && f.password.errors" class="invalid-feedback">
+                          <div *ngIf="f.password.errors.required">Password is required</div>
+                      </div>
+                  </div>
+              </div>
+              <div class="form-group">
+                <label class="form-control-label">Server destination</label>
+                <div class="input-group input-group-merge">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text">
+                            <i class="icon-dual" data-feather="user" appFeatherIcon></i>
+                        </span>
+                    </div>
+                    <input type="text" class="form-control" formControlName="servername" id="servername" placeholder="Enter server IP address and port" [ngClass]="{ 'is-invalid': submitted && f.servername.errors }" required tabindex='4'/>
+                    <div *ngIf="submitted && f.servername.errors" class="invalid-feedback">
+                        <div *ngIf="f.servername.errors.required">Server destination is required</div>
+                    </div>
+                </div>
+              </div>
+              <div class="form-group">
+                <label class="form-control-label">Database user ID</label>
+                <div class="input-group input-group-merge">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text">
+                            <i class="icon-dual" data-feather="user" appFeatherIcon></i>
+                        </span>
+                    </div>
+                    <input type="text" class="form-control" formControlName="uid" id="uid" placeholder="Enter database user ID" [ngClass]="{ 'is-invalid': submitted && f.uid.errors }" required tabindex='5'/>
+                    <div *ngIf="submitted && f.uid.errors" class="invalid-feedback">
+                        <div *ngIf="f.uid.errors.required">Database user ID is required</div>
+                    </div>
+                </div>
+              </div>
+              <div class="form-group">
+                <label class="form-control-label">Database access password</label>
+                <div class="input-group input-group-merge">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text">
+                            <i class="icon-dual" data-feather="lock" appFeatherIcon></i>
+                        </span>
+                    </div>
+                    <input type="password" class="form-control" formControlName="serverpassword" id="serverpassword" placeholder="Enter database password" [ngClass]="{ 'is-invalid': submitted && f.serverpassword.errors }" required tabindex='6'/>
+                    <div *ngIf="submitted && f.serverpassword.errors" class="invalid-feedback">
+                        <div *ngIf="f.serverpassword.errors.required">Database password is required</div>
+                    </div>
+                </div>
+              </div>
+              <div class="invalid-feedback">
+                  This user is not belonged to dashboard. Please try to login from other platforms. If you have problem with login, please contact dashboard admin.
+              </div>
+              <div class="form-group mb-0 mt-4 text-center">
+                  <button class="btn btn-primary btn-block" type="submit" tabindex='7'> INSTALL </button>
+              </div>
+            </form>
+          </div> <!-- end card-body -->
+        </div>
+        <!-- end card -->
+
+        <div class="row mt-3">
+          <div class="col-12 text-center">
+            <p class="text-muted">Already installed? <a routerLink="/account/login"
+                class="text-primary font-weight-bold ml-1">Login</a></p>
+          </div> <!-- end col -->
+        </div>
+        <!-- end row -->
+
+      </div> <!-- end col -->
+    </div>
+    <!-- end row -->
+  </div>
+  <!-- end container -->
+</div>
+<!-- end page -->
