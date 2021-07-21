@@ -43,9 +43,9 @@
         <div class="card-body" style="min-height: 451px;">
           <h5 class="card-title mt-0 mb-0 header-title">
             Cook, POS usage & Disposal compare
-            <span *ngIf="filtered_daily_finished_products.length != 0 && filtered_daily_finished_products[0].amount != 0">
+            <!-- <span *ngIf="filtered_daily_finished_products.length != 0 && filtered_daily_finished_products[0].amount != 0">
               (Dispose ratio: {{filtered_pos_daily_dispose[0].dispose_amount / filtered_daily_finished_products[0].amount | percent: '0.1-1'}})
-            </span>
+            </span> -->
           </h5>
           <div *ngIf="daily_finished_products_comparison.series.length != 0">
             <apx-chart [series]="daily_finished_products_comparison.series" [chart]="daily_finished_products_comparison.chart"
@@ -64,9 +64,9 @@
         <div class="card-body" style="min-height: 451px;">
           <h5 class="card-title mt-0 mb-0 header-title">
             Raw material and Disposal
-            <span *ngIf="filtered_daily_ingredients.length != 0 && filtered_daily_ingredients[0].amount != 0">
+            <!-- <span *ngIf="filtered_daily_ingredients.length != 0 && filtered_daily_ingredients[0].amount != 0">
               (Dispose ratio: {{filtered_daily_ingredients_dispose[0].dispose_amount ? filtered_daily_ingredients_dispose[0].dispose_amount / filtered_daily_ingredients[0].amount : 0 | percent: '0.1-1'}})
-            </span>
+            </span> -->
           </h5>
           <div *ngIf="pos_daily_usage_comparison.series.length != 0">
             <apx-chart [series]="pos_daily_usage_comparison.series" [chart]="pos_daily_usage_comparison.chart"

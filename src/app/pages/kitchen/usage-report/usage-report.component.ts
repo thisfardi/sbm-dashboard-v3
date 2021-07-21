@@ -206,6 +206,7 @@ export class UsageReportComponent implements OnInit {
           price: item.cost
         }
       })
+      this.finished_products.filter(item => item.name)
     }
     this.uniq_finished_products_code = []
     this.uniq_finished_products_name = ["All items"]
@@ -231,8 +232,8 @@ export class UsageReportComponent implements OnInit {
       })
     }
 
-    if(data.hasOwnProperty('dispose_rate_list')){
-      this.daily_waste = data.dispose_rate_list.map(item => {
+    if(data.hasOwnProperty('dispose_detail_list')){
+      this.daily_waste = data.dispose_detail_list.map(item => {
         return {
           code: item.item_code,
           name: item.item_name,

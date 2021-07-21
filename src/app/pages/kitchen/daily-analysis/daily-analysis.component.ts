@@ -291,6 +291,7 @@ export class DailyAnalysisComponent implements OnInit {
   }
 
   set_data(data){
+    console.log(data)
     if(data.hasOwnProperty('producted_list')){
       this.daily_finished_products = data.producted_list.map(item => {
         return {
@@ -302,7 +303,7 @@ export class DailyAnalysisComponent implements OnInit {
           price: item.cost,
           //timestamp: item.timestamp
         }
-      })
+      }).filter(item => item.name != "")
     }
     if(data.hasOwnProperty('pos_usage')){
       this.pos_daily_usage = data.pos_usage.map(item => {
@@ -315,8 +316,8 @@ export class DailyAnalysisComponent implements OnInit {
         }
       })
     }
-    if(data.hasOwnProperty('dispose_rate_list')){
-      this.pos_daily_dispose = data.dispose_rate_list.map(item => {
+    if(data.hasOwnProperty('dispose_detail_list')){
+      this.pos_daily_dispose = data.dispose_detail_list.map(item => {
         return {
           code: item.item_code,
           name: item.item_name,
@@ -340,17 +341,17 @@ export class DailyAnalysisComponent implements OnInit {
         }
       })
     }
-    if(data.hasOwnProperty('dispose_list')){
-      this.daily_ingredients_dispose = data.dispose_list.map(item => {
-        return {
-          code: item.item_code,
-          name: item.item_name,
-          //amount: item.product_amount,
-          price: item.cost,
-          //timestamp: item.timestamp
-        }
-      })
-    }
+    // if(data.hasOwnProperty('dispose_list')){
+    //   this.daily_ingredients_dispose = data.dispose_list.map(item => {
+    //     return {
+    //       code: item.item_code,
+    //       name: item.item_name,
+    //       //amount: item.product_amount,
+    //       price: item.cost,
+    //       //timestamp: item.timestamp
+    //     }
+    //   })
+    // }
     if(data.hasOwnProperty('pos_ingredients_used')){
       this.pos_daily_ingredient = data.pos_ingredients_used.map(item => {
         return {
@@ -519,6 +520,8 @@ export class DailyAnalysisComponent implements OnInit {
       })
     }
 
+    console.log(this.filtered_daily_ingredients)
+
     // Netsale, Material cost, Waste cost comparison
     this.netsale_cook_dispose_compare_piechart.dataSource.data = []
     this.netsale_cook_dispose_compare_piechart.dataSource.data.push({
@@ -545,9 +548,9 @@ export class DailyAnalysisComponent implements OnInit {
       this.filtered_pos_daily_usage = [...this.pos_daily_usage.filter(item => item.name.toLowerCase() == this.selected_finished_product.toLowerCase())]
       this.filtered_pos_daily_dispose = [...this.pos_daily_dispose.filter(item => item.name.toLowerCase() == this.selected_finished_product.toLowerCase())]
 
-      this.filtered_daily_ingredients = [...this.daily_ingredients.filter(item => item.name.toLowerCase() == this.selected_finished_product.toLowerCase())]
-      this.filtered_daily_ingredients_dispose = [...this.daily_ingredients_dispose.filter(item => item.name.toLowerCase() == this.selected_finished_product.toLowerCase())]
-      this.filtered_pos_daily_ingredient = [...this.pos_daily_ingredient.filter(item => item.name.toLowerCase() == this.selected_finished_product.toLowerCase())]
+      this.filtered_daily_ingredients = [...this.daily_ingredients]
+      this.filtered_daily_ingredients_dispose = [...this.daily_ingredients_dispose]
+      this.filtered_pos_daily_ingredient = [...this.pos_daily_ingredient]
       this.group_filtered_data()
     }, 100)
   }

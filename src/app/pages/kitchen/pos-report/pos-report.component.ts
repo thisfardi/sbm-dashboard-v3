@@ -252,6 +252,8 @@ export class PosReportComponent implements OnInit {
           price: item.cost
         }
       })
+      console.log(this.pos_daily_usage)
+      this.pos_daily_usage = [...this.pos_daily_usage.filter(item => item.code != "")]
       this.uniq_pos_daily_usage_name = ["All items"]
       this.pos_daily_usage.forEach(item => {
         if(!this.uniq_pos_daily_usage_name.includes(item.name)){

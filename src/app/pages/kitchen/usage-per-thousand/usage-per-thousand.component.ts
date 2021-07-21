@@ -266,8 +266,8 @@ export class UsagePerThousandComponent implements OnInit {
 
   set_data(data){
     console.log(data)
-    if(data.hasOwnProperty('producted_list')){
-      this.finished_products = data.producted_list.map(item => {
+    if(data.hasOwnProperty('pos_ingredients_used')){
+      this.finished_products = data.pos_ingredients_used.map(item => {
         return {
           name: item.item_name,
           amount: item.product_amount,
