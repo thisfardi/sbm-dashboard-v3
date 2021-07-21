@@ -26,7 +26,7 @@ import {
 export class DailyAnalysisComponent implements OnInit {
 
   date_ranges: Object;
-  f_criteria: string = 'day';
+  f_criteria = 1;
   disable_criteria = [0, 1, 1, 1, 1, 1, 1];
 
   filter_range: string;
@@ -137,6 +137,7 @@ export class DailyAnalysisComponent implements OnInit {
     this.shops = [];
     this.error = ''
     this.shop_loading = true;
+    let user_shops = JSON.parse(this.authService.currentUser().shop_name)
     this.apiService.shops(this.parseService.encode({
       db: JSON.parse(this.cookieService.getCookie('currentUser')).database,
       servername: this.authService.currentUser().servername,
@@ -148,8 +149,8 @@ export class DailyAnalysisComponent implements OnInit {
         data => {
           this.shop_loading = false;
           if(data['status'] == 'success'){
-            this.shops = [...data['data']]
-            this.shop_names = data['data'].map(item => item.description)
+            this.shops = [...data['data'].filter(item => user_shops.indexOf(item.description) != -1)]
+            this.shop_names = this.shops.map(item => item.description)
             this.filter_shop_name = this.shop_names[0]
             this.selected_shop_id = this.shops.filter(item => item.description == this.filter_shop_name)[0].id
 
@@ -214,14 +215,13 @@ export class DailyAnalysisComponent implements OnInit {
     this.pos_daily_ingredient = []
 
     this.apiService.getKitchenHistory({
-      //shop_id: 7,
       shop_id: this.selected_shop_id,
+      type: this.f_criteria,
       date_range: {
-        // from: '2021-03-02',
-        // to: '2021-03-02',
         from: this.filter_date['from'],
         to: this.filter_date['to']
-      }
+      },
+      db_name: JSON.parse(this.cookieService.getCookie('currentUser')).company.toLowerCase()
     })
       .pipe(first())
       .subscribe(
@@ -245,43 +245,43 @@ export class DailyAnalysisComponent implements OnInit {
     switch(this.filter_range){
       case 'Today':
         this.disable_criteria = [0, 1, 1, 1, 1, 1, 1];
-        this.f_criteria = 'day';
+        this.f_criteria = 1;
         break;
       case 'Yesterday':
         this.disable_criteria = [0, 1, 1, 1, 1, 1, 1];
-        this.f_criteria = 'day';
+        this.f_criteria = 1;
         break;
       case 'This week':
         this.disable_criteria = [1, 0, 1, 1, 1, 1, 1];
-        this.f_criteria = 'days';
+        this.f_criteria = 2;
         break;
       case 'Last week':
         this.disable_criteria = [1, 0, 1, 1, 1, 1, 1];
-        this.f_criteria = 'days';
+        this.f_criteria = 2;
         break;
       case 'This month':
         this.disable_criteria = [1, 0, 1, 1, 1, 1, 1];
-        this.f_criteria = 'week';
+        this.f_criteria = 3;
         break;
       case 'Last month':
         this.disable_criteria = [1, 0, 1, 1, 1, 1, 1];
-        this.f_criteria = 'week';
+        this.f_criteria = 3;
         break;
       case 'This year':
         this.disable_criteria = [1, 1, 1, 1, 1, 0, 1];
-        this.f_criteria = 'month';
+        this.f_criteria = 3;
         break;
       case 'Last year':
         this.disable_criteria = [1, 1, 1, 1, 1, 0, 1];
-        this.f_criteria = 'month';
+        this.f_criteria = 3;
         break;
       case 'All time':
         this.disable_criteria = [1, 1, 1, 1, 1, 1, 0];
-        this.f_criteria = 'year';
+        this.f_criteria = 4;
         break;
       case 'Custom range':
         this.disable_criteria = [0, 0, 0, 0, 0, 0, 0];
-        this.f_criteria = 'day';
+        this.f_criteria = 4;
         break;
     }
   }
@@ -376,7 +376,7 @@ export class DailyAnalysisComponent implements OnInit {
     this.filter_item_change()
   }
   group_filtered_data(){
-    if(this.f_criteria == 'day'){
+    if(this.f_criteria == 1){
       this.filtered_daily_finished_products = [this.filtered_daily_finished_products.reduce((arr, item) => {
         if(!arr['name']){
           arr['name'] = item['name']
@@ -444,10 +444,10 @@ export class DailyAnalysisComponent implements OnInit {
       }, {})]
 
     }
-    else if (this.f_criteria == 'days'){
+    else if (this.f_criteria == 1){
 
     }
-    else if (this.f_criteria == 'week'){
+    else if (this.f_criteria == 2){
 
     }else{
 

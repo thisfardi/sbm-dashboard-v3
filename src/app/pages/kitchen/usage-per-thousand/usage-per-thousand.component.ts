@@ -23,7 +23,7 @@ export class UsagePerThousandComponent implements OnInit {
   database: string = JSON.parse(this.cookieService.getCookie('currentUser')).database;
   date_ranges: Object;
 
-  f_criteria: string = 'hour';
+  f_criteria = 1;
   disable_criteria = [0, 1, 1, 1, 1, 1, 1];
 
   filter_range: string;
@@ -122,6 +122,7 @@ export class UsagePerThousandComponent implements OnInit {
     this.shops = [];
     this.error = ''
     this.shop_loading = true;
+    let user_shops = JSON.parse(this.authService.currentUser().shop_name)
     this.apiService.shops(this.parseService.encode({
       db: JSON.parse(this.cookieService.getCookie('currentUser')).database,
       servername: this.authService.currentUser().servername,
@@ -133,8 +134,8 @@ export class UsagePerThousandComponent implements OnInit {
         data => {
           this.shop_loading = false;
           if(data['status'] == 'success'){
-            this.shops = [...data['data']]
-            this.shop_names = data['data'].map(item => item.description)
+            this.shops = [...data['data'].filter(item => user_shops.indexOf(item.description) != -1)]
+            this.shop_names = this.shops.map(item => item.description)
             this.filter_shop_name = this.shop_names[0]
             this.selected_shop_id = this.shops.filter(item => item.description == this.filter_shop_name)[0].id
             this._fetchNetsale()
@@ -194,10 +195,12 @@ export class UsagePerThousandComponent implements OnInit {
     ]
     this.apiService.getKitchenHistory({
       shop_id: this.selected_shop_id,
+      type: this.f_criteria,
       date_range: {
         from: this.filter_date['from'],
         to: this.filter_date['to']
-      }
+      },
+      db_name: JSON.parse(this.cookieService.getCookie('currentUser')).company.toLowerCase()
     })
       .pipe(first())
       .subscribe(
@@ -220,48 +223,49 @@ export class UsagePerThousandComponent implements OnInit {
     switch(this.filter_range){
       case 'Today':
         this.disable_criteria = [0, 1, 1, 1, 1, 1, 1];
-        this.f_criteria = 'hour';
+        this.f_criteria = 1;
         break;
       case 'Yesterday':
         this.disable_criteria = [0, 1, 1, 1, 1, 1, 1];
-        this.f_criteria = 'hour';
+        this.f_criteria = 1;
         break;
       case 'This week':
         this.disable_criteria = [1, 0, 1, 1, 1, 1, 1];
-        this.f_criteria = 'day';
+        this.f_criteria = 2;
         break;
       case 'Last week':
         this.disable_criteria = [1, 0, 1, 1, 1, 1, 1];
-        this.f_criteria = 'day';
+        this.f_criteria = 2
         break;
       case 'This month':
         this.disable_criteria = [1, 0, 1, 1, 1, 1, 1];
-        this.f_criteria = 'day';
+        this.f_criteria = 3
         break;
       case 'Last month':
         this.disable_criteria = [1, 0, 1, 1, 1, 1, 1];
-        this.f_criteria = 'day';
+        this.f_criteria = 3
         break;
       case 'This year':
         this.disable_criteria = [1, 1, 1, 1, 1, 0, 1];
-        this.f_criteria = 'month';
+        this.f_criteria = 3
         break;
       case 'Last year':
         this.disable_criteria = [1, 1, 1, 1, 1, 0, 1];
-        this.f_criteria = 'month';
+        this.f_criteria = 3
         break;
       case 'All time':
         this.disable_criteria = [1, 1, 1, 1, 1, 1, 0];
-        this.f_criteria = 'year';
+        this.f_criteria = 4
         break;
       case 'Custom range':
         this.disable_criteria = [0, 0, 0, 0, 0, 0, 0];
-        this.f_criteria = 'day';
+        this.f_criteria = 4
         break;
     }
   }
 
   set_data(data){
+    console.log(data)
     if(data.hasOwnProperty('producted_list')){
       this.finished_products = data.producted_list.map(item => {
         return {

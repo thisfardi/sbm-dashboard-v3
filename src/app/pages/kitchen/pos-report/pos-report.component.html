@@ -54,7 +54,7 @@
                     <tr>
                       <th scope="col">Item code</th>
                       <th scope="col">Item name</th>
-                      <th scope="col">Amount</th>
+                      <th scope="col">Amount (g)</th>
                       <th scope="col">Cost ($)</th>
                     </tr>
                   </thead>
@@ -62,8 +62,8 @@
                     <tr *ngFor="let item of filterd_pos_daily_usage" (click)="select_item(item.name)">
                       <td>{{item.code}}</td>
                       <td>{{item.name}}</td>
-                      <td>{{item.amount}}</td>
-                      <td>{{item.price}}</td>
+                      <td>{{item.amount | number}}</td>
+                      <td>{{item.price | currency}}</td>
                     </tr>
                   </tbody>
                 </table>

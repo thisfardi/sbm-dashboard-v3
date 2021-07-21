@@ -31,7 +31,7 @@ export class UsageReportComponent implements OnInit {
   company: string = JSON.parse(this.cookieService.getCookie('currentUser')).company;
   date_ranges: Object;
 
-  f_criteria: string = 'hour';
+  f_criteria: string = '1';
   disable_criteria = [0, 1, 1, 1, 1, 1, 1];
 
   filter_range: string;
@@ -155,7 +155,7 @@ export class UsageReportComponent implements OnInit {
   }
   _fetchHistoryData(){
     this.error = ''
-    this.selected_shop_id = this.shops.filter(item => item.description == this.filter_shop_name)[0].code
+    this.selected_shop_id = this.shops.filter(item => item.description == this.filter_shop_name)[0].id
     this.filter_date['from'] = moment(this.filter_date['from']).format('YYYY-MM-DD');
     this.filter_date['to'] = this.filter_date['to'] ? moment(this.filter_date['to']).format('YYYY-MM-DD') : this.filter_date['from'];
     this.history_loading = true
@@ -171,11 +171,12 @@ export class UsageReportComponent implements OnInit {
 
     this.apiService.getKitchenHistory({
       shop_id: this.selected_shop_id,
-      type: 4,
+      type: this.f_criteria,
       date_range: {
         from: this.filter_date['from'],
         to: this.filter_date['to']
-      }
+      },
+      db_name: JSON.parse(this.cookieService.getCookie('currentUser')).company.toLowerCase()
     })
       .pipe(first())
       .subscribe(
@@ -193,6 +194,7 @@ export class UsageReportComponent implements OnInit {
   }
   set_data(data){
 
+    console.log(data)
     if(data.hasOwnProperty('producted_list')){
       this.finished_products = data.producted_list.map(item => {
         return {
@@ -336,43 +338,43 @@ export class UsageReportComponent implements OnInit {
     switch(this.filter_range){
       case 'Today':
         this.disable_criteria = [0, 1, 1, 1, 1, 1, 1];
-        this.f_criteria = 'hour';
+        this.f_criteria = '1';
         break;
       case 'Yesterday':
         this.disable_criteria = [0, 1, 1, 1, 1, 1, 1];
-        this.f_criteria = 'hour';
+        this.f_criteria = '1';
         break;
       case 'This week':
         this.disable_criteria = [1, 0, 1, 1, 1, 1, 1];
-        this.f_criteria = 'day';
+        this.f_criteria = '1';
         break;
       case 'Last week':
         this.disable_criteria = [1, 0, 1, 1, 1, 1, 1];
-        this.f_criteria = 'day';
+        this.f_criteria = '1';
         break;
       case 'This month':
         this.disable_criteria = [1, 0, 1, 1, 1, 1, 1];
-        this.f_criteria = 'day';
+        this.f_criteria = '2';
         break;
       case 'Last month':
         this.disable_criteria = [1, 0, 1, 1, 1, 1, 1];
-        this.f_criteria = 'day';
+        this.f_criteria = '2';
         break;
       case 'This year':
         this.disable_criteria = [1, 1, 1, 1, 1, 0, 1];
-        this.f_criteria = 'month';
+        this.f_criteria = '3';
         break;
       case 'Last year':
         this.disable_criteria = [1, 1, 1, 1, 1, 0, 1];
-        this.f_criteria = 'month';
+        this.f_criteria = '3';
         break;
       case 'All time':
         this.disable_criteria = [1, 1, 1, 1, 1, 1, 0];
-        this.f_criteria = 'year';
+        this.f_criteria = '4';
         break;
       case 'Custom range':
         this.disable_criteria = [0, 0, 0, 0, 0, 0, 0];
-        this.f_criteria = 'day';
+        this.f_criteria = '4';
         break;
     }
   }
