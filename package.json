@@ -32,7 +32,7 @@
     "@fullcalendar/timegrid": "^4.3.0",
     "@ng-bootstrap/ng-bootstrap": "^5.1.1",
     "@ng-select/ng-select": "^3.0.7",
-    "angular-archwizard": "5.0.0",
+    "angular-archwizard": "5.0.1",
     "angular-fusioncharts": "^3.0.4",
     "angularx-flatpickr": "^6.1.1",
     "apexcharts": "~3.22.1",
